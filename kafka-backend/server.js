@@ -1,4 +1,7 @@
 var connection = new require('./kafka/Connection');
+var { mongoDB } = require('./config');
+var mongoose = require("mongoose");
+const account = require("./services/account");
 
 var options = {
     useNewUrlParser: true,
@@ -6,7 +9,6 @@ var options = {
     poolSize: 500,
     bufferMaxEntries: 0
 };
-
 mongoose.connect(mongoDB, options, (err) => {
     if (err) {
         console.log("MONGODB connection error", err);
@@ -26,33 +28,8 @@ function handleTopicRequest(topic_name) {
         var data = JSON.parse(message.value);
 
         switch (topic_name) {
-            case "login":
-                login.serve(data.data, function (err, res) {
-                    response(data, res, producer);
-                    return;
-                })
-            case "student_profile":
-                studentProfile.serve(data.data, function (err, res) {
-                    response(data, res, producer);
-                    return;
-                })
-            case "company_profile":
-                companyProfile.serve(data.data, function (err, res) {
-                    response(data, res, producer);
-                    return;
-                })
-            case "company_jobs_events":
-                companyJobsEvents.serve(data.data, function (err, res) {
-                    response(data, res, producer);
-                    return;
-                })
-            case "student_jobs_events":
-                studentJobsEvents.serve(data.data, function (err, res) {
-                    response(data, res, producer);
-                    return;
-                })
-            case "students":
-                students.serve(data.data, function (err, res) {
+            case "account":
+                account.serve(data.data, function (err, res) {
                     response(data, res, producer);
                     return;
                 })
@@ -81,4 +58,4 @@ function response(data, res, producer) {
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
-handleTopicRequest("login");
+handleTopicRequest("account");

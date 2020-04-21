@@ -1,5 +1,5 @@
 {
-  "name": "kafka-backend",
+  "name": "kafka-back-end",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -7,5 +7,25 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "brcypt": "^1.0.1",
+    "formidable": "^1.2.2",
+    "glob": "^7.1.6",
+    "images-upload-middleware": "^1.1.1",
+    "kafka-node": "^5.0.0",
+    "mongodb": "^3.5.5",
+    "mongodb-autoincrement": "^1.0.1",
+    "mongoose": "^5.9.7",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.4.6",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "uuidv4": "^6.0.7"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^1.10.1"
+  }
 }
