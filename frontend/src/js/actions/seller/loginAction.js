@@ -15,12 +15,12 @@ export const sellerLogin = (data) => {
 
 export const setLoginCredentials = (data) => {
     return {
-        type: LOGIN,
+        type: SELLER_LOGIN,
         payload: { ...data }
     }
 }
 
 
 export const logout = () => ({
-    type: LOGOUT
+    type: SELLER_LOGOUT
 })
