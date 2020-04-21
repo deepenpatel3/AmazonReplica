@@ -1,3 +1,5 @@
-const backendURL = "http://localhost:3001";
+const config = {
+    backendURL: "http://localhost:3001"
+}
 
-export default backendURL;
+module.exports = config;
