@@ -5,14 +5,14 @@ const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
 
 router.post("/signIn", (req, res) => {
-    console.log("inside customer signin api", req.body);
+    console.log("inside admin signin api", req.body);
 
     let body = {
         email: req.body.email,
         password: req.body.password
     }
-    kafka.make_request('account', { "path": "customer_login", "body": body }, function (err, result) {
-        console.log('got back from kafka customer_login');
+    kafka.make_request('account', { "path": "admin_login", "body": body }, function (err, result) {
+        console.log('got back from kafka admin_login');
         if (err) {
             console.log('error', err)
             res.send(JSON.stringify({
@@ -20,11 +20,11 @@ router.post("/signIn", (req, res) => {
                 message: "Please try again"
             }))
         } else {
-            console.log("customer login result- ", result);
+            console.log("admin login result- ", result);
             if (result.signInSuccess) {
                 var payload = {
                     signInSuccess: result.signInSuccess,
-                    CID: result.CID,
+                    AID: result.AID,
                     name: result.name,
                     message: result.message
                 }
@@ -41,21 +41,21 @@ router.post("/signIn", (req, res) => {
 })
 
 router.post("/signUp", function (req, res) {
-    console.log('inside customer signup api', req.body);
+    console.log('inside admin signup api', req.body);
 
-    kafka.make_request('account', { "path": "customer_signup", "body": req.body }, function (err, result) {
-        console.log('got back from kafka customer_signup');
+    kafka.make_request('account', { "path": "admin_signup", "body": req.body }, function (err, result) {
+        console.log('got back from kafka admin_signup');
         if (err) {
             console.log('error', err)
             res.send({
                 signInSuccess: false
             })
         } else {
-            console.log("customer signup result- ", result);
+            console.log("admin signup result- ", result);
             if (result.signInSuccess) {
                 var payload = {
                     signInSuccess: result.signInSuccess,
-                    CID: result.CID,
+                    AID: result.AID,
                     name: result.name,
                     message: result.message
                 }

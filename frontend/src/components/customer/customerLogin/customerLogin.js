@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { connect } from "react-redux";
-import { customerLogin } from "../../../js/actions/customer/loginAction";
+import { customerLogin } from "../../../Redux/actions/customer/loginAction";
 import { Redirect } from "react-router-dom";
 
 class Customerlogin extends Component {
