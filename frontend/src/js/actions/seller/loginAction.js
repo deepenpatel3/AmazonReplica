@@ -13,7 +13,7 @@ export const sellerLogin = (data) => {
     }
 };
 
-export const setLoginCredentials = (data) => {
+const setLoginCredentials = (data) => {
     return {
         type: LOGIN,
         payload: { ...data }
