@@ -3,7 +3,7 @@ var kafka = require('kafka-node');
 function ConnectionProvider() {
 
     this.getClient = function () {
-        this.client = new kafka.KafkaClient({kafkaHost:"127.0.0.1:9092"});
+        this.client = new kafka.KafkaClient({kafkaHost:"127.0.0.1:2181"});
         return  this.client;
     };
 
