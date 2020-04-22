@@ -8,5 +8,5 @@ const store = createStore(
     rootReducer,
     storeEnhancers(applyMiddleware(thunk))
 );
-
+//window.store = store
 export default store;

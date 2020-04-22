@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import { CUSTOMER_LOGIN, CUSTOMER_LOGOUT } from "../../../js/constants/action-types";
 const { backendURL } = require("../../../config");
@@ -26,7 +27,6 @@ const setLoginCredentials = (token) => {
         payload: { ...decoded }
     }
 }
-
 export const logout = () => ({
     type: CUSTOMER_LOGOUT
 })

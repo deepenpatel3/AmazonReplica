@@ -13,6 +13,7 @@ export const sellerLogin = (data) => {
     }
 };
 
+
 const setLoginCredentials = (data) => {
     return {
         type: LOGIN,
