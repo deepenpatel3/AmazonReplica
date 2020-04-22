@@ -1,4 +1,4 @@
-import { CUSTOMER_LOGIN , CUSTOMER_LOGOUT } from "../constants/action-types";
+import { CUSTOMER_LOGIN , CUSTOMER_LOGOUT } from "../../constants/action-types";
 
 const initialState = {
     

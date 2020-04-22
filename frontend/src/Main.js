@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import SellerLogin from './components/seller/sellerLogin/sellerLogin';
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
 import AdminLogin from './components/admin/adminLogin/adminLogin';
+
 class Main extends Component {
     render() {
         return (

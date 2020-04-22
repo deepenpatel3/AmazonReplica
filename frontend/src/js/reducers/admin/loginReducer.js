@@ -1,4 +1,4 @@
-import { ADMIN_LOGIN , ADMIN_LOGOUT } from "../constants/action-types";
+import { ADMIN_LOGIN , ADMIN_LOGOUT } from "../../constants/action-types";
 
 const initialState = {
     
