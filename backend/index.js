@@ -1,14 +1,16 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+const { frontendURL } = require("./src/utils/config");
 
 var cors = require("cors");
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: frontendURL, credentials: true }));
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+// app.use(bodyParser.urlencoded({
+//     extended: true
+// }));
+app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", frontendURL);
@@ -25,23 +27,13 @@ app.use(function (req, res, next) {
     next();
 });
 
-// const mongoose = require('mongoose');
+const customerAccount = require("./src/routes/customer/account");
+const sellerAccount = require("./src/routes/seller/account");
+const adminAccount = require("./src/routes/admin/account");
 
-// var options = {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     poolSize: 500,
-//     bufferMaxEntries: 0
-// };
-
-// mongoose.connect(mongoDB, options, (err) => {
-//     if (err) {
-//         console.log(err);
-//         console.log(`MongoDB Connection Failed`);
-//     } else {
-//         console.log(`MongoDB Connected`);
-//     }
-// });
+app.use("/customer", customerAccount);
+app.use("/seller", sellerAccount);
+app.use("/admin", adminAccount);
 
 app.listen(3001);
 console.log("Server Listening on port 3001");

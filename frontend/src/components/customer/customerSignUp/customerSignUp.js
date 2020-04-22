@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { connect } from "react-redux";
-import { customerLogin } from "../../../Redux/actions/customer/loginAction";
+import { customerSignUp } from "../../../Redux/actions/customer/loginAction";
 import { Redirect } from "react-router-dom";
 
-class Customerlogin extends Component {
+class CustomerSignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,10 +15,11 @@ class Customerlogin extends Component {
     Login = (e) => {
         e.preventDefault();
         let data = {
+            name: document.getElementById("name").value,
             email: document.getElementById("email").value,
             password: document.getElementById("password").value
         }
-        this.props.customerLogin(data);
+        this.props.customerSignUp(data);
     }
     render() {
         let alertElement = null, redirectVar = null;
@@ -36,7 +37,14 @@ class Customerlogin extends Component {
                             <div className="text-center" >
                                 <img src={logo} alt="oops" style={{ width: "50%" }} />
                             </div>
-                            <h2>Sign In</h2>
+                            <h2>Sign Up</h2>
+
+                            <div class="form-group">
+                                <label for="name">Enter Name</label>
+                                <input type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter Name" />
+
+                            </div>
+
                             <div class="form-group">
                                 <label for="email">Email address</label>
                                 <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" />
@@ -64,4 +72,4 @@ function mapStateToProps(state) {
         message: state.customerLogin.message
     }
 }
-export default connect(mapStateToProps, { customerLogin })(Customerlogin);
+export default connect(mapStateToProps, { customerSignUp })(CustomerSignUp);

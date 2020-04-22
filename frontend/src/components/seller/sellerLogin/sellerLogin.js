@@ -1,36 +1,39 @@
 import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
-import {sellerLogin} from "../../../js/actions/seller/loginAction";
-import {connect} from 'react-redux';
+import { sellerLogin } from "../../../Redux/actions/seller/loginAction";
+import { connect } from "react-redux";
+
 class Sellerlogin extends Component {
-    constructor(props){
-        super(props)
+    constructor(props) {
+        super(props);
         this.state = {
-            email : '',
-            password : ''
+
         }
-        this.onChangeHandler = this.onChangeHandler.bind(this)
-        this.onSubmit = this.onSubmit.bind(this)
+        this.Login = this.Login.bind(this);
     }
-    onChangeHandler = (e) => {
-        this.setState({
-            [e.target.name] : e.target.value
-        })
-    }
-    onSubmit = e => {
+    Login = (e) => {
         e.preventDefault();
-        let data = this.state
+        let data = {
+            email: document.getElementById("exampleInputEmail1").value,
+            password: document.getElementById("exampleInputPassword1").value
+        }
         this.props.sellerLogin(data);
     }
     render() {
+        let alertElement = null, redirectVar = null;
+        // if (localStorage.getItem("customerID"))
+        //     redirectVar = <Redirect to="/customerHome" />
+        if (this.props.signInSuccess === false)
+            alertElement = <p className="alert alert-danger" role="alert">{this.props.message}</p>
         return (
             <div className="container">
+                {redirectVar}
                 <div className="row">
                     <div className="col-md-12" style={{ marginTop: "10%" }} >
 
-                        <form style={{ marginLeft: "30%", marginRight: "30%" }} onSubmit = {this.onSubmit}>
-                            <div  className="text-center" >
-                            <img src={logo} alt="oops" style={{width : "50%"}}/>
+                        <form style={{ marginLeft: "30%", marginRight: "30%" }} onSubmit={this.Login}>
+                            <div className="text-center" >
+                                <img src={logo} alt="oops" style={{ width: "50%" }} />
                             </div>
                             <h2>Sign In</h2>
                             <div class="form-group">
@@ -56,7 +59,7 @@ class Sellerlogin extends Component {
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
                             </div>
                             <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
-
+                            {alertElement}
                         </form>
                     </div>
                 </div>
@@ -64,4 +67,10 @@ class Sellerlogin extends Component {
         )
     }
 }
-export default connect(null , {sellerLogin})(Sellerlogin);
+function mapStateToProps(state) {
+    return {
+        signInSuccess: state.sellerLogin.signInSuccess,
+        message: state.sellerLogin.message
+    }
+}
+export default connect(mapStateToProps, { sellerLogin })(Sellerlogin);
