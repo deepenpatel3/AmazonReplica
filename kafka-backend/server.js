@@ -1,6 +1,7 @@
 var connection = new require('./kafka/Connection');
 var { mongoDB } = require('./config');
 var mongoose = require("mongoose");
+var topicsToCreate =  require('./topics/topic'); 
 const account = require("./services/account");
 
 var options = {
@@ -17,6 +18,20 @@ mongoose.connect(mongoDB, options, (err) => {
         console.log(`MongoDB Connected`);
     }
 });
+
+const client = connection.getClient();
+
+console.log("Topics: ",JSON.stringify(topicsToCreate));
+client.createTopics(topicsToCreate, true, function (err, data) { 
+    if(err){
+        console.log("In Topic Creation: ",err);
+        return;
+    } 
+    console.log("Topics are created: ");
+    console.log(data);
+});
+
+
 
 function handleTopicRequest(topic_name) {
     var consumer = connection.getConsumer(topic_name);

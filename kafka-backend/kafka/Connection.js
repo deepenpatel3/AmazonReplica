@@ -1,6 +1,13 @@
 var kafka = require('kafka-node');
 
 function ConnectionProvider() {
+
+    this.getClient = function () {
+        this.client = new kafka.KafkaClient({kafkaHost:"127.0.0.1:2181"});
+        return  this.client;
+    };
+
+
     this.getConsumer = function (topic_name) {
 
         this.client = new kafka.KafkaClient("localhost:2181");
