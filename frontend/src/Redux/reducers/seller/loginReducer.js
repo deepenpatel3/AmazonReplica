@@ -1,21 +1,22 @@
 
-import { SELLER_LOGIN, SELLER_LOGOUT } from "../../../js/constants/action-types";
+import { SELLER_LOGIN, SELLER_LOGOUT } from "../../../Redux/constants/action-types";
 
 const initialState = {
+    signInSuccess: null, message: ""
 };
 
 function sellerLoginReducer(state = initialState, action) {
-  if (action.type === SELLER_LOGIN) {
-    return Object.assign({}, state, {
-      id: action.payload.id
-    });
-  }
-  else if (action.type === SELLER_LOGOUT) {
-    return Object.assign({}, state, {
-      id: ''
-    });
-  }
-  return state;
+    if (action.type === SELLER_LOGIN) {
+        // console.log("action payload", action.payload)
+        return Object.assign({}, state, { signInSuccess: action.payload.signInSuccess, message: action.payload.message });
+    }
+    else if (action.type === SELLER_LOGOUT) {
+        return Object.assign({}, state, {
+            id: '',
+
+        });
+    }
+    return state;
 }
 
 export default sellerLoginReducer;

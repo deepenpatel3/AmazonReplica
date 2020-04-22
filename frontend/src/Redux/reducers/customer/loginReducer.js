@@ -1,12 +1,13 @@
 
-import { CUSTOMER_LOGIN, CUSTOMER_LOGOUT } from "../../../js/constants/action-types";
+import { CUSTOMER_LOGIN, CUSTOMER_LOGOUT } from "../../../Redux/constants/action-types";
 
 const initialState = {
     signInSuccess: null, message: ""
 };
 
-function sellerLoginReducer(state = initialState, action) {
+function customerLoginReducer(state = initialState, action) {
     if (action.type === CUSTOMER_LOGIN) {
+        console.log("action payload", action.payload)
         return Object.assign({}, state, { signInSuccess: action.payload.signInSuccess, message: action.payload.message });
     }
     else if (action.type === CUSTOMER_LOGOUT) {
@@ -18,4 +19,4 @@ function sellerLoginReducer(state = initialState, action) {
     return state;
 }
 
-export default sellerLoginReducer;
+export default customerLoginReducer;

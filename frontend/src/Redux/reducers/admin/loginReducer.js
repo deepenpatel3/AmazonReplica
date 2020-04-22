@@ -1,23 +1,22 @@
 
-import { ADMIN_LOGIN, ADMIN_LOGOUT } from "../../../js/constants/action-types";
+import { ADMIN_LOGIN, ADMIN_LOGOUT } from "../../../Redux/constants/action-types";
 
 const initialState = {
-
+    signInSuccess: null, message: ""
 };
 
 function adminLoginReducer(state = initialState, action) {
-  if (action.type === ADMIN_LOGIN) {
-    return Object.assign({}, state, {
-      id: action.payload.id
-    });
-  }
-  else if (action.type === ADMIN_LOGOUT) {
-    return Object.assign({}, state, {
-      id: '',
+    if (action.type === ADMIN_LOGIN) {
+        console.log("action payload", action.payload)
+        return Object.assign({}, state, { signInSuccess: action.payload.signInSuccess, message: action.payload.message });
+    }
+    else if (action.type === ADMIN_LOGOUT) {
+        return Object.assign({}, state, {
+            id: '',
 
-    });
-  }
-  return state;
+        });
+    }
+    return state;
 }
 
 export default adminLoginReducer;

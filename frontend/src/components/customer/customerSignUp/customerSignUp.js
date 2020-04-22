@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
-import { sellerLogin } from "../../../Redux/actions/seller/loginAction";
 import { connect } from "react-redux";
+import { customerSignUp } from "../../../Redux/actions/customer/loginAction";
+import { Redirect } from "react-router-dom";
 
-class Sellerlogin extends Component {
+class CustomerSignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,10 +15,11 @@ class Sellerlogin extends Component {
     Login = (e) => {
         e.preventDefault();
         let data = {
-            email: document.getElementById("exampleInputEmail1").value,
-            password: document.getElementById("exampleInputPassword1").value
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
         }
-        this.props.sellerLogin(data);
+        this.props.customerSignUp(data);
     }
     render() {
         let alertElement = null, redirectVar = null;
@@ -35,15 +37,22 @@ class Sellerlogin extends Component {
                             <div className="text-center" >
                                 <img src={logo} alt="oops" style={{ width: "50%" }} />
                             </div>
-                            <h2>Sign In</h2>
+                            <h2>Sign Up</h2>
+
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+                                <label for="name">Enter Name</label>
+                                <input type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter Name" />
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" />
 
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Password" />
                             </div>
                             <div class="form-group" style={{ width: "100%" }}>
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
@@ -59,8 +68,8 @@ class Sellerlogin extends Component {
 }
 function mapStateToProps(state) {
     return {
-        signInSuccess: state.sellerLogin.signInSuccess,
-        message: state.sellerLogin.message
+        signInSuccess: state.customerLogin.signInSuccess,
+        message: state.customerLogin.message
     }
 }
-export default connect(mapStateToProps, { sellerLogin })(Sellerlogin);
+export default connect(mapStateToProps, { customerSignUp })(CustomerSignUp);
