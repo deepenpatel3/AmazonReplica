@@ -1,6 +1,7 @@
 import { adminLogin } from "../../../Redux/actions/admin/loginAction";
 import React, { Component } from "react";
-import logo from "../../../images/amazon.png"
+import logo from "../../../images/amazon.png";
+import {Link} from 'react-router-dom';
 import { connect } from "react-redux";
 
 class Adminlogin extends Component {
@@ -35,7 +36,7 @@ class Adminlogin extends Component {
                             <div className="text-center" >
                                 <img src={logo} alt="oops" style={{ width: "50%" }} />
                             </div>
-                            <h2>Sign In</h2>
+                            <h2>Admin Sign In</h2>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
                                 <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
@@ -48,8 +49,11 @@ class Adminlogin extends Component {
                             <div class="form-group" style={{ width: "100%" }}>
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
                             </div>
-                            <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
-                            {alertElement}
+                            <div className="text-center" >
+                                <small id="emailHelp" class="form-text text-muted"><Link to='/adminSignUp'>Create an Admin account here.</Link></small>
+                                <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
+                                {alertElement}
+                            </div>
                         </form>
                     </div>
                 </div>
