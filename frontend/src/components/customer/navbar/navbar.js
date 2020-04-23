@@ -26,6 +26,11 @@ class Navbar extends Component {
                             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                             <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
                         </form>
+                        <ul class="navbar-nav">
+                            <li class="nav-item active">
+                                <Link class="nav-link" to="/customer/cart">Cart <span class="sr-only">(current)</span></Link>
+                            </li>
+                        </ul>
                     </div>
                 </nav>
             </div>

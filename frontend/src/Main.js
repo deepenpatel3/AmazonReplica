@@ -6,7 +6,8 @@ import CustomerSignUp from './components/customer/customerSignUp/customerSignUp'
 import SellerLogin from './components/seller/sellerLogin/sellerLogin';
 import SellerSignUp from './components/seller/sellerSignUp/sellerSignUp';
 import AdminSignUp from './components/admin/adminSignUp/adminSignUp';
-
+import CustomerHome from './components/customer/home/home';
+import Cart from './components/customer/cart/cart';
 class Main extends Component {
     render() {
         return (
@@ -17,7 +18,8 @@ class Main extends Component {
                 <Route path="/customerSignUp"><CustomerSignUp /></Route>
                 <Route path="/sellerSignUp"><SellerSignUp /></Route>
                 <Route path="/adminSignUp"><AdminSignUp /></Route>
-                
+                <Route path="/customer/home"><CustomerHome /></Route>
+                <Route path="/customer/cart"><Cart /></Route>
             </div>
         )
     }
