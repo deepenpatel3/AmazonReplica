@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { sellerLogin } from "../../../Redux/actions/seller/loginAction";
+import {Link} from 'react-router-dom';
 import { connect } from "react-redux";
 
 class Sellerlogin extends Component {
@@ -35,7 +36,7 @@ class Sellerlogin extends Component {
                             <div className="text-center" >
                                 <img src={logo} alt="oops" style={{ width: "50%" }} />
                             </div>
-                            <h2>Sign In</h2>
+                            <h2>Sign In to your seller account</h2>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
                                 <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
@@ -48,8 +49,11 @@ class Sellerlogin extends Component {
                             <div class="form-group" style={{ width: "100%" }}>
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
                             </div>
-                            <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
-                            {alertElement}
+                            <div className="text-center" >
+                                <small id="emailHelp" class="form-text text-muted">New to Amazon.com? <Link to='/sellerSignUp'>Create a seller account</Link></small>
+                                <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
+                                {alertElement}
+                            </div>
                         </form>
                     </div>
                 </div>
