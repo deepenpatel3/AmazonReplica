@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { connect } from "react-redux";
 import { customerLogin } from "../../../Redux/actions/customer/loginAction";
+import { Link } from 'react-router-dom';
 import { Redirect } from "react-router-dom";
 
 class Customerlogin extends Component {
@@ -36,7 +37,7 @@ class Customerlogin extends Component {
                             <div className="text-center" >
                                 <img src={logo} alt="oops" style={{ width: "50%" }} />
                             </div>
-                            <h2>Sign In</h2>
+                            <h2>Sign In as a customer</h2>
                             <div class="form-group">
                                 <label for="email">Email address</label>
                                 <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" />
@@ -49,8 +50,11 @@ class Customerlogin extends Component {
                             <div class="form-group" style={{ width: "100%" }}>
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
                             </div>
-                            <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
-                            {alertElement}
+                            <div className="text-center" >
+                                <small id="emailHelp" class="form-text text-muted">New to Amazon.com? <Link to='/customerSignUp'>Create an account</Link></small>
+                                <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
+                                {alertElement}
+                            </div>
                         </form>
                     </div>
                 </div>
