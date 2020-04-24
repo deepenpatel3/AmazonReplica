@@ -23,8 +23,8 @@ class AdminSignUp extends Component {
     }
     render() {
         let alertElement = null, redirectVar = null;
-        // if (localStorage.getItem("customerID"))
-        //     redirectVar = <Redirect to="/customerHome" />
+        if (localStorage.getItem("id"))
+            redirectVar = <Redirect to="/admin/home" />
         if (this.props.signInSuccess === false)
             alertElement = <p className="alert alert-danger" role="alert">{this.props.message}</p>
         return (

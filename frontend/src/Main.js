@@ -9,6 +9,8 @@ import AdminSignUp from './components/admin/adminSignUp/adminSignUp';
 import CustomerProductDashBoard from './components/customer/products/productDashBoard';
 import ProductDetailsDashBoard from './../src/components/customer/products/productDetailsDashBoard';
 
+import CustomerHome from './components/customer/home/home';
+import Cart from './components/customer/cart/cart';
 class Main extends Component {
     render() {
         return (
@@ -21,6 +23,8 @@ class Main extends Component {
                 <Route path="/adminSignUp"><AdminSignUp /></Route>
                 <Route path="/customerProduct"><CustomerProductDashBoard/></Route>
                 <Route path="/customerProductDetails"><ProductDetailsDashBoard/></Route>
+                <Route path="/customer/home"><CustomerHome /></Route>
+                <Route path="/customer/cart"><Cart /></Route>
             </div>
         )
     }
