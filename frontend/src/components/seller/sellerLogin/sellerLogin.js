@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { sellerLogin } from "../../../Redux/actions/seller/loginAction";
 import { connect } from "react-redux";
-
+import { Redirect } from 'react-router-dom';
 class Sellerlogin extends Component {
     constructor(props) {
         super(props);
@@ -21,8 +21,8 @@ class Sellerlogin extends Component {
     }
     render() {
         let alertElement = null, redirectVar = null;
-        // if (localStorage.getItem("customerID"))
-        //     redirectVar = <Redirect to="/customerHome" />
+        if (localStorage.getItem("id"))
+            redirectVar = <Redirect to="/seller/home" />
         if (this.props.signInSuccess === false)
             alertElement = <p className="alert alert-danger" role="alert">{this.props.message}</p>
         return (
