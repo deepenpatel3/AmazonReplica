@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Row, Col, CardGroup, Button, Image, Jumbotron, Modal, Form, ListGroup, Alert, Pagination, Container } from 'react-bootstrap';
+import { Row, Col, CardGroup, Button, Jumbotron, Modal, Form, ListGroup, Alert, Pagination, Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Rating from '@material-ui/lab/Rating';
@@ -11,6 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Box from '@material-ui/core/Box';
+import Image from 'material-ui-image';
 
 
 const Styles = styled.div`
@@ -20,8 +21,8 @@ const Styles = styled.div`
     max-width: 245px;
 }
 .product-tile-card{
-    max-width: 255px;
-    max-height: 450px;
+    width: 255px;
+    height: 400px;
     margin: 5px;
 }
 `;
@@ -34,7 +35,7 @@ class ProductTile extends Component {
             ProductName: this.props.Product.ProductName,
             ProductRating: this.props.Product.ProductRating,
             ProductPrice: this.props.Product.ProductPrice,
-            ProductImage: this.props.Product.ProductImage,
+            ProductImage: this.props.Product.ProductImages[0],
         }
     }
     onCardClickListner = (e) => {
@@ -61,11 +62,13 @@ class ProductTile extends Component {
 
                 <Card className="product-tile-card" onClick={this.onCardClickListner}>
                     <CardActionArea>
-                        <Image
-                            className="product-tile-image"
-                            src={this.state.ProductImage}
-                            title={this.state.ProductName}
-                        />
+                        <div className="product-tile-image">
+                            <Image    
+                                src={this.state.ProductImage}
+                                title={this.state.ProductName}
+                            />
+                        </div>
+
                     </CardActionArea>
                     <CardActions>
                         <Typography component="h7" variant="h7">
@@ -75,7 +78,7 @@ class ProductTile extends Component {
                         <Typography component="h7" variant="h7">$ {this.state.ProductPrice}</Typography>
                     </CardActions>
                     <CardActions>
-                        <Rating name="half-rating-read"  value={this.state.ProductRating} precision={0.2} readOnly />
+                        <Rating name="half-rating-read" value={this.state.ProductRating} precision={0.2} readOnly />
                     </CardActions>
                 </Card>
             </Styles>

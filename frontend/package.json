@@ -12,6 +12,7 @@
     "antd": "^4.1.4",
     "axios": "^0.19.2",
     "jwt-decode": "^2.2.0",
+    "material-ui-image": "^3.2.3",
     "ng-zorro-antd": "^9.0.2",
     "react": "^16.13.1",
     "react-avatar": "^3.9.2",
