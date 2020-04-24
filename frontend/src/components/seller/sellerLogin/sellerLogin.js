@@ -38,12 +38,22 @@ class Sellerlogin extends Component {
                             <h2>Sign In</h2>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-
+                                <input 
+                                    type="email" 
+                                    class="form-control" 
+                                    id="exampleInputEmail1" 
+                                    aria-describedby="emailHelp" 
+                                    placeholder="Enter email" 
+                                    onChange = {this.onChangeHandler}/>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="exampleInputPassword1" 
+                                    placeholder="Password" 
+                                    onChange = {this.onChangeHandler}/>
                             </div>
                             <div class="form-group" style={{ width: "100%" }}>
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
