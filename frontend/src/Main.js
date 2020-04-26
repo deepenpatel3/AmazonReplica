@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Route } from 'react-router-dom';
 import AdminLogin from './components/admin/adminLogin/adminLogin';
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
-import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
+import CustomerSignUp from './components/customer/customerSignup/customerSignUp';
 import SellerLogin from './components/seller/sellerLogin/sellerLogin';
 import SellerSignUp from './components/seller/sellerSignUp/sellerSignUp';
 import AdminSignUp from './components/admin/adminSignUp/adminSignUp';
@@ -11,6 +11,8 @@ import ProductDetailsDashBoard from './../src/components/customer/products/produ
 
 import CustomerHome from './components/customer/home/home';
 import Cart from './components/customer/cart/cart';
+import Payment from "./components/customer/payment/payment";
+
 class Main extends Component {
     render() {
         return (
@@ -25,6 +27,7 @@ class Main extends Component {
                 <Route path="/customerProductDetails"><ProductDetailsDashBoard/></Route>
                 <Route path="/customer/home"><CustomerHome /></Route>
                 <Route path="/customer/cart"><Cart /></Route>
+                <Route path="/customer/payment"><Payment /></Route>
             </div>
         )
     }
