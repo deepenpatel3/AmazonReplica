@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Main from "./Main";
 import { BrowserRouter } from 'react-router-dom';
 
@@ -8,7 +9,9 @@ function App() {
         <div >
             <BrowserRouter>
                 <div>
-                    <Main />
+                    <CssBaseline>
+                        <Main />
+                    </CssBaseline>
                 </div>
             </BrowserRouter>
         </div >
