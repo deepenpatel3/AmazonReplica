@@ -59,7 +59,7 @@ products = [
     },
 ]
 
-const Product = require('../models/porductModel');
+const Product = require('../models/productModel');
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);

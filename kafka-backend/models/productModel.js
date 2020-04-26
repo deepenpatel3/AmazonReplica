@@ -6,16 +6,7 @@ var sellerSchema = new Schema({
     SellerId: {type: String, required: true},
     Name: {type: String, required: true},
     SellerProfileUrl: {type: String}
-
 });
-
-var reviewSchema = new Schema({
-    CustomerId: {type: String, required: true},
-    CustomerName: {type: String, required: true},
-    Rating: {type: Number, required: true},
-    Review: {type: String, required: true}
-});
-
 
 var productSchema = new Schema({
     Seller: sellerSchema,
@@ -25,9 +16,11 @@ var productSchema = new Schema({
     Offers:[{type: String}],
     Price: {type: Number, required: true},
     Description:{type: Number, required: true},
-    Reviews: [reviewSchema],
+    Reviews: [{type:String}],
     Categories: [{type: String}],
 });
+
+
 
 productSchema.plugin(mongoosePaginate);
 const productModel = mongoose.model('product', productSchema);
