@@ -11,6 +11,7 @@
   "dependencies": {
     "bcrypt": "^4.0.1",
     "brcypt": "^1.0.1",
+    "faker": "^4.1.0",
     "formidable": "^1.2.2",
     "glob": "^7.1.6",
     "images-upload-middleware": "^1.1.1",
