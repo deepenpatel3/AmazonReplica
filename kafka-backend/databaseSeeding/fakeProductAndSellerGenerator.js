@@ -100,8 +100,8 @@ let getProductImages = (categories) => {
     var size = faker.random.number() % 5 + 1;
     var i;
     for (i = 0; i < size; i++) {
-        var cat_index = faker.random.number() % categories.length;
-        imgs.push("https://loremflickr.com/320/240/product," + categories[cat_index]);
+        var collection_id = faker.random.number()% 100000;
+        imgs.push("https://source.unsplash.com/collection/products/"+collection_id);
     }
     return imgs
 }
@@ -214,8 +214,8 @@ var sellerPromises = () => {
     }));
 }
 
-// sellerPromises().then((res)=>{
-//     console.log("sellers are added!",res.length);
-// }).catch( (err) => {
-//     console.log("Error: ",JSON.stringify(err));
-// })
+sellerPromises().then((res)=>{
+    console.log("sellers are added!",res.length);
+}).catch( (err) => {
+    console.log("Error: ",JSON.stringify(err));
+})

@@ -56,10 +56,21 @@ const Styles = styled.div`
 .product-details-quantity{
     width: 95px;
 }
+.product-details-chips{
+    padding-left: 5px;
+    margin-left: 2px;
+    min-height:10px;
+    max-hight: 50px;
+    overflow-y: scroll;
+
+}
 .product-details-add-to-cart-button{
     margin:5px;
     padding-top: 15px;
     background-color: #E65100;
+}
+.chip-divider{
+    width:px;
 }
 `;
 class ProductDetailsDashBoard extends Component {
@@ -67,14 +78,14 @@ class ProductDetailsDashBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ProductName: this.props.Product.ProductName,
-            ProductPrice: this.props.Product.ProductPrice,
-            ProductImages: this.props.Product.ProductImages,
-            SellerName: this.props.Product.SellerName,
-            ProductRating: this.props.Product.ProductRating,
+            Name: this.props.Product.Name,
+            Price: this.props.Product.Price,
+            Images: this.props.Product.Images,
+            SellerName: this.props.Product.Seller.Name,
+            Rating: this.props.Product.Rating,
             Reviews: this.props.Product.Reviews,
-            offers: this.props.Product.offers,
-            ProductDescription: this.props.Product.ProductDescription,
+            Offers: this.props.Product.Offers,
+            Description: this.props.Product.Description,
             Categories: this.props.Product.Categories,
         }
     }
@@ -91,7 +102,7 @@ class ProductDetailsDashBoard extends Component {
                     <Col sm={5} md={5}>
                         <div className="product-details-image-section">
                             <Carousel>
-                                {this.state.ProductImages.map((image) => {
+                                {this.state.Images.map((image) => {
                                     return (
                                         <Carousel.Item>
                                             <Image
@@ -113,7 +124,7 @@ class ProductDetailsDashBoard extends Component {
                     <Col sm={4.5} md={4.5}>
                         <div className="product-details-image-section">
                             <Typography variant="h4" component="h4">
-                                {this.state.ProductName}
+                                {this.state.Name}
                             </Typography>
                             <Typography variant="h6" component="h6">
                                 By {this.state.SellerName}
@@ -121,31 +132,33 @@ class ProductDetailsDashBoard extends Component {
                             <Rating name="half-rating-read" value={this.state.ProductRating} precision={0.2} readOnly />
                             <Divider variant="inset" component="li" className="product-details-divider" />
                             <Typography variant="h6" color="primary" component="h6">
-                                Price: $ {this.state.ProductPrice}
+                                Price: $ {this.state.Price}
                             </Typography>
                             <Row className="product-details-chips">
-                                {this.state.Categories.map((category) => {
-                                    return (
-                                        <Col>
-                                            <Chip
-                                                icon={<CategoryIcon />}
-                                                color="primary"
-                                                label={category}
-                                            />
-                                        </Col>
-                                    )
-                                })}
+                                <GridList cellHeight={40} cols={3}>
+                                    {this.state.Categories.map((category) => {
+                                        return (
+                                            <div>
+                                                <Chip
+                                                    icon={<CategoryIcon />}
+                                                    color="primary"
+                                                    label={category}
+                                                />
+                                            </div>
+                                        )
+                                    })}
+                                </GridList>
                             </Row>
                             <Typography variant="h6" component="h6">
                                 Description:
                             </Typography>
                             <Typography variant="span" color="" component="span">
-                                {this.state.ProductDescription}
+                                {this.state.Description}
                             </Typography>
                             <Typography variant="h6" component="h6">
                                 Offers:
                             </Typography>
-                            {this.state.offers.map((offer) => {
+                            {this.state.Offers.map((offer) => {
                                 return (
                                     <Row>
                                         <Typography variant="span" color="" component="span">
@@ -159,7 +172,7 @@ class ProductDetailsDashBoard extends Component {
                     <Col sm={2} md={2}>
                         <div className="product-details-addtocartbar">
                             <Typography variant="h6" className="product-detail-price" component="h6">
-                                Price: $ {this.state.ProductPrice}
+                                Price: $ {this.state.Price}
                             </Typography>
                             <Typography variant="h6" className="product-detail-instock" component="h6">
                                 In Stock.

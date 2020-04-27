@@ -3,6 +3,7 @@ var { mongoDB } = require('./config');
 var mongoose = require("mongoose");
 var topicsToCreate =  require('./topics/topic'); 
 const account = require("./services/account");
+const product = require("./services/product");
 
 var options = {
     useNewUrlParser: true,
@@ -48,6 +49,11 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
+            case "product":
+                product.serve(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
         }
     });
 }
@@ -73,4 +79,5 @@ function response(data, res, producer) {
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
-handleTopicRequest("account");
+handleTopicRequest("account",account);
+handleTopicRequest("product",product)
