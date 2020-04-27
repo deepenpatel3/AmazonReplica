@@ -18,7 +18,7 @@ var sellerSchema = new Schema({
     ProfileURL:  {type: String, required: false},
     Address: addressSchema,
     Products: [{type: String}],
-    Description:{type: Number, required: false},
+    Description:{type: String, required: false},
 },
     {
         versionKey: false

@@ -12,7 +12,7 @@ var addressSchema = new Schema({
 });
 
 var paymentSchema = new Schema({
-    Number: {type: Number, required: true},
+    Number: {type: String, required: true},
     NameOnCard: {type: String, required: true},
     ExpDate: {type: Date, required: true},
 });
@@ -40,8 +40,8 @@ var customerSchema = new Schema({
     ProfileURL:  {type: String, required: false},
     Address: [{type: addressSchema}],
     Payments: [{type: paymentSchema}],
-    Cart: cartSchema,
-    SaveForLater: saveForLater,
+    Cart: [{type: cartSchema}],
+    SaveForLater: [{ type: saveForLater}],
     CommentsRef: [{type: String}],
     
 },
