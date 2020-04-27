@@ -1,6 +1,6 @@
-const {ACCOUNT } =  require('./topic_names');
+const {ACCOUNT, PRODUCT } =  require('./topic_names');
 
-    let topicsToCreate = [ACCOUNT];
+    let topicsToCreate = [ACCOUNT,PRODUCT];
 
 //     const topicsToCreate = [
 //     {

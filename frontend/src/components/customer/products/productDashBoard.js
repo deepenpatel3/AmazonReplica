@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Row, Col, Card, CardGroup, Button, Jumbotron, Modal, Form, ListGroup, Alert, Pagination, Container } from 'react-bootstrap';
+import { Row, Col, Card, CardGroup, Button, Jumbotron, Modal, Form, ListGroup, Alert, Container } from 'react-bootstrap';
 import { Icon } from 'antd';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import Pagination from '@material-ui/lab/Pagination';
 import Navbar from '../navbar/navbar';
 import ProductTile from './productTile';
 import ProductDetailsDashBoard from './productDetailsDashBoard';
+import { getProducts } from '../../../Redux/actions/customer/productActions';
 
 const Styles = styled.div`
     .product-filter-bar{
@@ -28,6 +30,11 @@ const Styles = styled.div`
         padding:10px;
         padding-left: 0px;
     }
+    .product-dashboard-pagination{
+        margin: 5px; 
+        height:20px;
+        width:500px;
+    }
 `;
 
 class ProductDashBoard extends Component {
@@ -35,129 +42,25 @@ class ProductDashBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            products: [
-                {
-                    ProductName: "Apple AirPods Pro",
-                    ProductRating: 3.5,
-                    ProductPrice: 234,
-                    ProductImages: ["https://images-na.ssl-images-amazon.com/images/I/71zny7BTRlL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/718UsV0ns5L._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71bhWgQK-cL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/81nuOe%2BXCtL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71SJDhJtEVL._AC_SL1500_.jpg"],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                    Reviews: [],
-                },
-                {
-                    ProductName: "New Apple iPad (10.2-Inch, Wi-Fi, 32GB) - Space Gray (Latest Model)",
-                    ProductRating: 5,
-                    ProductPrice: 299,
-                    ProductImages: ["https://m.media-amazon.com/images/I/6162WMQWhVL._AC_UL640_FMwebp_QL65_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/51BokXhnBbL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/5145l0K6fDL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/61MYgDuxqbL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71tvYppCioL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/51KDP8vi4uL._AC_SL1500_.jpg"
-                    ],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                    Reviews: [],
-                },
-                {
-                    ProductName: "Apple Watch Series 5 (GPS, 44mm) - Space Gray Aluminum Case with Black Sport Band",
-                    ProductRating: 3.5,
-                    ProductPrice: 414,
-                    ProductImages: ["https://m.media-amazon.com/images/I/71wu+HMAKBL._AC_UL640_FMwebp_QL65_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71LX4GnkYFL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71Xt1HvigDL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/81lV6jrGQlL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71-5xAstWTL._AC_SL1500_.jpg",],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                    Reviews: [],
-                },
-                {
-                    ProductName: "New Apple MacBook Air (13-inch, 8GB RAM, 256GB SSD Storage) - Gold",
-                    ProductRating: 4.5,
-                    ProductPrice: 949.99,
-                    ProductImages: ["https://m.media-amazon.com/images/I/71thf1SYnGL._AC_UL640_FMwebp_QL65_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/310q4ue7jjL._AC_SL1024_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/6186nCBW02L._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/51YNm2P9VjL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/41aGUF63L2L._AC_SL1024_.jpg"],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                    Reviews: [],
-                },
-                {
-                    ProductName: "Apple AirPods Pro",
-                    ProductRating: 3.5,
-                    ProductPrice: 234,
-                    ProductImages: ["https://images-na.ssl-images-amazon.com/images/I/71zny7BTRlL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/718UsV0ns5L._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71bhWgQK-cL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/81nuOe%2BXCtL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71SJDhJtEVL._AC_SL1500_.jpg"],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                    Reviews: [],
-                },
-                {
-                    ProductName: "New Apple iPad (10.2-Inch, Wi-Fi, 32GB) - Space Gray (Latest Model)",
-                    ProductRating: 5,
-                    ProductPrice: 299,
-                    ProductImages: ["https://m.media-amazon.com/images/I/6162WMQWhVL._AC_UL640_FMwebp_QL65_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/51BokXhnBbL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/5145l0K6fDL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/61MYgDuxqbL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71tvYppCioL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/51KDP8vi4uL._AC_SL1500_.jpg"
-                    ],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    Reviews: [],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                },
-                {
-                    ProductName: "Apple Watch Series 5 (GPS, 44mm) - Space Gray Aluminum Case with Black Sport Band",
-                    ProductRating: 3.5,
-                    ProductPrice: 414,
-                    Reviews: [],
-                    ProductImages: ["https://m.media-amazon.com/images/I/71wu+HMAKBL._AC_UL640_FMwebp_QL65_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71LX4GnkYFL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71Xt1HvigDL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/81lV6jrGQlL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/71-5xAstWTL._AC_SL1500_.jpg",],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                },
-                {
-                    ProductName: "New Apple MacBook Air (13-inch, 8GB RAM, 256GB SSD Storage) - Gold",
-                    ProductRating: 4.5,
-                    ProductPrice: 949.99,
-                    ProductImages: ["https://m.media-amazon.com/images/I/71thf1SYnGL._AC_UL640_FMwebp_QL65_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/310q4ue7jjL._AC_SL1024_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/6186nCBW02L._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/51YNm2P9VjL._AC_SL1500_.jpg",
-                        "https://images-na.ssl-images-amazon.com/images/I/41aGUF63L2L._AC_SL1024_.jpg"],
-                    offers: ["Pay $39.16/month for 6 months (plus S&H, tax) with 0% interest equal monthly payments when you're approved for an Amazon Store Card.", "6% off with Amazon"],
-                    Reviews: [],
-                    ProductDescription: "Active noise cancellation for immersive sound Transparency mode for hearing and connecting with the world around you Three sizes of soft, tapered silicone tips for a customizable fit Sweat and water resistant \n Adaptive EQ automatically tunes music to the shape of your ear\n Easy setup for all your Apple devices\n Quick access to Siri by saying “Hey Siri”\n The Wireless Charging Case delivers more than 24 hours of battery life",
-                    Categories: ["Electronics", "Earbuds"],
-                },
-            ],
+            products: [],
+            activePage: 1,
+            totalPages: 1,
+            limit: 8,
+            totalDocs: null,
             ProductDetailsView: false,
             SelectedProduct: null,
         }
     }
 
+    handleChange = (e, value) => {
+        e.preventDefault();
+        this.props.getProducts(this.props.productData, value, this.state.limit);
+      };
+
+    handlePageNext = (e) => {
+        e.preventDefault();
+        this.props.getProducts(this.props.productData, this.state.nextPage, this.state.limit);
+    }
 
     onProductCardListner = (id) => {
         console.log("Product id: ", id);
@@ -173,6 +76,39 @@ class ProductDashBoard extends Component {
             ProductDetailsView: false,
         });
     }
+
+    componentDidMount() {
+        this.props.getProducts(this.props.productData, 1, this.state.limit);
+        if (!this.props.productData) {
+            this.setState({
+                products: this.props.productData.products
+            })
+            if (this.props.jobData) {
+                this.setState({
+                    totalDocs: this.props.productData.totalDocs,
+                    totalPages: this.props.productData.totalPages,
+                    limit: this.props.productData.limit,
+                    nextPage: this.props.productData.nextPage,
+                    prevPage: this.props.productData.prevPage,
+                    activePage: this.props.productData.page,
+                });
+            }
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        console.log("nextProps.products: ", JSON.stringify(nextProps.productData));
+        if (nextProps.productData.page) {
+            this.setState({
+                totalDocs: nextProps.productData.totalDocs,
+                totalPages: nextProps.productData.totalPages,
+                limit: nextProps.productData.limit,
+                nextPage: nextProps.productData.nextPage,
+                prevPage: nextProps.productData.prevPage,
+                activePage: nextProps.productData.page,
+                products: nextProps.productData.products,
+            })
+        }
+    };
 
     render() {
         if (this.state.ProductDetailsView) {
@@ -201,7 +137,13 @@ class ProductDashBoard extends Component {
                                     ))}
                                 </GridList>
                             </div>
+                            <div className="product-dashboard-pagination">
+                                <Pagination count={this.state.totalPages}  page={this.state.activePage} onChange={this.handleChange} size="large" shape="rounded" />
+                            </div>
                         </Col>
+                    </Row>
+                    <Row>
+                    <div className="product-dashboard-pagination"></div>
                     </Row>
                 </Styles>
             );
@@ -212,9 +154,9 @@ class ProductDashBoard extends Component {
 
 const mapStateToProps = state => {
     return {
-
+        productData: state.customerProductData,
     };
 };
 
 
-export default connect(mapStateToProps, {})(ProductDashBoard);
+export default connect(mapStateToProps, {getProducts})(ProductDashBoard);
