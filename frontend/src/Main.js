@@ -12,6 +12,7 @@ import ProductDetailsDashBoard from './../src/components/customer/products/produ
 import CustomerHome from './components/customer/home/home';
 import Cart from './components/customer/cart/cart';
 import Payment from "./components/customer/payment/payment";
+import SaveForLater from './components/customer/saveForLater/saveForLater';
 
 class Main extends Component {
     render() {
@@ -28,6 +29,7 @@ class Main extends Component {
                 <Route path="/customer/home"><CustomerHome /></Route>
                 <Route path="/customer/cart"><Cart /></Route>
                 <Route path="/customer/payment"><Payment /></Route>
+                <Route path="/customer/saveForLater"><SaveForLater /></Route>
             </div>
         )
     }

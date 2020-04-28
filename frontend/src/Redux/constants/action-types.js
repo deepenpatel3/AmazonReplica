@@ -5,3 +5,10 @@ export const SELLER_LOGIN = "SELLER_LOGIN";
 export const SELLER_LOGOUT = "SELLER_LOGOUT";
 export const ADMIN_LOGIN = "ADMIN_LOGIN";
 export const ADMIN_LOGOUT = "ADMIN_LOGOUT";
+
+
+//customer payment
+export const GET_PAYMENT_DETAILS = "GET_PAYMENT_DETAILS";
+export const GET_ADDRESS_DETAILS = "GET_ADDRESS_DETAILS"
+export const GET_CART_DETAILS = "GET_CART_DETAILS";
+
