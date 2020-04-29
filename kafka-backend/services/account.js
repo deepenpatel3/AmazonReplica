@@ -29,6 +29,9 @@ exports.serve = function serve(msg, callback) {
         case "admin_signup":
             admin_signup(msg, callback);
             break;
+        case "customer_payment":
+            customer_payment(msg,callback);
+            break;
     }
 }
 
@@ -167,6 +170,21 @@ function admin_signup(msg, callback) {
                 name: msg.body.name, email: msg.body.email, password: hash
             })
             newAdmin.save(() => { callback(null, { signInSuccess: true, AID: newAdmin._id, name: newAdmin.name, message: "Successfully Signed up" }) });
+        }
+    })
+}
+
+
+function customer_payment(msg, callback) {
+    Customer.findOne({ _id: msg.body.id }).populate('Cart.ProductID')
+    .exec( (err, customer) => {
+        if (err) {
+            console.log('Customer Payment error', err)
+            callback(null, { message: "Please try again" })
+        }
+        if (customer) {
+            console.log("customer payment details")
+            callback(null, { Payments : customer.Payments , Address : customer.Address, Cart : customer.Cart })
         }
     })
 }

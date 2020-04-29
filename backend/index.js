@@ -30,6 +30,7 @@ app.use(function (req, res, next) {
 const customerAccount = require("./src/routes/customer/account");
 const sellerAccount = require("./src/routes/seller/account");
 const adminAccount = require("./src/routes/admin/account");
+const customerPayment = require("./src/routes/customer/payment")
 const customerProduct = require("./src/routes/customer/product");
 const customerReview = require("./src/routes/customer/review");
 
@@ -38,6 +39,9 @@ app.use("/seller", sellerAccount);
 app.use("/admin", adminAccount);
 app.use("/customer/product", customerProduct);
 app.use("/customer/review", customerReview);
+
+//Customer Payment
+app.use("/customer/payment",customerPayment)
 
 app.listen(3001);
 console.log("Server Listening on port 3001");
