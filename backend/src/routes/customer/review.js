@@ -4,23 +4,22 @@ const { secret } = require("../../utils/config");
 const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
 
-router.get("/products", function (req, res) {
+router.get("/reviews", function (req, res) {
     const data = {
-        page: req.query.page,
-        limit: req.query.limit,
+        ProductID: req.query.product_id,
     }
     // console.log("Data: ",JSON.stringify(data));
-    kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
+    kafka.make_request('review', { "path": "get_reviews_product", "body": data }, function (err, result) {
         if (!result) {
             console.log("Inside err");
             res.status(404);
             res.json({
                 status: "error",
-                msg: "Products not found",
+                msg: "Reviews not found",
             })
             res.end();
         } else {
-            console.log("Inside data");
+            console.log("Inside Review data");
             // console.log("Data:", JSON.stringify(results));
             res.status(200);
             res.json(result)

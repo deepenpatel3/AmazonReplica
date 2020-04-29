@@ -101,7 +101,7 @@ let getProductImages = (categories) => {
     var i;
     for (i = 0; i < size; i++) {
         var collection_id = faker.random.number()% 100000;
-        imgs.push("https://source.unsplash.com/collection/products/"+collection_id);
+        imgs.push("https://source.unsplash.com/collection/products"+collection_id);
     }
     return imgs
 }

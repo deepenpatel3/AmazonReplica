@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Product =require('./productModel');
+const Review = require('./reviewModel');
 
 const Schema = mongoose.Schema;
 
@@ -18,7 +20,7 @@ var paymentSchema = new Schema({
 });
 
 var saveForLater = new Schema({
-    ProductID: {type: String, required: true , ref: "product"},
+    ProductID: {type: Schema.Types.ObjectId, required: true , ref: Product},
     Quantity: {type: Number, required: true},
     Price: {type: Number, required:true},
     IsGift: {type: Boolean, required:true},
@@ -26,7 +28,7 @@ var saveForLater = new Schema({
 });
 
 var cartSchema = new Schema({
-    ProductID: {type: String, required: true , ref: "product"},
+    ProductID: {type: Schema.Types.ObjectId, required: true , ref: Product},
     Quantity: {type: Number, required: true},
     Price: {type: Number, required:true},
     IsGift: {type: Boolean, required:true},
@@ -42,7 +44,7 @@ var customerSchema = new Schema({
     Payments: [{type: paymentSchema}],
     Cart: [{type: cartSchema}],
     SaveForLater: [{ type: saveForLater}],
-    CommentsRef: [{type: String}],
+    CommentsRef: [{type:  Schema.Types.ObjectId, required: true , ref: Review}],
     
 },
     {

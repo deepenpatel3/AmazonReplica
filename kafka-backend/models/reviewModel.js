@@ -6,8 +6,9 @@ var reviewSchema = new Schema({
     ProductID: {type:String, required:true},
     CustomerId: {type: String, required: true},
     CustomerName: {type: String, required: true},
+    CustomerUrl: {type:String, required:false},
     Vote: {type: Number, required: true},
-    Review: {type: String, required: true}
+    ReviewText: {type: String, required: true}
 });
 
 reviewSchema.plugin(mongoosePaginate);
