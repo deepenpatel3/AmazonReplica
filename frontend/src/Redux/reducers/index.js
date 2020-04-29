@@ -3,12 +3,14 @@ import sellerLoginReducer from './seller/loginReducer';
 import customerLoginReducer from "./customer/loginReducer";
 import adminLoginReducer from "./admin/loginReducer";
 import customerProductReducer from "./customer/productReducer";
+import customerReviewReducer from "./customer/reviewReducer";
 
 const rootReducer = combineReducers({
     sellerLogin : sellerLoginReducer,
     customerLogin : customerLoginReducer,
     adminLogin : adminLoginReducer,
     customerProductData: customerProductReducer,
+    customerReviewData: customerReviewReducer,
 })
 
 export default rootReducer;

@@ -1,29 +1,25 @@
-const Product = require('../models/productModel');
+const Review = require('../models/reviewModel');
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);
     // console.log("In Service path:", msg.path);
     switch (msg.path) {
-        case "add_product":
-            add_product(msg.body, callback);
+        case "add_review":
+            add_review(msg.body, callback);
             break;
-        case "get_all_product":
-            get_all_product(msg.body, callback)
+        case "get_reviews_product":
+            get_reviews_product(msg.body, callback)
     }
 }
 
-function add_product(msg, callback) {
+function add_review(msg, callback) {
 }
 
 
-function get_all_product(msg, callback){
+function get_reviews_product(msg, callback){
     // console.log("In Get Students kafka backend");
-    const options = {
-        page: msg.page,
-        limit: msg.limit,
-    };
     // console.log("msg: ",JSON.stringify(msg));
-    Product.paginate({},options,function (err, result) {
+    Review.find({ProductID: msg.ProductID},function (err, result) {
         if (err) {
             // console.log("Error: ",err);
             callback(err, null);

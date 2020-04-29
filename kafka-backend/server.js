@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var topicsToCreate =  require('./topics/topic'); 
 const account = require("./services/account");
 const product = require("./services/product");
+const review = require("./services/review");
 
 var options = {
     useNewUrlParser: true,
@@ -54,6 +55,11 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
+            case "review":
+                review.serve(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
         }
     });
 }
@@ -80,4 +86,5 @@ function response(data, res, producer) {
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest("account",account);
-handleTopicRequest("product",product)
+handleTopicRequest("product",product);
+handleTopicRequest("review", review)

@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
+import Skeleton from '@material-ui/lab/Skeleton';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Box from '@material-ui/core/Box';
@@ -56,8 +57,8 @@ class ProductTile extends Component {
     };
 
     render() {
-        var productImage = "";
-        if(this.state.Images.length > 0){
+        var productImage = null;
+        if (this.state.Images.length > 0) {
             productImage = this.state.Images[0];
         }
         return (
@@ -74,12 +75,19 @@ class ProductTile extends Component {
                 <Card className="product-tile-card" onClick={this.onCardClickListner}>
                     <CardActionArea>
                         <div className="product-tile-image">
-                            <Image    
-                                src={productImage}
-                                title={this.state.Name}
-                            />
-                        </div>
+                            {productImage ? (
+                                <Image
+                                    src={productImage}
+                                    title={this.state.Name}
+                                    animation="wave"
+                                    disableSpinner
+                                />
+                                // <Skeleton variant="rect" animation="wave" width={250} height={245} />
+                            ) : (
+                                    <Skeleton variant="rect" animation="wave" width={250} height={245} />
+                                )}
 
+                        </div>
                     </CardActionArea>
                     <CardActions>
                         <Typography component="h7" variant="h7">
