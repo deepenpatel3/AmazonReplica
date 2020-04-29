@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { connect } from "react-redux";
-import { customerSignUp } from "../../../Redux/actions/customer/loginAction";
+import { customerLogin } from "../../../Redux/actions/customer/loginAction";
 import { Redirect } from "react-router-dom";
 
 class CustomerSignUp extends Component {
@@ -72,4 +72,4 @@ function mapStateToProps(state) {
         message: state.customerLogin.message
     }
 }
-export default connect(mapStateToProps, { customerSignUp })(CustomerSignUp);
+export default connect(mapStateToProps, { customerLogin })(CustomerSignUp);

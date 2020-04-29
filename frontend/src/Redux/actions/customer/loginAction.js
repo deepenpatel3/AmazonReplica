@@ -27,16 +27,6 @@ const setLoginCredentials = (token) => {
         payload: { ...decoded }
     }
 }
-export const customerSignUp = (data) => dispatch => {
-    console.log("inside signup action");
-    axios.defaults.withCredentials = true;
-    axios.post(backendURL + '/customer/signUp', data)
-        .then(response => {
-            // console.log("resonse", response)
-            return dispatch(setLoginCredentials(response.data.token))
-        })
-};
-
 export const logout = () => ({
     type: CUSTOMER_LOGOUT
 })

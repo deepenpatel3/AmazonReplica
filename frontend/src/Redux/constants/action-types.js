@@ -5,4 +5,9 @@ export const SELLER_LOGIN = "SELLER_LOGIN";
 export const SELLER_LOGOUT = "SELLER_LOGOUT";
 export const ADMIN_LOGIN = "ADMIN_LOGIN";
 export const ADMIN_LOGOUT = "ADMIN_LOGOUT";
+
+
+//customer payment
+export const GET_PAYMENT_DETAILS = "GET_PAYMENT_DETAILS";
+
 export const CUSTOMER_GET_PRODUCTS = "CUSTOMER_GET_PRODUCTS";
