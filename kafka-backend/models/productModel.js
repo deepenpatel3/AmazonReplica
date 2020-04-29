@@ -15,7 +15,7 @@ var productSchema = new Schema({
     Rating: {type: Number, required: true},
     Offers:[{type: String}],
     Price: {type: Number, required: true},
-    Description:{type: Number, required: true},
+    Description:{type: String, required: true},
     Reviews: [{type:String}],
     Categories: [{type: String}],
 });

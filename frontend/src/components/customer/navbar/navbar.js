@@ -10,10 +10,10 @@ class Navbar extends Component {
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                        <Link class="navbar-brand" to="/">amazon</Link>
+                        <Link class="navbar-brand" to="/customerProduct">Amazon</Link>
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                             <li class="nav-item active">
-                                <Link class="nav-link" to="/customer/home">Home <span class="sr-only">(current)</span></Link>
+                                <Link class="nav-link" to="/customerProduct">Home <span class="sr-only">(current)</span></Link>
                             </li>
                             <li class="nav-item">
                                 <Link class="nav-link" to="#">Link</Link>

@@ -176,14 +176,15 @@ function admin_signup(msg, callback) {
 
 
 function customer_payment(msg, callback) {
-    Customer.findOne({ _id: msg.body.id }, (err, customer) => {
+    Customer.findOne({ _id: msg.body.id }).populate('Cart.ProductID')
+    .exec( (err, customer) => {
         if (err) {
             console.log('Customer Payment error', err)
             callback(null, { message: "Please try again" })
         }
         if (customer) {
             console.log("customer payment details")
-            callback(null, { Payments : customer.Payments , Address : customer.Address  })
+            callback(null, { Payments : customer.Payments , Address : customer.Address, Cart : customer.Cart })
         }
     })
 }

@@ -22,7 +22,7 @@ const Styles = styled.div`
 }
 .product-tile-card{
     width: 255px;
-    height: 400px;
+    height: 375px;
     margin: 5px;
 }
 `;
@@ -32,10 +32,10 @@ class ProductTile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ProductName: this.props.Product.ProductName,
-            ProductRating: this.props.Product.ProductRating,
-            ProductPrice: this.props.Product.ProductPrice,
-            ProductImage: this.props.Product.ProductImages[0],
+            Name: this.props.Product.Name,
+            Rating: this.props.Product.Rating,
+            Price: this.props.Product.Price,
+            Images: this.props.Product.Images,
         }
     }
     onCardClickListner = (e) => {
@@ -43,11 +43,22 @@ class ProductTile extends Component {
         this.props.onProductCardListner(this.props.id);
     }
 
-    render() {
-        if (!this.state.ProductImage) {
+    componentWillReceiveProps(nextProps) {
+
+        if (nextProps.Product) {
             this.setState({
-                ProductImage: "https://dummyimage.com/600x400/000/fff",
-            });
+                Name: nextProps.Product.Name,
+                Rating: nextProps.Product.Rating,
+                Price: nextProps.Product.Price,
+                Images: nextProps.Product.Images,
+            })
+        }
+    };
+
+    render() {
+        var productImage = "";
+        if(this.state.Images.length > 0){
+            productImage = this.state.Images[0];
         }
         return (
             <Styles>
@@ -64,21 +75,21 @@ class ProductTile extends Component {
                     <CardActionArea>
                         <div className="product-tile-image">
                             <Image    
-                                src={this.state.ProductImage}
-                                title={this.state.ProductName}
+                                src={productImage}
+                                title={this.state.Name}
                             />
                         </div>
 
                     </CardActionArea>
                     <CardActions>
                         <Typography component="h7" variant="h7">
-                            {this.state.ProductName}</Typography>
+                            {this.state.Name}</Typography>
                     </CardActions>
                     <CardActions>
-                        <Typography component="h7" variant="h7">$ {this.state.ProductPrice}</Typography>
+                        <Typography component="h7" variant="h7">$ {this.state.Price}</Typography>
                     </CardActions>
                     <CardActions>
-                        <Rating name="half-rating-read" value={this.state.ProductRating} precision={0.2} readOnly />
+                        <Rating name="half-rating-read" value={this.state.Rating} precision={0.2} readOnly />
                     </CardActions>
                 </Card>
             </Styles>
