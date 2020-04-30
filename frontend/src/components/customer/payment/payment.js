@@ -20,90 +20,10 @@ class Payment extends Component {
     componentDidMount() {
         console.log("inside payment componentWillMount")
         let data = {
-            // id : localStorage.getItem("id")
-            id: "5ea783a9378c850bbc3e50c4"
+            id : localStorage.getItem("id")
         }
 
         this.props.getPaymentDetails(data)
-
-
-        // res=>{
-        // console.log("Inside Callback",res.data.result)
-        // let finalPrice = null
-        // res.data.result.Cart.forEach(element => {
-        //     finalPrice += element.Price + element.Quantity
-        // });
-        // this.setState({
-        //     savedAddress : res.data.result.Address,
-        //     paymentMethod : res.data.result.Payments,
-        //     product : res.data.result.Cart,
-        //     finalPrice : finalPrice
-        // })
-        // })
-        // res => {
-        //     console.log("Res Data", res.data.result.Address)
-        //     // let finalPrice = 0;
-        //     // for (let i of res.dat.result.Cart) {
-        //     //     finalPrice += i.Price * i.Quantity
-        //     // }
-        //     this.setState({
-        //         product: res.data.result.Cart,
-        //         savedAddress : res.data.result.Address,
-        //         paymentMethod : res.data.result.Payments,
-        //         // finalPrice : finalPrice
-        //     })
-        // })
-
-        // let savedAddress = [
-        //     {
-        //         Street: "Milpitas",
-        //         Apt: "452",
-        //         City: "San Jose",
-        //         State: "CA",
-        //         Country: "USA",
-        //         Zipcode: "95035"
-        //     },
-        //     {
-        //         Street: "North San Jose",
-        //         Apt: "456",
-        //         City: "SF",
-        //         State: "CA",
-        //         Country: "USA",
-        //         Zipcode: "95112"
-        //     }
-        // ]
-        // let paymentMethod = [
-        //     {
-        //         cardNumber: "01232456789",
-        //         cardHolderName: "Harshil",
-        //         cardExpirationDate: "10-12-2025",
-        //         billingAddress: savedAddress[1]
-        //     },
-        //     {
-        //         cardNumber: "9876543210",
-        //         cardHolderName: "Deepen",
-        //         cardExpirationDate: "01-30-2024",
-        //         billingAddress: savedAddress[1]
-        //     }
-        // ]
-        // let product = [
-        //     {
-        //         img: "http://lorempixel.com/640/480/city",
-        //         productName: "PRODUCT NAME",
-        //         productDescription: "PRODUCT DESCRIPTION",
-        //         productPrice: 10.10,
-        //         productQty: 3,
-        //         sellerName: "SELLER NAME"
-        //     },
-        //     {
-        //         img: "http://lorempixel.com/640/480/city",
-        //         productName: "PRODUCT NAME",
-        //         productDescription: "PRODUCT DESCRIPTION",
-        //         productPrice: 12.00,
-        //         productQty: 5,
-        //         sellerName: "SELLER NAME"
-        //     }
-        // ]
 
     }
 
@@ -123,15 +43,15 @@ class Payment extends Component {
                 paymentMethod: prevProps.payment[0],
                 product: prevProps.cart,
                 finalPrice: finalPrice
-            }, () => { alert("Hello") })
+            })
         }
     }
     render() {
         console.log("Props:", this.props.savedAddress)
-        // let redirectVar = null 
-        // if (!localStorage.getItem("id")){
-        //     redirectVar = <Redirect to ="/customerLogin"></Redirect>
-        // }
+        let redirectVar = null 
+        if (!localStorage.getItem("id")){
+            redirectVar = <Redirect to ="/customerLogin"></Redirect>
+        }
         var today = new Date();
         today.setDate(today.getDate() + 7);
         var dd = String(today.getDate()).padStart(2, '0');
@@ -200,7 +120,7 @@ class Payment extends Component {
                                 </div>
                                 <div className="col-md-7">
 
-                                    <b className="text-danger">Order Total : ${this.state.finalPrice}</b><br />
+                                    <b className="text-danger">Order Total : ${Number.parseFloat(this.state.finalPrice).toFixed(2)}</b><br />
                                     <small>By placing your order, you agree to Amazon.com's <span className="text-info">privacy notice</span> and <span className="text-info"> conditions of use</span></small>
                                 </div>
                             </div>

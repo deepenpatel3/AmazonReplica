@@ -19,7 +19,7 @@ var paymentSchema = new Schema({
 });
 
 var saveForLater = new Schema({
-    ProductID: {type: Schema.Types.ObjectId, required: true , ref: Product},
+    ProductID: { type: Schema.Types.ObjectId, ref: Product },
     Quantity: {type: Number, required: true},
     Price: {type: Number, required:true},
     IsGift: {type: Boolean, required:true},
