@@ -5,6 +5,7 @@ import adminLoginReducer from "./admin/loginReducer";
 import customerPaymentReducer from "./customer/payment"
 import customerProductReducer from "./customer/productReducer";
 import customerReviewReducer from "./customer/reviewReducer";
+import sellerProductReducer from "./seller/productReducer";
 
 import cartReducer from "./customer/cartReducer";
 const rootReducer = combineReducers({
@@ -14,8 +15,8 @@ const rootReducer = combineReducers({
     customerPayment : customerPaymentReducer,
     customerProductData: customerProductReducer,
     customerReviewData: customerReviewReducer,
-    cart : cartReducer
-
+    cart : cartReducer,
+    sellerProductData: sellerProductReducer,
 })
 
 export default rootReducer;
