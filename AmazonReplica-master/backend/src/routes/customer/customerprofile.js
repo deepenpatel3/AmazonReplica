@@ -4,6 +4,11 @@ const { secret } = require("../../utils/config");
 const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
 
+router.get("/",authenticate('jwt',{session: false}),(req,res)=>{
+    req
+});
+
+
 router.post("/customerprofile",(req,res,err)=>{
     console.log("inside customer profile API");
     
