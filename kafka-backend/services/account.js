@@ -29,13 +29,13 @@ exports.serve = function serve(msg, callback) {
         case "admin_signup":
             admin_signup(msg, callback);
             break;
-<<<<<<< Updated upstream
         case "customer_payment":
             customer_payment(msg,callback);
-=======
         case "get_cart":
             get_cart(msg,callback);
->>>>>>> Stashed changes
+            break;
+        case "update_cart" : 
+            update_cart(msg,callback)
             break;
     }
 }
@@ -50,13 +50,25 @@ function get_cart(msg,callback){
     .catch( err => {
         console.log("ERROR : " + err)
     })
-    
-    
-    // , (err,result) => {
-    //     console.log("@@@@@@@@@" + result)
-    //     callback(null,{value : result})
-    // })
 }
+
+function update_cart(msg,callback){
+
+    Customer.findOneAndUpdate({"_id" : msg.id},
+    {
+        $set : {
+            Cart : msg
+        }
+    },{new : true}).exec()
+    .then(result=>{
+        console.log("result",result)
+        callback(null,{value : true})
+    })
+    .catch( err => {
+        console.log("ERROR : " + err)
+    })
+}
+
 
 function customer_login(msg, callback) {
     let password = msg.body.password;
