@@ -3,26 +3,39 @@ import { Redirect } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import { getPaymentDetails } from "../../../Redux/actions/customer/payment"
 import { connect } from 'react-redux'
+import { Modal,Button } from 'react-bootstrap';
+
 class Payment extends Component {
     //This is payment component
     constructor(props) {
         super(props)
         this.state = {
-            paymentMethod: [],
-            savedAddress: [],
+            payment: [],
+            addresses: [],
+            paymentMethod: {},
+            savedAddress: {},
             product: [],
-            finalPrice: ""
+            finalPrice: "",
+            modalShow : false
         }
+        this.SelectCard = this.SelectCard.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleShow = this.handleShow.bind(this);
     }
 
 
 
+    SelectCard(i) {
+        this.handleClose();
+        this.setState({
+            paymentMethod : this.state.payment[i]
+        })
+    }
     componentDidMount() {
         console.log("inside payment componentWillMount")
         let data = {
-            id : localStorage.getItem("id")
+            id: localStorage.getItem("id")
         }
-
         this.props.getPaymentDetails(data)
 
     }
@@ -30,15 +43,17 @@ class Payment extends Component {
     componentWillReceiveProps(prevProps) {
         console.log("CustomerPayment : COMPONENETWILLRECEIVEPROPS CALLED")
         if (prevProps.savedAddress !== this.props.savedAddress || prevProps.payment !== this.props.payment || prevProps.cart !== this.props.cart) {
-            
+
             let finalPrice = null
             prevProps.cart.forEach(element => {
-                console.log("elem",element)
+                console.log("elem", element)
                 finalPrice += element.Price * element.Quantity
             });
 
             console.log("final", finalPrice)
             this.setState({
+                addresses: prevProps.savedAddress,
+                payment: prevProps.payment,
                 savedAddress: prevProps.savedAddress[0],
                 paymentMethod: prevProps.payment[0],
                 product: prevProps.cart,
@@ -46,11 +61,16 @@ class Payment extends Component {
             })
         }
     }
+    
+
+    handleClose = () => this.setState({modalShow:false});
+    handleShow = () => this.setState({modalShow:true});
+
     render() {
         console.log("Props:", this.props.savedAddress)
-        let redirectVar = null 
-        if (!localStorage.getItem("id")){
-            redirectVar = <Redirect to ="/customerLogin"></Redirect>
+        let redirectVar = null
+        if (!localStorage.getItem("id")) {
+            redirectVar = <Redirect to="/customerLogin"></Redirect>
         }
         var today = new Date();
         today.setDate(today.getDate() + 7);
@@ -58,16 +78,45 @@ class Payment extends Component {
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
         today = mm + '/' + dd + '/' + yyyy;
+        let cards = null;
+        if(this.state.payment.length > 0){
+            cards = <div>{this.state.payment.map((elem, i) => {
+                return (
+                    <div className="card" style={{margin: "2%",padding : "2%"}}>
 
+                        <span>
+                            Name : {elem.NameOnCard} <button type="button" className="btn btn-warning" style={{float : "right"}} onClick={()=>this.SelectCard(i)}>Select Card</button> <br/>
+                            Card No. : {elem.Number}
+                        </span>
+                        
+                    </div>
+                )
+            })}
+             </div>
+        }
         return (
             <div>
+                <Modal show= {this.state.modalShow} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Change Card</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {cards}
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.handleClose}>Close</Button>
+                        {/* <Button variant="primary">Save changes</Button> */}
+                    </Modal.Footer>
+                </Modal> 
                 <Navbar />
                 <div className="container">
                     <div className="row" style={{ marginTop: "2%" }} >
                         <div className="col-md-3 card" style={{ padding: "1%" }} ><b>1. Shipping Address</b></div>
                         <div className="col-md-6 card" style={{ padding: "1%" }}>
                             <div style={{ float: "left" }}>
-                                <button style={{ float: "right", width: "20%", height: "30%" }}>Change</button>
+                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button">Change</button>
                                 {this.state.savedAddress.Street} {this.state.savedAddress.City}<br></br>
                                 {this.state.savedAddress.State}  {this.state.savedAddress.Country}<br></br>
                                 {this.state.savedAddress.Zipcode}<br></br>
@@ -78,7 +127,7 @@ class Payment extends Component {
                         <div className="col-md-3 card" style={{ padding: "1%" }}><b>2. Payment Method</b></div>
                         <div className="col-md-6 card" style={{ padding: "1%" }}>
                             <div style={{ float: "left" }}>
-                                <button style={{ float: "right", width: "20%", height: "30%" }}>Change</button>
+                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button" onClick={this.handleShow}>Change</button>
                                 <b>Visa</b> ending in : {this.state.paymentMethod.Number}<br></br>
                                 <b>Billing Address : </b>{this.state.savedAddress.Street} {this.state.savedAddress.City} {this.state.savedAddress.State}<br></br>
                             </div>
