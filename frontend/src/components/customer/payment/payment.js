@@ -16,16 +16,24 @@ class Payment extends Component {
             savedAddress: {},
             product: [],
             finalPrice: "",
-            modalShow : false
+            modalShow : false,
+            modalShowAddress : false
         }
         this.SelectCard = this.SelectCard.bind(this);
+        this.SelectAdd = this.SelectAdd.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleShow = this.handleShow.bind(this);
+        this.handleCloseAdd = this.handleCloseAdd.bind(this);
+        this.handleShowAdd = this.handleShowAdd.bind(this);
     }
 
-
-
-    SelectCard(i) {
+    SelectAdd = i => {
+        this.handleCloseAdd();
+        this.setState({
+            savedAddress : this.state.addresses[i]
+        })
+    }
+    SelectCard = (i) => {
         this.handleClose();
         this.setState({
             paymentMethod : this.state.payment[i]
@@ -65,6 +73,8 @@ class Payment extends Component {
 
     handleClose = () => this.setState({modalShow:false});
     handleShow = () => this.setState({modalShow:true});
+    handleCloseAdd = () => this.setState({modalShowAddress:false});
+    handleShowAdd = () => this.setState({modalShowAddress:true});
 
     render() {
         console.log("Props:", this.props.savedAddress)
@@ -78,7 +88,22 @@ class Payment extends Component {
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
         today = mm + '/' + dd + '/' + yyyy;
+        let address = null;
         let cards = null;
+        if(this.state.addresses.length > 0){
+            address = <div>{this.state.addresses.map((elem, i) => {
+                return (
+                    <div className="card" style={{margin: "2%",padding : "2%"}}>
+                        <span>
+                            {elem.Street} {elem.City} <button type="button" className="btn btn-warning" style={{float : "right"}} onClick={()=>this.SelectAdd(i)}>Select Address</button> <br></br>
+                            {elem.State}  {elem.Country}<br></br>
+                            {elem.Zipcode}<br></br> 
+                        </span>
+                    </div>
+                )
+            })}
+             </div>
+        }
         if(this.state.payment.length > 0){
             cards = <div>{this.state.payment.map((elem, i) => {
                 return (
@@ -105,10 +130,18 @@ class Payment extends Component {
                         {cards}
                     </Modal.Body>
 
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleClose}>Close</Button>
-                        {/* <Button variant="primary">Save changes</Button> */}
-                    </Modal.Footer>
+                    
+                </Modal> 
+                <Modal show= {this.state.modalShowAddress} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Change Address</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {address}
+                    </Modal.Body>
+
+                    
                 </Modal> 
                 <Navbar />
                 <div className="container">
@@ -116,7 +149,7 @@ class Payment extends Component {
                         <div className="col-md-3 card" style={{ padding: "1%" }} ><b>1. Shipping Address</b></div>
                         <div className="col-md-6 card" style={{ padding: "1%" }}>
                             <div style={{ float: "left" }}>
-                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button">Change</button>
+                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button"  onClick={this.handleShowAdd}>Change</button>
                                 {this.state.savedAddress.Street} {this.state.savedAddress.City}<br></br>
                                 {this.state.savedAddress.State}  {this.state.savedAddress.Country}<br></br>
                                 {this.state.savedAddress.Zipcode}<br></br>

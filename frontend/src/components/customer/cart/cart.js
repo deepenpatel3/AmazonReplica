@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import Navbar from '../navbar/navbar'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getCart , updateCart } from '../../../Redux/actions/customer/cartActions'
+import { getCart , updateCart } from '../../../Redux/actions/customer/cartActions';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 class Cart extends Component {
     constructor(props) {
         super(props)
@@ -196,7 +198,7 @@ class Cart extends Component {
                                     </div>
                                 </form>
                                 <button className="btn btn-light" onClick = {()=>{this.savetoLater(i)}}>Save for later</button>
-                                <button className="btn btn-danger" onClick = {()=>{this.deleteFromCart(i)}}>Delete</button>
+                                <button className="btn btn-light float-right" onClick = {()=>{this.deleteFromCart(i)}}><DeleteIcon color="secondary" /></button>
                             </div> 
                             <div className="col-md-1">
                                 <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
@@ -261,7 +263,7 @@ class Cart extends Component {
                                     </div>
                                 </form>
                                 <button className="btn btn-warning" onClick={() => this.addToCart(i)}>Add to Cart</button>
-                                <button className="btn btn-danger" onClick = {()=>{this.deleteFromSave(i)}}>Delete</button>
+                                <button className="btn btn-light float-right" onClick = {()=>{this.deleteFromSave(i)}}><DeleteIcon color="secondary"/></button>
                             </div>
                             <div className="col-md-1">
                                 <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
