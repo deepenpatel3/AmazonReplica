@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Navbar from '../navbar/navbar'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getCart } from '../../../Redux/actions/customer/cartActions'
+import { getCart , updateCart } from '../../../Redux/actions/customer/cartActions'
 class Cart extends Component {
     constructor(props) {
         super(props)
@@ -15,6 +15,11 @@ class Cart extends Component {
         this.changeHandler = this.changeHandler.bind(this);
         this.addToCart = this.addToCart.bind(this);
         this.savetoLater = this.savetoLater.bind(this);
+        this.updateQty = this.updateQty.bind(this);
+        this.updateQtySave = this.updateQtySave.bind(this);
+        this.deleteFromSave = this.deleteFromSave.bind(this);
+        this.deleteFromCart = this.deleteFromCart.bind(this);
+
     }
 
 
@@ -50,20 +55,58 @@ class Cart extends Component {
     changeHandler = e => {
 
     }
+    deleteFromCart = i => {
+        let del = this.state.cart.filter((val,k)=> k !== i)
+        this.setState({
+            cart : del
+        },()=>{
+            this.props.updateCart({id: localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater })
+        })
+    }
+    deleteFromSave = i => {
+        let del = this.state.saveForLater.filter((val,k)=> k !== i)
+        this.setState({
+            saveFromLater : del
+        },()=>{
+            this.props.updateCart({id: localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater })
+        })
+    }
+    updateQty = (e,i) => {
+        let update = this.state.cart.filter((val,k) => k === i)
+        update[0].Quantity = e.target.value
+        let newCart = this.state.cart
+        newCart[i]= update[0];
+        this.setState({
+            cart : newCart
+        },()=>{
+            this.props.updateCart({id: localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater })
+        })
+    }
+    updateQtySave = (e,i) => {
+        let update = this.state.saveForLater.filter((val,k) => k === i)
+        update[0].Quantity = e.target.value
+        let newSave = this.state.saveForLater
+        newSave[i]= update[0];
+        this.setState({
+            saveForLater : newSave
+        },()=>{
+            this.props.updateCart({id: localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater })
+        })
+    } 
     addToCart = i => {
-        alert("ADD TO CART CALLED")
+        // alert("ADD TO CART CALLED")
         let newSave = this.state.saveForLater.filter((val, k) => k !== i)
         let newCart = this.state.cart;
         let add = this.state.saveForLater.filter((val, k) => k === i)
 
         newCart.push(add[0])
-        alert(newCart.length)
+        // alert(newCart.length)
         this.setState({
             cart: newCart,
             saveForLater: newSave
         }, () => {
-            //this.props.updateCart({id : localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater})
-            alert(this.state.cart)
+            this.props.updateCart({id : localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater})
+            // alert(this.state.cart)
             let finalPrice = 0;
             for (let i of this.state.cart) {
                 finalPrice += i.Price * i.Quantity
@@ -78,7 +121,7 @@ class Cart extends Component {
         })
     }
     savetoLater = i => {
-        alert("SAVE FOR LATER CALLED")
+        // alert("SAVE FOR LATER CALLED")
         let newCart = this.state.cart.filter((val, k) => k !== i)
         let newSave = this.state.saveForLater;
         let add = this.state.cart.filter((val, k) => k === i)
@@ -89,8 +132,8 @@ class Cart extends Component {
             cart: newCart,
             saveForLater: newSave
         }, () => {
-            //this.props.updateCart({id : localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater})
-            alert(this.state.cart)
+            this.props.updateCart({id : localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater})
+            // alert(this.state.cart)
             let finalPrice = 0;
             for (let i of this.state.cart) {
                 finalPrice += i.Price * i.Quantity
@@ -145,7 +188,7 @@ class Cart extends Component {
                                         <input
                                             type="number"
                                             className="form-control"
-                                            onChange={this.changeHandler}
+                                            onChange={(e)=> this.updateQty(e,i)}
                                             name="ItemQuantity"
                                             placeholder="Qty"
                                             defaultValue={elem.Quantity}
@@ -153,7 +196,8 @@ class Cart extends Component {
                                     </div>
                                 </form>
                                 <button className="btn btn-light" onClick = {()=>{this.savetoLater(i)}}>Save for later</button>
-                            </div>
+                                <button className="btn btn-danger" onClick = {()=>{this.deleteFromCart(i)}}>Delete</button>
+                            </div> 
                             <div className="col-md-1">
                                 <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
                             </div>
@@ -167,8 +211,6 @@ class Cart extends Component {
                             </div>
                         </div>
                     </div>
-
-
                 )
             })
         if (this.state.saveForLater.length > 0)
@@ -211,7 +253,7 @@ class Cart extends Component {
                                         <input
                                             type="number"
                                             className="form-control"
-                                            onChange={this.changeHandler}
+                                            onChange={(e)=> this.updateQtySave(e,i)}
                                             name="ItemQuantity"
                                             placeholder="Qty"
                                             defaultValue={elem.Quantity}
@@ -219,6 +261,7 @@ class Cart extends Component {
                                     </div>
                                 </form>
                                 <button className="btn btn-warning" onClick={() => this.addToCart(i)}>Add to Cart</button>
+                                <button className="btn btn-danger" onClick = {()=>{this.deleteFromSave(i)}}>Delete</button>
                             </div>
                             <div className="col-md-1">
                                 <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
@@ -243,7 +286,7 @@ class Cart extends Component {
                 SAVE FOR LATER : {JSON.stringify(this.state.saveForLater)}<br /> */}
                 <div className="card float-right" style={{ padding: "2%", marginTop: "6%", marginRight: "2%" }}>
                     <h5>Subtotal Items ({this.state.cart.length}) : ${Number.parseFloat(this.state.finalPrice).toFixed(2)} </h5>
-                    <button className="btn btn-warning btn-lg btn-block">Proceed To Checkout</button>
+                    <Link className="btn btn-warning" to="/customer/payment" >Proceed To Checkout</Link>
                 </div>
                 <div className="container" style={{ marginTop: "3%" }}>
                     <div className="row">
@@ -264,7 +307,7 @@ class Cart extends Component {
                     </div>
                     <div className="row" style={{ marginBottom: "2%" }}>
                         <div className="col-md-12 text-center">
-                            <button className="btn btn-warning ">Proceed To Checkout</button>
+                            <Link className="btn btn-warning" to="/customer/payment" >Proceed To Checkout</Link>
                         </div>
                     </div>
                     <div className="row">
@@ -290,4 +333,4 @@ const map = state => {
         saveForLater: state.cart.saveForLater
     }
 }
-export default connect(map, { getCart })(Cart);
+export default connect(map, { getCart,updateCart })(Cart);
