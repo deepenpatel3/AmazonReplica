@@ -70,4 +70,15 @@ router.post("/signUp", function (req, res) {
         }
     });
 })
+router.post("/getCart", function (req, res) {
+    console.log('inside get cart', req.body);
+
+    kafka.make_request('account', { "path": "get_cart", "body": req.body }, function (err, result) {
+        console.log('got back from kafka customer_signup');
+        
+            console.log("customer get cart result- ", result);           
+            res.send(result.value)
+        
+    });
+})
 module.exports = router;

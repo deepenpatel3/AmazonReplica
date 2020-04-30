@@ -5,30 +5,30 @@ class Navbar extends Component {
     render() {
         return (
             <div>
-                <nav class="navbar navbar-dark bg-dark  navbar-expand-lg ">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                <nav className="navbar navbar-dark bg-dark  navbar-expand-lg ">
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                        <Link class="navbar-brand" to="/customerProduct">Amazon</Link>
-                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                            <li class="nav-item active">
-                                <Link class="nav-link" to="/customerProduct">Home <span class="sr-only">(current)</span></Link>
+                    <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+                        <Link className="navbar-brand" to="/">amazon</Link>
+                        <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+                            <li className="nav-item active">
+                                <Link className="nav-link" to="/customer/home">Home <span className="sr-only">(current)</span></Link>
                             </li>
-                            <li class="nav-item">
-                                <Link class="nav-link" to="#">Link</Link>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#">Link</Link>
                             </li>
-                            <li class="nav-item">
-                                <Link class="nav-link disabled" to="#">Disabled</Link>
+                            <li className="nav-item">
+                                <Link className="nav-link disabled" to="#">Disabled</Link>
                             </li>
                         </ul>
-                        <form class="form-inline ">
-                            <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
-                            <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
+                        <form className="form-inline ">
+                            <input className="form-control" type="search" placeholder="Search" aria-label="Search" />
+                            <button className="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
                         </form>
-                        <ul class="navbar-nav">
-                            <li class="nav-item active">
-                                <Link class="nav-link" to="/customer/cart"><i class="fas fa-shopping-cart"></i><span class="sr-only">(current)</span></Link>
+                        <ul className="navbar-nav">
+                            <li className="nav-item active">
+                                <Link className="nav-link" to="/customer/cart"><i className="fas fa-shopping-cart"></i><span className="sr-only">(current)</span></Link>
                             </li>
                         </ul>
                     </div>
