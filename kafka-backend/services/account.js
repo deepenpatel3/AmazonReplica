@@ -29,21 +29,44 @@ exports.serve = function serve(msg, callback) {
         case "admin_signup":
             admin_signup(msg, callback);
             break;
+<<<<<<< Updated upstream
         case "customer_payment":
             customer_payment(msg,callback);
+=======
+        case "get_cart":
+            get_cart(msg,callback);
+>>>>>>> Stashed changes
             break;
     }
 }
 
+function get_cart(msg,callback){
+
+    Customer.findOne({"_id" : msg.body.id}).populate("Cart.ProductID").populate("SaveForLater.ProductID").exec()
+    .then(result=>{
+        console.log("result",result)
+        callback(null,{value : result})
+    })
+    .catch( err => {
+        console.log("ERROR : " + err)
+    })
+    
+    
+    // , (err,result) => {
+    //     console.log("@@@@@@@@@" + result)
+    //     callback(null,{value : result})
+    // })
+}
+
 function customer_login(msg, callback) {
     let password = msg.body.password;
-    Customer.findOne({ email: msg.body.email })
+    Customer.findOne({ Email: msg.body.email })
         .then(customer => {
             if (customer) {
                 console.log("customer found-", customer)
-                if (bcrypt.compareSync(password, customer.password)) {
+                if (bcrypt.compareSync(password, customer.Password)) {
                     console.log('customer match')
-                    callback(null, { signInSuccess: true, CID: customer._id, name: customer.name, message: "successful login" })
+                    callback(null, { signInSuccess: true, CID: customer._id, name: customer.Name, message: "successful login" })
                 }
                 else {
                     console.log('wrong password')
@@ -63,7 +86,7 @@ function customer_login(msg, callback) {
 
 function customer_signup(msg, callback) {
 
-    Customer.findOne({ email: msg.body.email }, (err, customer) => {
+    Customer.findOne({ Email: msg.body.email }, (err, customer) => {
         if (err) {
             console.log('customer signup error', err)
             callback(null, { signInSuccess: false, message: "Please try again" })
@@ -75,22 +98,22 @@ function customer_signup(msg, callback) {
             console.log("about to signup")
             let hash = bcrypt.hashSync(msg.body.password, salt);
             let newCustomer = new Customer({
-                name: msg.body.name, email: msg.body.email, password: hash
+                Name: msg.body.name, Email: msg.body.email, Password: hash
             })
-            newCustomer.save(() => { callback(null, { signInSuccess: true, CID: newCustomer._id, name: newCustomer.name, message: "Successfully Signed up" }) });
+            newCustomer.save(() => { callback(null, { signInSuccess: true, CID: newCustomer._id, name: newCustomer.Name, message: "Successfully Signed up" }) });
         }
     })
 }
 
 function seller_login(msg, callback) {
     let password = msg.body.password;
-    Seller.findOne({ email: msg.body.email })
+    Seller.findOne({ Email: msg.body.email })
         .then(seller => {
             if (seller) {
                 console.log("seller found-", seller)
-                if (bcrypt.compareSync(password, seller.password)) {
+                if (bcrypt.compareSync(password, seller.Password)) {
                     console.log('seller match')
-                    callback(null, { signInSuccess: true, SID: seller._id, name: seller.name, message: "successful login" })
+                    callback(null, { signInSuccess: true, SID: seller._id, name: seller.Name, message: "successful login" })
                 }
                 else {
                     console.log('wrong password')
@@ -109,7 +132,7 @@ function seller_login(msg, callback) {
 }
 
 function seller_signup(msg, callback) {
-    Seller.findOne({ email: msg.body.email }, (err, seller) => {
+    Seller.findOne({ Email: msg.body.email }, (err, seller) => {
         if (err) {
             console.log('seller signup error', err)
             callback(null, { signInSuccess: false, message: "Please try again" })
@@ -121,22 +144,22 @@ function seller_signup(msg, callback) {
             console.log("about to signup")
             let hash = bcrypt.hashSync(msg.body.password, salt);
             let newSeller = new Seller({
-                name: msg.body.name, email: msg.body.email, password: hash
+                Name: msg.body.name, Email: msg.body.email, Password: hash
             })
-            newSeller.save(() => { callback(null, { signInSuccess: true, SID: newSeller._id, name: newSeller.name, message: "Successfully Signed up" }) });
+            newSeller.save(() => { callback(null, { signInSuccess: true, SID: newSeller._id, name: newSeller.Name, message: "Successfully Signed up" }) });
         }
     })
 }
 
 function admin_login(msg, callback) {
     let password = msg.body.password;
-    Admin.findOne({ email: msg.body.email })
+    Admin.findOne({ Email: msg.body.email })
         .then(admin => {
             if (admin) {
                 console.log("admin found-", admin)
-                if (bcrypt.compareSync(password, admin.password)) {
+                if (bcrypt.compareSync(password, admin.Password)) {
                     console.log('admin match')
-                    callback(null, { signInSuccess: true, AID: admin._id, name: admin.name, message: "successful login" })
+                    callback(null, { signInSuccess: true, AID: admin._id, name: admin.Name, message: "successful login" })
                 }
                 else {
                     console.log('wrong password')
@@ -155,7 +178,7 @@ function admin_login(msg, callback) {
 }
 
 function admin_signup(msg, callback) {
-    Admin.findOne({ email: msg.body.email }, (err, admin) => {
+    Admin.findOne({ Email: msg.body.email }, (err, admin) => {
         if (err) {
             console.log('admin signup error', err)
             callback(null, { signInSuccess: false, message: "Please try again" })
@@ -167,9 +190,9 @@ function admin_signup(msg, callback) {
             console.log("about to signup")
             let hash = bcrypt.hashSync(msg.body.password, salt);
             let newAdmin = new Admin({
-                name: msg.body.name, email: msg.body.email, password: hash
+                Name: msg.body.name, Email: msg.body.email, Password: hash
             })
-            newAdmin.save(() => { callback(null, { signInSuccess: true, AID: newAdmin._id, name: newAdmin.name, message: "Successfully Signed up" }) });
+            newAdmin.save(() => { callback(null, { signInSuccess: true, AID: newAdmin._id, name: newAdmin.Name, message: "Successfully Signed up" }) });
         }
     })
 }
