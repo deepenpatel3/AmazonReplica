@@ -3,151 +3,153 @@ import { Redirect } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import { getPaymentDetails } from "../../../Redux/actions/customer/payment"
 import { connect } from 'react-redux'
+import { Modal,Button } from 'react-bootstrap';
+
 class Payment extends Component {
     //This is payment component
     constructor(props) {
         super(props)
         this.state = {
-            paymentMethod: [],
-            savedAddress: [],
+            payment: [],
+            addresses: [],
+            paymentMethod: {},
+            savedAddress: {},
             product: [],
-            finalPrice: ""
+            finalPrice: "",
+            modalShow : false,
+            modalShowAddress : false
         }
+        this.SelectCard = this.SelectCard.bind(this);
+        this.SelectAdd = this.SelectAdd.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.handleCloseAdd = this.handleCloseAdd.bind(this);
+        this.handleShowAdd = this.handleShowAdd.bind(this);
     }
 
-
-
+    SelectAdd = i => {
+        this.handleCloseAdd();
+        this.setState({
+            savedAddress : this.state.addresses[i]
+        })
+    }
+    SelectCard = (i) => {
+        this.handleClose();
+        this.setState({
+            paymentMethod : this.state.payment[i]
+        })
+    }
     componentDidMount() {
         console.log("inside payment componentWillMount")
         let data = {
-            // id : localStorage.getItem("id")
-            id: "5ea783a9378c850bbc3e50c4"
+            id: localStorage.getItem("id")
         }
-
         this.props.getPaymentDetails(data)
-
-
-        // res=>{
-        // console.log("Inside Callback",res.data.result)
-        // let finalPrice = null
-        // res.data.result.Cart.forEach(element => {
-        //     finalPrice += element.Price + element.Quantity
-        // });
-        // this.setState({
-        //     savedAddress : res.data.result.Address,
-        //     paymentMethod : res.data.result.Payments,
-        //     product : res.data.result.Cart,
-        //     finalPrice : finalPrice
-        // })
-        // })
-        // res => {
-        //     console.log("Res Data", res.data.result.Address)
-        //     // let finalPrice = 0;
-        //     // for (let i of res.dat.result.Cart) {
-        //     //     finalPrice += i.Price * i.Quantity
-        //     // }
-        //     this.setState({
-        //         product: res.data.result.Cart,
-        //         savedAddress : res.data.result.Address,
-        //         paymentMethod : res.data.result.Payments,
-        //         // finalPrice : finalPrice
-        //     })
-        // })
-
-        // let savedAddress = [
-        //     {
-        //         Street: "Milpitas",
-        //         Apt: "452",
-        //         City: "San Jose",
-        //         State: "CA",
-        //         Country: "USA",
-        //         Zipcode: "95035"
-        //     },
-        //     {
-        //         Street: "North San Jose",
-        //         Apt: "456",
-        //         City: "SF",
-        //         State: "CA",
-        //         Country: "USA",
-        //         Zipcode: "95112"
-        //     }
-        // ]
-        // let paymentMethod = [
-        //     {
-        //         cardNumber: "01232456789",
-        //         cardHolderName: "Harshil",
-        //         cardExpirationDate: "10-12-2025",
-        //         billingAddress: savedAddress[1]
-        //     },
-        //     {
-        //         cardNumber: "9876543210",
-        //         cardHolderName: "Deepen",
-        //         cardExpirationDate: "01-30-2024",
-        //         billingAddress: savedAddress[1]
-        //     }
-        // ]
-        // let product = [
-        //     {
-        //         img: "http://lorempixel.com/640/480/city",
-        //         productName: "PRODUCT NAME",
-        //         productDescription: "PRODUCT DESCRIPTION",
-        //         productPrice: 10.10,
-        //         productQty: 3,
-        //         sellerName: "SELLER NAME"
-        //     },
-        //     {
-        //         img: "http://lorempixel.com/640/480/city",
-        //         productName: "PRODUCT NAME",
-        //         productDescription: "PRODUCT DESCRIPTION",
-        //         productPrice: 12.00,
-        //         productQty: 5,
-        //         sellerName: "SELLER NAME"
-        //     }
-        // ]
 
     }
 
     componentWillReceiveProps(prevProps) {
         console.log("CustomerPayment : COMPONENETWILLRECEIVEPROPS CALLED")
         if (prevProps.savedAddress !== this.props.savedAddress || prevProps.payment !== this.props.payment || prevProps.cart !== this.props.cart) {
-            
+
             let finalPrice = null
             prevProps.cart.forEach(element => {
-                console.log("elem",element)
+                console.log("elem", element)
                 finalPrice += element.Price * element.Quantity
             });
 
             console.log("final", finalPrice)
             this.setState({
+                addresses: prevProps.savedAddress,
+                payment: prevProps.payment,
                 savedAddress: prevProps.savedAddress[0],
                 paymentMethod: prevProps.payment[0],
                 product: prevProps.cart,
                 finalPrice: finalPrice
-            }, () => { alert("Hello") })
+            })
         }
     }
+    
+
+    handleClose = () => this.setState({modalShow:false});
+    handleShow = () => this.setState({modalShow:true});
+    handleCloseAdd = () => this.setState({modalShowAddress:false});
+    handleShowAdd = () => this.setState({modalShowAddress:true});
+
     render() {
         console.log("Props:", this.props.savedAddress)
-        // let redirectVar = null 
-        // if (!localStorage.getItem("id")){
-        //     redirectVar = <Redirect to ="/customerLogin"></Redirect>
-        // }
+        let redirectVar = null
+        if (!localStorage.getItem("id")) {
+            redirectVar = <Redirect to="/customerLogin"></Redirect>
+        }
         var today = new Date();
         today.setDate(today.getDate() + 7);
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
         today = mm + '/' + dd + '/' + yyyy;
+        let address = null;
+        let cards = null;
+        if(this.state.addresses.length > 0){
+            address = <div>{this.state.addresses.map((elem, i) => {
+                return (
+                    <div className="card" style={{margin: "2%",padding : "2%"}}>
+                        <span>
+                            {elem.Street} {elem.City} <button type="button" className="btn btn-warning" style={{float : "right"}} onClick={()=>this.SelectAdd(i)}>Select Address</button> <br></br>
+                            {elem.State}  {elem.Country}<br></br>
+                            {elem.Zipcode}<br></br> 
+                        </span>
+                    </div>
+                )
+            })}
+             </div>
+        }
+        if(this.state.payment.length > 0){
+            cards = <div>{this.state.payment.map((elem, i) => {
+                return (
+                    <div className="card" style={{margin: "2%",padding : "2%"}}>
 
+                        <span>
+                            Name : {elem.NameOnCard} <button type="button" className="btn btn-warning" style={{float : "right"}} onClick={()=>this.SelectCard(i)}>Select Card</button> <br/>
+                            Card No. : {elem.Number}
+                        </span>
+                        
+                    </div>
+                )
+            })}
+             </div>
+        }
         return (
             <div>
+                <Modal show= {this.state.modalShow} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Change Card</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {cards}
+                    </Modal.Body>
+
+                    
+                </Modal> 
+                <Modal show= {this.state.modalShowAddress} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Change Address</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {address}
+                    </Modal.Body>
+
+                    
+                </Modal> 
                 <Navbar />
                 <div className="container">
                     <div className="row" style={{ marginTop: "2%" }} >
                         <div className="col-md-3 card" style={{ padding: "1%" }} ><b>1. Shipping Address</b></div>
                         <div className="col-md-6 card" style={{ padding: "1%" }}>
                             <div style={{ float: "left" }}>
-                                <button style={{ float: "right", width: "20%", height: "30%" }}>Change</button>
+                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button"  onClick={this.handleShowAdd}>Change</button>
                                 {this.state.savedAddress.Street} {this.state.savedAddress.City}<br></br>
                                 {this.state.savedAddress.State}  {this.state.savedAddress.Country}<br></br>
                                 {this.state.savedAddress.Zipcode}<br></br>
@@ -158,7 +160,7 @@ class Payment extends Component {
                         <div className="col-md-3 card" style={{ padding: "1%" }}><b>2. Payment Method</b></div>
                         <div className="col-md-6 card" style={{ padding: "1%" }}>
                             <div style={{ float: "left" }}>
-                                <button style={{ float: "right", width: "20%", height: "30%" }}>Change</button>
+                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button" onClick={this.handleShow}>Change</button>
                                 <b>Visa</b> ending in : {this.state.paymentMethod.Number}<br></br>
                                 <b>Billing Address : </b>{this.state.savedAddress.Street} {this.state.savedAddress.City} {this.state.savedAddress.State}<br></br>
                             </div>
@@ -200,7 +202,7 @@ class Payment extends Component {
                                 </div>
                                 <div className="col-md-7">
 
-                                    <b className="text-danger">Order Total : ${this.state.finalPrice}</b><br />
+                                    <b className="text-danger">Order Total : ${Number.parseFloat(this.state.finalPrice).toFixed(2)}</b><br />
                                     <small>By placing your order, you agree to Amazon.com's <span className="text-info">privacy notice</span> and <span className="text-info"> conditions of use</span></small>
                                 </div>
                             </div>

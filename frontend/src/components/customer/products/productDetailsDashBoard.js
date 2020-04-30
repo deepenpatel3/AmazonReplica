@@ -4,9 +4,9 @@ import { Row, Col, Carousel, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import Navbar from '../navbar/navbar';
-import ProductTile from './productTile';
+// import GridListTile from '@material-ui/core/GridListTile';
+// import Navbar from '../navbar/navbar';
+// import ProductTile from './productTile';
 import { Icon, Typography, Chip, Divider, Button, InputLabel, MenuItem, Paper } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import Rating from '@material-ui/lab/Rating';
@@ -19,7 +19,7 @@ import Image from 'material-ui-image';
 import ReviewTile from './reviewTile';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import { getReviewsForProduct } from '../../../Redux/actions/customer/reviewActions';
-
+import { updateCart } from '../../../Redux/actions/customer/cartActions' 
 
 const Styles = styled.div`
 .product-details-addtocartbar{
@@ -129,9 +129,30 @@ class ProductDetailsDashBoard extends Component {
             Offers: this.props.Product.Offers,
             Description: this.props.Product.Description,
             Categories: this.props.Product.Categories,
+            cart : [],
+            saveForLater : [],
+            qty : 1
         }
+        this.addToCart = this.addToCart.bind(this);
+        this.qtyHandler = this.qtyHandler.bind(this);
     }
-
+    qtyHandler = e => {
+        this.setState({
+            qty : e.target.value
+        })
+    }
+    addToCart = () => {
+        let newCart = this.state.cart;
+        let product = {
+            ProductID : this.props.Product._id,
+            Quantity : this.state.qty,
+            Price : this.state.Price,
+            IsGift: false,
+            GiftMessage : ""
+        }
+        newCart.push(product)
+        this.props.updateCart({id : localStorage.getItem('id'), Cart : this.state.cart , SaveForLater : this.state.saveForLater})
+    }
     componentDidMount() {
         this.props.getReviewsForProduct(this.props.Product._id);
         // if (this.props.reviewData || this.props.reviewData.productId == this.props.Product._id) {
@@ -145,6 +166,8 @@ class ProductDetailsDashBoard extends Component {
         console.log("nextProps.products: ", JSON.stringify(nextProps.reviewData));
         this.setState({
             Reviews: nextProps.reviewData.reviews,
+            cart : nextProps.cart,
+            saveForLater : nextProps.saveForLater
         })
     };
 
@@ -257,6 +280,7 @@ class ProductDetailsDashBoard extends Component {
                                     value={this.state.quantity}
                                     label="Qty"
                                     className="product-details-quantity"
+                                    onChange = {this.qtyHandler}
                                 >
                                     <MenuItem value="">
                                         <em>None</em>
@@ -273,6 +297,7 @@ class ProductDetailsDashBoard extends Component {
                                 color="secondary"
                                 className="product-details-add-to-cart-button"
                                 startIcon={<AddShoppingCartIcon />}
+                                onClick = {this.addToCart}
                             >
                                 Add To Cart
                             </Button>
@@ -313,8 +338,10 @@ class ProductDetailsDashBoard extends Component {
 const mapStateToProps = state => {
     return {
         reviewData: state.customerReviewData,
+        cart : state.cart.cart,
+        saveForLater : state.cart.saveForLater
     };
 };
 
 
-export default connect(mapStateToProps, { getReviewsForProduct })(ProductDetailsDashBoard);
+export default connect(mapStateToProps, { getReviewsForProduct , updateCart })(ProductDetailsDashBoard);

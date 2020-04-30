@@ -31,8 +31,12 @@ exports.serve = function serve(msg, callback) {
             break;
         case "customer_payment":
             customer_payment(msg,callback);
+            break;
         case "get_cart":
             get_cart(msg,callback);
+            break;
+        case "update_cart" :
+            update_cart(msg,callback)
             break;
     }
 }
@@ -47,13 +51,26 @@ function get_cart(msg,callback){
     .catch( err => {
         console.log("ERROR : " + err)
     })
-    
-    
-    // , (err,result) => {
-    //     console.log("@@@@@@@@@" + result)
-    //     callback(null,{value : result})
-    // })
 }
+
+function update_cart(msg,callback){
+
+    Customer.findOneAndUpdate({"_id" : msg.body.id},
+    {
+        $set : {
+            Cart : msg.body.Cart,
+            SaveForLater : msg.body.SaveForLater
+        }
+    },{new : true}).exec()
+    .then(result=>{
+        console.log("result",result)
+        callback(null,{value : true})
+    })
+    .catch( err => {
+        console.log("ERROR : " + err)
+    })
+}
+
 
 function customer_login(msg, callback) {
     let password = msg.body.password;
@@ -207,4 +224,4 @@ function customer_payment(msg, callback) {
             callback(null, { Payments : customer.Payments , Address : customer.Address, Cart : customer.Cart })
         }
     })
-}
+}update_cart

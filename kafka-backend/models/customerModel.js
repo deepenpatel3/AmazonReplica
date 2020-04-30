@@ -3,7 +3,6 @@ const Product =require('./productModel');
 const Review = require('./reviewModel');
 
 const Schema = mongoose.Schema;
-const Product = require("../models/productModel");
 var addressSchema = new Schema({
     Street: {type: String, required: true},
     Apt: {type: String, required: false},
@@ -20,11 +19,7 @@ var paymentSchema = new Schema({
 });
 
 var saveForLater = new Schema({
-<<<<<<< Updated upstream
-    ProductID: {type: Schema.Types.ObjectId, required: true , ref: Product},
-=======
     ProductID: { type: Schema.Types.ObjectId, ref: Product },
->>>>>>> Stashed changes
     Quantity: {type: Number, required: true},
     Price: {type: Number, required:true},
     IsGift: {type: Boolean, required:true},

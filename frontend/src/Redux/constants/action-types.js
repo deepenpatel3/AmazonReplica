@@ -16,3 +16,4 @@ export const GET_CART = "GET_CART";
 
 export const SELLER_GET_PRODUCTS = "SELLER_GET_PRODUCTS";
 export const SELLER_ADD_PRODUCT = "SELLER_ADD_PRODUCT";
+export const UPDATE_CART = "UPDATE_CART";
