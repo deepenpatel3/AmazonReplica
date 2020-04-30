@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Route } from 'react-router-dom';
 import AdminLogin from './components/admin/adminLogin/adminLogin';
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
-import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
+import CustomerSignUp from './components/customer/customerSignup/customerSignUp';
 import SellerLogin from './components/seller/sellerLogin/sellerLogin';
 import SellerSignUp from './components/seller/sellerSignUp/sellerSignUp';
 import AdminSignUp from './components/admin/adminSignUp/adminSignUp';
