@@ -130,9 +130,6 @@ class ProductDashBoard extends Component {
                         </div>
                         </Col>
                         <Col>
-                            <Row>
-                                
-                            </Row>
                             <div className="product-dashboard">
                                 <GridList cellHeight={50} >
                                     {this.state.products.map((product, id) => (

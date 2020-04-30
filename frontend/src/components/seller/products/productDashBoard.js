@@ -11,6 +11,14 @@ import Navbar from '../navbar/navbar';
 import ProductTile from './productTile';
 import ProductDetailsDashBoard from './productDetailsDashBoard';
 import { getProducts } from '../../../Redux/actions/customer/productActions';
+import Paper from '@material-ui/core/Paper';
+import MaterialUiButton from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import Chip from '@material-ui/core/Chip';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
+
+
 
 const Styles = styled.div`
     .product-filter-bar{
@@ -35,12 +43,40 @@ const Styles = styled.div`
         height:20px;
         width:500px;
     }
+    .add-product-button-bar {
+        margin: 3px;
+        width: 100%;
+        margin: 5px;
+      },
+    .add-product-button {
+        float:right;
+        margin: 2px;
+    }
+    .chip-paper {
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        padding: theme.spacing(0.5),
+        margin: 0,
+    }
+    .category-chip {
+       margin: 1px;
+       height: 15px;
+       padding: 1px;
+    }
+    .images-upload-button{
+        display: flex; 
+        justify-content: flex-end;
+    }
 `;
+
 
 class ProductDashBoard extends Component {
 
     constructor(props) {
         super(props);
+        let cetagories = ['value1', 'value2', 'value3']
         this.state = {
             products: [],
             activePage: 1,
@@ -49,18 +85,54 @@ class ProductDashBoard extends Component {
             totalDocs: null,
             ProductDetailsView: false,
             SelectedProduct: null,
+            modalShow: false,
+            imageModalShow: false,
+            ProductImages: [],
+            cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
         }
+        this.handleShow = this.handleShow.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleImageShow = this.handleImageShow.bind(this);
+        this.handleImageClose = this.handleImageClose.bind(this);
     }
+
 
     handleChange = (e, value) => {
         e.preventDefault();
         this.props.getProducts(this.props.productData, value, this.state.limit);
-      };
+    };
 
-    handlePageNext = (e) => {
-        e.preventDefault();
-        this.props.getProducts(this.props.productData, this.state.nextPage, this.state.limit);
+    handleDelete = (id) => () => {
+        var arr = this.state.cetagoriesSet;
+        arr.splice(id, 1);
+        this.setState({
+            cetagoriesSet: arr,
+        });
+    };
+    handleImageShow = (e) => {
+        this.setState({
+            imageModalShow: true,
+        })
     }
+    handleImageClose = (e) => {
+        this.setState({
+            imageModalShow: false,
+        })
+    }
+    handleClose = (e) => {
+        // e.preventDefault();
+        this.setState({
+            modalShow: false,
+        })
+    };
+
+    handleShow = (e) => {
+        e.preventDefault();
+        console.log("Inside handleShow");
+        this.setState({
+            modalShow: true,
+        })
+    };
 
     onProductCardListner = (id) => {
         console.log("Product id: ", id);
@@ -70,6 +142,26 @@ class ProductDashBoard extends Component {
         });
     };
 
+    onFileUploadChangeHandler = event => {
+        this.setState({
+            ProductImages: event.target.files,
+        })
+
+    }
+
+    onAddProductClick = (e) => {
+        e.preventDefault();
+        const product = {
+            Name: this.state.Name,
+            Price: this.state.Price,
+            Description: this.state.Description,
+            Images: this.state.ProductImages,
+            SellerId: localStorage.getItem("id"),
+            SellerName: localStorage.getItem("name"),
+        }
+        
+    }
+
     onBackClickListner = () => {
         this.setState({
             SelectedProduct: null,
@@ -77,13 +169,14 @@ class ProductDashBoard extends Component {
         });
     }
 
+    onValueChangeHandler = (e) => this.setState({ [e.target.name]: e.target.value })
     componentDidMount() {
         this.props.getProducts(this.props.productData, 1, this.state.limit);
         if (!this.props.productData) {
             this.setState({
                 products: this.props.productData.products
             })
-            if (this.props.jobData) {
+            if (this.props.productData) {
                 this.setState({
                     totalDocs: this.props.productData.totalDocs,
                     totalPages: this.props.productData.totalPages,
@@ -121,6 +214,88 @@ class ProductDashBoard extends Component {
         } else {
             return (
                 <Styles>
+                    <Modal show={this.state.imageModalShow} onHide={this.handleImageClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Upload Your Resume</Modal.Title>
+                        </Modal.Header>
+
+                        <Modal.Body>
+                            <input type="file" multiple name="file" onChange={this.onFileUploadChangeHandler} />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={this.handleImageClose}>Close</Button>
+                            <Button variant="primary" onClick={this.handleImageClose}>Apply</Button>
+                        </Modal.Footer>
+                    </Modal>
+                    <Modal show={this.state.modalShow} onHide={this.handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add Product</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <Form.Row>
+                                    <Form.Group as={Col} controlId="employer">
+                                        <Form.Label className="signup-form-lable">Product Name</Form.Label>
+                                        <Form.Control onChange={this.onChangeHandeler} name="Name" placeholder="Product name" />
+                                    </Form.Group>
+                                    <Form.Group as={Col} controlId="employer">
+                                        <Form.Label className="signup-form-lable">Product Price</Form.Label>
+                                        <Form.Control onChange={this.onChangeHandeler} name="Price" type="Number" placeholder="Product price" />
+                                    </Form.Group>
+                                </Form.Row>
+                                <Form.Row>
+                                    <Form.Group as={Col} controlId="employer">
+                                        <Form.Label className="signup-form-lable">Categories</Form.Label>
+                                        <GridList cellHeight={40} spacing={1} cols={Math.min(this.state.cetagoriesSet.length, 4)} >
+                                            {this.state.cetagoriesSet.map((data, id) => {
+                                                console.log("Chip data: ", data);
+                                                return (
+                                                    <GridListTile className="category-chip">
+                                                        <Chip
+                                                            label={data}
+                                                            onDelete={this.handleDelete(id)}
+                                                        />
+                                                    </GridListTile>
+                                                )
+                                            })}
+                                        </GridList>
+                                    </Form.Group>
+                                </Form.Row>
+                                <Form.Row>
+                                    <Form.Group as={Col} controlId="employer">
+                                        <Form.Label className="signup-form-lable">Upload Product Images</Form.Label>
+                                    </Form.Group>
+                                    <Form.Group as={Col} controlId="employer">
+                                        <div className="images-upload-button">
+                                            <MaterialUiButton
+                                                variant="contained"
+                                                color="default"
+                                                size="small"
+                                                onClick={this.handleImageShow}
+                                                startIcon={<CloudUploadIcon />}
+                                            >
+                                                Upload
+                                            </MaterialUiButton>
+                                        </div>
+                                    </Form.Group>
+                                </Form.Row>
+                                <Form.Row>
+                                    <Form.Group as={Col} controlId="end_date">
+                                        <Form.Label>Product Description</Form.Label>
+                                        <Form.Control as="textarea" name="Description"  placeholder="Write description here..." rows="3" />
+                                    </Form.Group>
+                                </Form.Row>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={this.handleClose}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={this.handleClose}>
+                                Add Product
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                     <Navbar />
                     <div className="product-filter-bar"></div>
                     <Row>
@@ -130,6 +305,20 @@ class ProductDashBoard extends Component {
                         </div>
                         </Col>
                         <Col>
+                            <Row>
+                                <Paper className="add-product-button-bar">
+                                    <MaterialUiButton
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        className="add-product-button"
+                                        startIcon={<AddIcon />}
+                                        onClick={this.handleShow}
+                                    >
+                                        Add Product
+                                    </MaterialUiButton>
+                                </Paper>
+                            </Row>
                             <div className="product-dashboard">
                                 <GridList cellHeight={50} >
                                     {this.state.products.map((product, id) => (
@@ -138,14 +327,14 @@ class ProductDashBoard extends Component {
                                 </GridList>
                             </div>
                             <div className="product-dashboard-pagination">
-                                <Pagination count={this.state.totalPages}  page={this.state.activePage} onChange={this.handleChange} size="large" shape="rounded" />
+                                <Pagination count={this.state.totalPages} page={this.state.activePage} onChange={this.handleChange} size="large" shape="rounded" />
                             </div>
                         </Col>
                     </Row>
                     <Row>
-                    <div className="product-dashboard-pagination"></div>
+                        <div className="product-dashboard-pagination"></div>
                     </Row>
-                </Styles>
+                </Styles >
             );
         }
     }
@@ -159,4 +348,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, {getProducts})(ProductDashBoard);
+export default connect(mapStateToProps, { getProducts })(ProductDashBoard);

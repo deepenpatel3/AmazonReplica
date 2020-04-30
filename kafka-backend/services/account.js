@@ -29,13 +29,10 @@ exports.serve = function serve(msg, callback) {
         case "admin_signup":
             admin_signup(msg, callback);
             break;
-<<<<<<< Updated upstream
         case "customer_payment":
             customer_payment(msg,callback);
-=======
         case "get_cart":
             get_cart(msg,callback);
->>>>>>> Stashed changes
             break;
     }
 }
