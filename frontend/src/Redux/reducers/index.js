@@ -6,6 +6,7 @@ import customerPaymentReducer from "./customer/payment"
 import customerProductReducer from "./customer/productReducer";
 import customerReviewReducer from "./customer/reviewReducer";
 
+import cartReducer from "./customer/cartReducer";
 const rootReducer = combineReducers({
     sellerLogin : sellerLoginReducer,
     customerLogin : customerLoginReducer,
@@ -13,6 +14,8 @@ const rootReducer = combineReducers({
     customerPayment : customerPaymentReducer,
     customerProductData: customerProductReducer,
     customerReviewData: customerReviewReducer,
+    cart : cartReducer
+
 })
 
 export default rootReducer;

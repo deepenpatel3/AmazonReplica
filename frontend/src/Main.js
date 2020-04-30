@@ -24,8 +24,8 @@ class Main extends Component {
                 <Route path="/customerSignUp"><CustomerSignUp /></Route>
                 <Route path="/sellerSignUp"><SellerSignUp /></Route>
                 <Route path="/adminSignUp"><AdminSignUp /></Route>
-                <Route path="/customerProduct"><CustomerProductDashBoard/></Route>
-                <Route path="/sellerProduct"><SellerProductDashBoard/></Route>
+                <Route path="/seller/product"><SellerProductDashBoard/></Route>
+                <Route path="/customer/product"><CustomerProductDashBoard/></Route>
                 <Route path="/customer/home"><CustomerHome /></Route>
                 <Route path="/customer/cart"><Cart /></Route>
                 <Route path="/customer/payment"><Payment /></Route>
