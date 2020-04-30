@@ -66,7 +66,7 @@ class Cart extends Component {
     deleteFromSave = i => {
         let del = this.state.saveForLater.filter((val,k)=> k !== i)
         this.setState({
-            saveFromLater : del
+            saveForLater : del
         },()=>{
             this.props.updateCart({id: localStorage.getItem("id") , Cart : this.state.cart , SaveForLater : this.state.saveForLater })
         })
