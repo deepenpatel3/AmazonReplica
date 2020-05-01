@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+const redis = require("redis");
 const { frontendURL } = require("./src/utils/config");
 
 var cors = require("cors");
@@ -10,6 +11,13 @@ app.use(cors({ origin: frontendURL, credentials: true }));
 // app.use(bodyParser.urlencoded({
 //     extended: true
 // }));
+
+const redisClient = redis.createClient(6379);
+
+redisClient.on("error" , (err) => {
+    console.log(err)
+});
+
 app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
