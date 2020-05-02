@@ -11,11 +11,13 @@ var app = express();
 
 const bucket = "ouramazonbucket1";
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 const s3Bucket = new aws.S3({
-    accessKeyId: "AKIAJIMYICX5TT3QDPZA",
-    secretAccessKey: "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"
+    accessKeyId: `${process.env.accessKeyId}`,
+    secretAccessKey: `${process.env.secretAccessKey}`
 })
-console.log("sercret key", process.env.secretKey, "access", process.env.accessKeyId);
 
 const upload = multer({
     storage: multers3({
