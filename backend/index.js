@@ -1,15 +1,39 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+const redis = require("redis");
 const { frontendURL } = require("./src/utils/config");
-
+var { mongoDB } = require('./config');
+var mongoose = require("mongoose");
 var cors = require("cors");
+
+var options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 500,
+    bufferMaxEntries: 0
+};
+mongoose.connect(mongoDB, options, (err) => {
+    if (err) {
+        console.log("MONGODB connection error", err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
+});
 
 app.use(cors({ origin: frontendURL, credentials: true }));
 
 // app.use(bodyParser.urlencoded({
 //     extended: true
 // }));
+
+const redisClient = redis.createClient(6379);
+
+redisClient.on("error" , (err) => {
+    console.log(err)
+});
+
 app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
