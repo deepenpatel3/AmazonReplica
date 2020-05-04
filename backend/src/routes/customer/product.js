@@ -15,10 +15,11 @@ router.get("/products", function (req, res) {
     const data = {
         page: req.query.page,
         limit: req.query.limit,
+        sellerId: req.query.sellerId,
     }
 
     // console.log("Data: ",JSON.stringify(data));
-    if (parseInt(data.page) < 6) {
+    if (parseInt(data.page) < 6 && (!data.sellerId)) {
         let redisKey = "pg_" + data.page
         redisClient.get(redisKey, (err, result) => {
             if (result) {

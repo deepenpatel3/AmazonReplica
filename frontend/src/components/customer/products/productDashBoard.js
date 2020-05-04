@@ -114,14 +114,12 @@ class ProductDashBoard extends Component {
         if (this.state.ProductDetailsView) {
             return (
                 <Styles>
-                    <Navbar />
                     <ProductDetailsDashBoard Product={this.state.SelectedProduct} onBackClickListner={this.onBackClickListner} />
                 </Styles>
             )
         } else {
             return (
                 <Styles>
-                    <Navbar />
                     <div className="product-filter-bar"></div>
                     <Row>
                         <Col sm={2} md={2}>
