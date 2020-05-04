@@ -141,6 +141,7 @@ class ProductDashBoard extends Component {
     };
 
     onFileUploadChangeHandler = event => {
+        console.log("Images Files: ",JSON.stringify(event.target.files));
         this.setState({
             ProductImages: event.target.files,
         })

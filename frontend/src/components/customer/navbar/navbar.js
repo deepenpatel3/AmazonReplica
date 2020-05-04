@@ -63,7 +63,6 @@ class Navbar extends Component {
                                     <StyledBadge badgeContent={this.state.cart.length} color="secondary">
                                         <ShoppingCartIcon />
                                     </StyledBadge>
-
                                 </Link>
                             </li>
 

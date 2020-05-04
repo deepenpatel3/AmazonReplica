@@ -44,10 +44,24 @@ export const getProducts = (productData, sellerId, page, limit) => dispatch => {
 
 export const addProduct = (product, productImages) => dispatch => {
 
+   
+
+    console.log("Images: ", JSON.stringify(productImages));
+    var imgs = [];
+    // productImages.map((key,value)=>{
+    //     console.log("Key: ",key);
+    //     console.log("value: ", value);
+    //     imgs.push(value);
+    // })
+    for (const key in productImages) {
+        console.log("Key: ",key);
+        console.log("value: ", productImages[key]);
+        imgs.push( productImages[key]);
+      }
+
     const formData = new FormData();
     formData.append('Product', JSON.stringify(product));
-    formData.append('Images', productImages);
-
+    formData.append('Images', imgs);
     // const token = localStorage.getItem("token");
     const config = {
         headers: {

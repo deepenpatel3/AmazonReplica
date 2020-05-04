@@ -23,7 +23,7 @@ router.get("/products", function (req, res) {
         let redisKey = "pg_" + data.page
         redisClient.get(redisKey, (err, result) => {
             if (result) {
-                console.log("@@@@@@@@@@\nCALLED FROM CACHE MEMORY")
+                // console.log("@@@@@@@@@@\nCALLED FROM CACHE MEMORY")
                 res.status(200);
                 res.json(JSON.parse(result))
                 res.end();
@@ -41,7 +41,7 @@ router.get("/products", function (req, res) {
                         res.end();
                         return;
                     } else {
-                        console.log("Inside data");
+                        // console.log("Inside data");
                         // console.log("Data:", JSON.stringify(results));
                         res.status(200);
                         res.json(result)
@@ -66,7 +66,7 @@ router.get("/products", function (req, res) {
                 res.end();
                 return;
             } else {
-                console.log("Inside data");
+                // console.log("Inside data");
                 // console.log("Data:", JSON.stringify(results));
                 res.status(200);
                 res.json(result)
