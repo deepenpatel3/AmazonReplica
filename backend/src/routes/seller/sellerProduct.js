@@ -22,16 +22,23 @@ const upload = multer({
 app.use('../../uploads', express.static(path.join(__dirname, '/uploads')));
 
 
-router.get("/addProduct",upload.array('photos', 5), function (req, res) {
+router.post("/addProduct", upload.array('photos', 5), function (req, res) {
     let UpdatedImages = []
     for (let i = 0; i < req.file.Images.length; i++) {
-         UpdatedImages[i] = req.protocol + "://" + req.hostname + ':3001/' + req.file[i].path;
+        UpdatedImages[i] = req.protocol + "://" + req.hostname + ':3001/' + req.file[i].path;
     }
-    
+
     req.body.Images = UpdatedImages
-    console.log("Images Path",req.body.Images)
+    console.log("Images Path", req.body.Images)
     const data = {
-        req : req,
+        Name: req.body.Name,
+        Images: req.file.Images,
+        Offers: [],
+        Price: req.body.Price,
+        Description: req.body.Description,
+        Categories: req.body.Categories,
+        SellerId: req.body.SellerId,
+        Name: req.body.sellerName,
     }
     // console.log("Data: ",JSON.stringify(data));
     kafka.make_request('product', { "path": "add_seller_product", "body": data }, function (err, result) {
@@ -56,7 +63,7 @@ router.get("/addProduct",upload.array('photos', 5), function (req, res) {
 
 router.get("/updateProduct", function (req, res) {
     const data = {
-        req : req.body
+        req: req.body
     }
     // console.log("Data: ",JSON.stringify(data));
     kafka.make_request('product', { "path": "update_seller_product", "body": data }, function (err, result) {
@@ -81,7 +88,7 @@ router.get("/updateProduct", function (req, res) {
 
 router.get("/deleteProduct", function (req, res) {
     const data = {
-        req : req.body
+        req: req.body
     }
     // console.log("Data: ",JSON.stringify(data));
     kafka.make_request('product', { "path": "delete_seller_product", "body": data }, function (err, result) {

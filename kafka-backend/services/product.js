@@ -89,7 +89,7 @@ function get_all_product(msg, callback) {
             limit: msg.limit,
         };
         // console.log("msg: ",JSON.stringify(msg));
-        Product.paginate({ _id: msg.sellerId }, options, function (err, result) {
+        Product.paginate({ "Seller.SellerId": msg.sellerId }, options, function (err, result) {
             if (err) {
                 // console.log("Error: ",err);
                 callback(err, null);

@@ -8,12 +8,13 @@ router.get("/products", function (req, res) {
     const data = {
         page: req.query.page,
         limit: req.query.limit,
+        sellerId: req.query.sellerId,
     }
     // console.log("Data: ",JSON.stringify(data));
     kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
         if (!result) {
             console.log("Inside err");
-            res.status(404);
+            res.status(404); 
             res.json({
                 status: "error",
                 msg: "Products not found",
