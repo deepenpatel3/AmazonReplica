@@ -16,7 +16,7 @@ import MaterialUiButton from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Chip from '@material-ui/core/Chip';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-
+import axios from 'axios';
 
 
 
@@ -49,7 +49,7 @@ const Styles = styled.div`
         margin: 5px;
       },
     .add-product-button {
-        float:right;
+        float: right;
         margin: 2px;
     }
     .chip-paper {
@@ -146,7 +146,6 @@ class ProductDashBoard extends Component {
         this.setState({
             ProductImages: event.target.files,
         })
-
     }
 
     onAddProductClick = (e) => {
@@ -159,7 +158,12 @@ class ProductDashBoard extends Component {
             SellerId: localStorage.getItem("id"),
             SellerName: localStorage.getItem("name"),
         }
-        
+        console.log("product", product)
+        axios.post('http://localhost:3001/seller/product/addProduct', product)
+            .then(response => {
+                // console.log("All Student", JSON.stringify(response));
+                console.log(response);
+            })
     }
 
     onBackClickListner = () => {
@@ -170,6 +174,7 @@ class ProductDashBoard extends Component {
     }
 
     onValueChangeHandler = (e) => this.setState({ [e.target.name]: e.target.value })
+
     componentDidMount() {
         this.props.getProducts(this.props.productData, 1, this.state.limit);
         if (!this.props.productData) {
@@ -248,7 +253,7 @@ class ProductDashBoard extends Component {
                                         <Form.Label className="signup-form-lable">Categories</Form.Label>
                                         <GridList cellHeight={40} spacing={1} cols={Math.min(this.state.cetagoriesSet.length, 4)} >
                                             {this.state.cetagoriesSet.map((data, id) => {
-                                                console.log("Chip data: ", data);
+                                                // console.log("Chip data: ", data);a
                                                 return (
                                                     <GridListTile className="category-chip">
                                                         <Chip
@@ -282,7 +287,7 @@ class ProductDashBoard extends Component {
                                 <Form.Row>
                                     <Form.Group as={Col} controlId="end_date">
                                         <Form.Label>Product Description</Form.Label>
-                                        <Form.Control as="textarea" name="Description"  placeholder="Write description here..." rows="3" />
+                                        <Form.Control as="textarea" name="Description" placeholder="Write description here..." rows="3" />
                                     </Form.Group>
                                 </Form.Row>
                             </Form>
@@ -291,7 +296,7 @@ class ProductDashBoard extends Component {
                             <Button variant="secondary" onClick={this.handleClose}>
                                 Close
                             </Button>
-                            <Button variant="primary" onClick={this.handleClose}>
+                            <Button variant="primary" onClick={this.onAddProductClick}>
                                 Add Product
                             </Button>
                         </Modal.Footer>

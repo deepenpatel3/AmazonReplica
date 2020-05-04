@@ -18,9 +18,9 @@ const setLoginCredentials = (token) => {
     var decoded = jwt_decode(token.split(' ')[1]);
     if (decoded.signInSuccess) {
         localStorage.setItem("token", token)
-        localStorage.setItem("id", decoded.CID);
+        localStorage.setItem("id", decoded.id);
         localStorage.setItem("name", decoded.name);
-        localStorage.setItem("type", "customer");
+        localStorage.setItem("type", decoded.role);
     }
     return {
         type: CUSTOMER_LOGIN,
