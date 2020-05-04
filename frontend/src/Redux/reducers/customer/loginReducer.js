@@ -12,8 +12,7 @@ function customerLoginReducer(state = initialState, action) {
     }
     else if (action.type === CUSTOMER_LOGOUT) {
         return Object.assign({}, state, {
-            id: '',
-
+            signInSuccess: "", message: ""
         });
     }
     return state;

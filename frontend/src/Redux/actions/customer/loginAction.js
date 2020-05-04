@@ -27,6 +27,10 @@ const setLoginCredentials = (token) => {
         payload: { ...decoded }
     }
 }
-export const logout = () => ({
-    type: CUSTOMER_LOGOUT
-})
+export const logout = () => {
+    
+    localStorage.clear();
+    return {
+        type: CUSTOMER_LOGOUT
+    }
+}
