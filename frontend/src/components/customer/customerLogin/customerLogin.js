@@ -23,7 +23,7 @@ class Customerlogin extends Component {
     render() {
         let alertElement = null, redirectVar = null;
         if (localStorage.getItem("id"))
-            redirectVar = <Redirect to="/customer/home" />
+            redirectVar = <Redirect to="/customer/products" />
         if (this.props.signInSuccess === false)
             alertElement = <p className="alert alert-danger" role="alert">{this.props.message}</p>
         return (

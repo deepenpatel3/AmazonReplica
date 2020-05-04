@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
+import {Redirect} from 'react-router';
 
 class Navbar extends Component {
+    
     render() {
+        if(!localStorage.getItem("id") || !(localStorage.getItem("type") == "seller")){
+            return(
+            <Redirect to="/login" />
+            );
+        }
+
         return (
             <div>
                 <nav class="navbar navbar-dark bg-dark  navbar-expand-lg ">
@@ -10,16 +18,10 @@ class Navbar extends Component {
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                        <Link class="navbar-brand" to="/">amazon</Link>
+                        <Link class="navbar-brand" to="/seller/product">amazon</Link>
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                             <li class="nav-item active">
-                                <Link class="nav-link" to="/home">Home <span class="sr-only">(current)</span></Link>
-                            </li>
-                            <li class="nav-item">
-                                <Link class="nav-link" to="#">Link</Link>
-                            </li>
-                            <li class="nav-item">
-                                <Link class="nav-link disabled" to="#">Disabled</Link>
+                                <Link class="nav-link" to="/seller/product">Home <span class="sr-only">(current)</span></Link>
                             </li>
                         </ul>
                         <form class="form-inline my-2 my-lg-0">

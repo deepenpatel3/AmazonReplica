@@ -19,7 +19,7 @@ router.get("/products", function (req, res) {
     }
 
     // console.log("Data: ",JSON.stringify(data));
-    if (parseInt(data.page) < 6) {
+    if (parseInt(data.page) < 6 && (!data.sellerId)) {
         let redisKey = "pg_" + data.page
         redisClient.get(redisKey, (err, result) => {
             if (result) {

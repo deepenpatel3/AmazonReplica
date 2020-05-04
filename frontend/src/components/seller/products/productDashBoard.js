@@ -208,14 +208,12 @@ class ProductDashBoard extends Component {
         if (this.state.ProductDetailsView) {
             return (
                 <Styles>
-                    <Navbar />
                     <ProductDetailsDashBoard Product={this.state.SelectedProduct} onBackClickListner={this.onBackClickListner} />
                 </Styles>
             )
         } else {
             return (
                 <Styles>
-                    <Container className="product-dashboard">
                     <Modal show={this.state.modalShow} onHide={this.handleClose}>
                         <Modal.Header closeButton>
                             <Modal.Title>Add Product</Modal.Title>
@@ -284,7 +282,6 @@ class ProductDashBoard extends Component {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-                    <Navbar />
                     <div className="product-filter-bar"></div>
                         <Row>
                             <Col sm={2} md={2}>
@@ -321,10 +318,6 @@ class ProductDashBoard extends Component {
                                 </Row>
                             </Col>
                         </Row>
-                        <Row>
-                            <div className="product-dashboard-pagination"></div>
-                        </Row>
-                    </Container>
                 </Styles >
             );
         }
