@@ -28,7 +28,7 @@ const Styles = styled.div`
         border-radius: 3px;
     }
     .product-sidebar{
-        padding: 10px;
+        padding:2px;
         padding-left: 15px;
         height: 625px;
         box-shadow: 1px 1px 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
@@ -45,11 +45,10 @@ const Styles = styled.div`
     }
     .add-product-button-bar {
         margin: 1px;
-        width: 100%;
+        width: 98%;
         margin: 1px;
       },
     .add-product-button {
-        float: right;
         margin: 2px;
     }
     .chip-paper {
@@ -171,7 +170,7 @@ class ProductDashBoard extends Component {
 
     componentDidMount() {
         var sellerId = localStorage.getItem("id");
-        this.props.getProducts(this.props.productData, "5ea75b988d81e96fa24e18ec", 1, this.state.limit);
+        this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit);
         if (!this.props.productData) {
             this.setState({
                 products: this.props.productData.products
