@@ -16,7 +16,7 @@ import MaterialUiButton from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Chip from '@material-ui/core/Chip';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-
+import axios from 'axios';
 
 
 
@@ -49,8 +49,7 @@ const Styles = styled.div`
         margin: 1px;
       },
     .add-product-button {
-        display: flex;
-        justifyContent: 'end',
+        float: right;
         margin: 2px;
     }
     .chip-paper {
@@ -146,7 +145,6 @@ class ProductDashBoard extends Component {
         this.setState({
             ProductImages: event.target.files,
         })
-
     }
 
     onAddProductClick = (e) => {
@@ -170,6 +168,7 @@ class ProductDashBoard extends Component {
     }
 
     onValueChangeHandler = (e) => this.setState({ [e.target.name]: e.target.value })
+
     componentDidMount() {
         var sellerId = localStorage.getItem("id");
         this.props.getProducts(this.props.productData, "5ea75b988d81e96fa24e18ec", 1, this.state.limit);

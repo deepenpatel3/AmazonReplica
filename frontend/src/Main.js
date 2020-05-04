@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Route } from 'react-router-dom';
-import AdminLogin from './components/admin/adminLogin/adminLogin';
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
 import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
-import SellerLogin from './components/seller/sellerLogin/sellerLogin';
 import SellerSignUp from './components/seller/sellerSignUp/sellerSignUp';
 import AdminSignUp from './components/admin/adminSignUp/adminSignUp';
 import CustomerProductDashBoard from './components/customer/products/productDashBoard';
@@ -23,9 +21,8 @@ class Main extends Component {
         return (
             <BrowserRouter>
                 <div>
-                    <Route path="/login/seller"><SellerLogin /></Route>
-                    <Route path="/login/customer"> <CustomerLogin /> </Route>
-                    <Route path="/login/admin"><AdminLogin /></Route>
+                    <Route path="/login"> <CustomerLogin /> </Route>
+                    
                     <Route path="/customerSignUp"><CustomerSignUp /></Route>
                     <Route path="/sellerSignUp"><SellerSignUp /></Route>
                     <Route path="/adminSignUp"><AdminSignUp /></Route>

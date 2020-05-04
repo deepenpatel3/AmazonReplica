@@ -8,11 +8,10 @@ const aws = require("aws-sdk");
 const multers3 = require("multer-s3");
 var path = require('path');
 var app = express();
-
-const bucket = "ouramazonbucket1";
-
 const dotenv = require('dotenv');
 dotenv.config();
+
+const bucket = "ouramazonbucket1";
 
 const s3Bucket = new aws.S3({
     accessKeyId: `${process.env.accessKeyId}`,
@@ -32,7 +31,7 @@ const upload = multer({
             callback(null, req.body.SellerName + '/' + folder + '/' + Date.now().toString() + path.extname(file.originalname))
         }
     }),
-}).array('images', 5);
+}).array('Images', 5);
 
 
 router.post("/addProduct", function (req, res) {
