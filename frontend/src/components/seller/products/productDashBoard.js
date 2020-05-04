@@ -97,7 +97,7 @@ class ProductDashBoard extends Component {
 
     handleChange = (e, value) => {
         e.preventDefault();
-        this.props.getProducts(this.props.productData, value, this.state.limit);
+        this.props.getProducts(this.props.productData,localStorage.getItem("id"), value, this.state.limit);
     };
 
     handleDelete = (id) => () => {
@@ -155,6 +155,7 @@ class ProductDashBoard extends Component {
             Description: this.state.Description,
             SellerId: localStorage.getItem("id"),
             SellerName: localStorage.getItem("name"),
+            Categories: this.state.cetagoriesSet,
         }
         this.handleClose();
         this.props.addProduct(product, this.state.ProductImages);

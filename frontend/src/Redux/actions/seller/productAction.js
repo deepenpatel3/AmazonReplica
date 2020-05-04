@@ -47,21 +47,16 @@ export const addProduct = (product, productImages) => dispatch => {
    
 
     console.log("Images: ", JSON.stringify(productImages));
-    var imgs = [];
-    // productImages.map((key,value)=>{
-    //     console.log("Key: ",key);
-    //     console.log("value: ", value);
-    //     imgs.push(value);
-    // })
-    for (const key in productImages) {
-        console.log("Key: ",key);
-        console.log("value: ", productImages[key]);
-        imgs.push( productImages[key]);
-      }
-
+   
     const formData = new FormData();
     formData.append('Product', JSON.stringify(product));
-    formData.append('Images', imgs);
+    formData.append('Name',product.Name);
+    formData.append('SellerName', product.SellerName);
+    for (const key in productImages) {
+        formData.append('Images', productImages[key]);
+      }
+
+    
     // const token = localStorage.getItem("token");
     const config = {
         headers: {

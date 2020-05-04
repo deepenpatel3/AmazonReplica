@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const Seller = require('../models/sellerModel');
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);
@@ -25,7 +26,7 @@ exports.serve = function serve(msg, callback) {
 function add_seller_product(msg, callback) {
     const product = new Product({
         Name: msg.body.Name,
-        Images: msg.file.Images,
+        Images: msg.body.Images,
         Rating: 0,
         Offers: msg.body.Offers,
         Price: msg.body.Price,
@@ -34,15 +35,23 @@ function add_seller_product(msg, callback) {
         Reviews : [],
         Seller: {
             SellerId: msg.body.SellerId,
-            Name: msg.body.sellerName
+            Name: msg.body.SellerName,
         }
     });
     product
         .save()
         .then(result => {
-            callback(null, result);
+            Seller.update({"_id": msg.body.SellerId},{$push:{ "Products": result._id }}).then((res) =>{
+                console.log("res in adding product: ", JSON.stringify(res));
+                callback(null, result);
+            }).catch((err) =>{
+                console.log("Erro in adding product: ", err)
+                callback(err, null);
+            });
+            
         })
         .catch(err => {
+            console.log("Erro in adding product: ", err)
             callback(err, null);
         })
 

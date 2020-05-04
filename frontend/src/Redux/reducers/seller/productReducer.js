@@ -26,7 +26,7 @@ const sellerProductReducer = (state = initialState, action) => {
 
             return {
                 ...state,
-                products: [action.payload, ...state],
+                products: [action.payload, ...state.products],
             };
 
         default:

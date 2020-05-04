@@ -33,8 +33,12 @@ const upload = multer({
     }),
 }).array('Images', 5);
 
-
+console.log("Key: ", process.env.accessKeyId);
+console.log("Key: ", process.env.secretAccessKey);
 router.post("/addProduct", function (req, res) {
+
+
+
     let UpdatedImages = []
     // console.log("req.body", req.data)
     // console.log("req.file", req.file);
@@ -49,33 +53,42 @@ router.post("/addProduct", function (req, res) {
             for (let i = 0; i < req.files.length; i++) {
                 UpdatedImages.push(req.files[i].location);
             }
+            console.log("updated imgages: ", UpdatedImages);
+            // req.body.Images = UpdatedImages
+            
+            var product = JSON.parse(req.body.Product);
+            const data = {
+                Name: product.Name,
+                Images: UpdatedImages,
+                Offers: [],
+                Price: product.Price,
+                Description: product.Description,
+                Categories: product.Categories,
+                SellerId: product.SellerId,
+                SellerName: product.SellerName
+            }
+            console.log("Data: ",JSON.stringify(data));
+            kafka.make_request('product', { "path": "add_seller_product", "body": data }, function (err, result) {
+                if (!result) {
+                    console.log("Inside err");
+                    res.status(404);
+                    res.json({
+                        status: "error",
+                        msg: "Products not found",
+                    })
+                    res.end();
+                } else {
+                    console.log("Inside data");
+                    // console.log("Data:", JSON.stringify(results));
+                    res.status(200);
+                    res.json(result)
+                    res.end();
+                    return;
+                }
+            });
         }
     })
-    console.log("updated imgages: ", UpdatedImages);
-    // req.body.Images = UpdatedImages
-    // console.log("Images Path", req.body.Images)
-    // const data = {
-    //     req: req,
-    // }
-    // // console.log("Data: ",JSON.stringify(data));
-    // kafka.make_request('product', { "path": "add_seller_product", "body": data }, function (err, result) {
-    //     if (!result) {
-    //         console.log("Inside err");
-    //         res.status(404);
-    //         res.json({
-    //             status: "error",
-    //             msg: "Products not found",
-    //         })
-    //         res.end();
-    //     } else {
-    //         console.log("Inside data");
-    //         // console.log("Data:", JSON.stringify(results));
-    //         res.status(200);
-    //         res.json(result)
-    //         res.end();
-    //         return;
-    //     }
-    // });
+
 });
 
 router.get("/updateProduct", function (req, res) {
