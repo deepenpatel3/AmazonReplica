@@ -3,6 +3,7 @@ const router = express.Router();
 const { secret } = require("../../utils/config");
 const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
+// const Product = require('../../models/productModel');
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
 
@@ -14,10 +15,11 @@ router.get("/products", function (req, res) {
     const data = {
         page: req.query.page,
         limit: req.query.limit,
+        sellerId: req.query.sellerId,
     }
-    
+
     // console.log("Data: ",JSON.stringify(data));
-    if (parseInt(data.page) < 6 ) {
+    if (parseInt(data.page) < 6 && (!data.sellerId)) {
         let redisKey = "pg_" + data.page
         redisClient.get(redisKey, (err, result) => {
             if (result) {
@@ -50,8 +52,8 @@ router.get("/products", function (req, res) {
                 });
             }
         })
-        
-    } 
+
+    }
     else {
         kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
             if (!result) {

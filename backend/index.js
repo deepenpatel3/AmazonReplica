@@ -3,8 +3,24 @@ var app = express();
 var bodyParser = require("body-parser");
 const redis = require("redis");
 const { frontendURL } = require("./src/utils/config");
-
+var { mongoDB } = require('./config');
+var mongoose = require("mongoose");
 var cors = require("cors");
+
+var options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 500,
+    bufferMaxEntries: 0
+};
+mongoose.connect(mongoDB, options, (err) => {
+    if (err) {
+        console.log("MONGODB connection error", err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
+});
 
 app.use(cors({ origin: frontendURL, credentials: true }));
 

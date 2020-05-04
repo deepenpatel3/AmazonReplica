@@ -9,6 +9,7 @@ import { Navbar as BNavbar, Form, FormControl, Button, Nav } from 'react-bootstr
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { logout } from "../../../Redux/actions/customer/loginAction";
 import SearchIcon from '@material-ui/icons/Search';
+import {Redirect} from 'react-router';
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -23,7 +24,8 @@ class Navbar extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            cart: []
+            cart: [],
+            redirect : false 
         }
     }
     componentWillMount = () => {
@@ -32,6 +34,9 @@ class Navbar extends Component {
     }
     logout = () => {
         this.props.logout();
+        this.setState({
+            redirect : true
+        })
     }
     componentDidUpdate = (prevProps) => {
         if (prevProps.cart !== this.props.cart) {
@@ -41,6 +46,13 @@ class Navbar extends Component {
         }
     }
     render() {
+        // let redirect = this.state.redirect;
+
+        if(!localStorage.getItem("id") || !(localStorage.getItem("type") == "customer")){
+            return(
+            <Redirect to="/login" />
+            );
+        }
         return (
             <div>
                 <BNavbar style={{ backgroundColor: "#252f3d", padding: "0" }}>

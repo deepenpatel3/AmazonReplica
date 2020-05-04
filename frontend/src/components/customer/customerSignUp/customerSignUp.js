@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { connect } from "react-redux";
-import { customerLogin } from "../../../Redux/actions/customer/loginAction";
+import { customerSignUp } from "../../../Redux/actions/customer/loginAction";
 import { Redirect } from "react-router-dom";
 
 class CustomerSignUp extends Component {
@@ -17,14 +17,18 @@ class CustomerSignUp extends Component {
         let data = {
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
-            password: document.getElementById("password").value
+            password: document.getElementById("password").value,
+            role: document.getElementById("role").value
         }
         this.props.customerSignUp(data);
     }
     render() {
         let alertElement = null, redirectVar = null;
-        if (localStorage.getItem("id"))
-            redirectVar = <Redirect to="/customer/home" />
+        let role = localStorage.getItem("type");
+        if (role === "customer") redirectVar = <Redirect to="/customer/home" />
+        else if (role === 'seller') redirectVar = <Redirect to="/seller/product" />
+        else if (role === 'admin') { }
+
         if (this.props.signInSuccess === false)
             alertElement = <p className="alert alert-danger" role="alert">{this.props.message}</p>
         return (
@@ -54,7 +58,14 @@ class CustomerSignUp extends Component {
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password" placeholder="Password" />
                             </div>
-                            <div class="form-group" style={{ width: "100%" }}>
+                            <label for="role">Choose Your Role: </label>
+                            <select class="custom-select" id='role'>
+                                <option value="Customer" >Customer</option>
+                                <option value="Seller">Seller</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+
+                            <div class="form-group" style={{ width: "100%", marginTop: "20px" }}>
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
                             </div>
                             <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
@@ -72,4 +83,4 @@ function mapStateToProps(state) {
         message: state.customerLogin.message
     }
 }
-export default connect(mapStateToProps, { customerLogin })(CustomerSignUp);
+export default connect(mapStateToProps, { customerSignUp })(CustomerSignUp);

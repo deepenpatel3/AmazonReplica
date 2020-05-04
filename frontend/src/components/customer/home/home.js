@@ -5,7 +5,6 @@ class CustomerHome extends Component {
     render() {
         return (
             <div>
-                <Navbar />
                 Your Products
                 
             </div>
