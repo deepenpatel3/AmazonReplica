@@ -24,8 +24,9 @@ class Customerlogin extends Component {
     render() {
         let alertElement = null, redirectVar = null;
         let role = localStorage.getItem("type");
+        console.log(role)
         if (role === "customer") redirectVar = <Redirect to="/customer/home" />
-        else if (role === 'seller') { }
+        else if (role === 'seller') redirectVar = <Redirect to="/seller/product" />
         else if (role === 'admin') { }
 
 

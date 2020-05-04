@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Route } from 'react-router-dom';
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
 import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
-import SellerSignUp from './components/seller/sellerSignUp/sellerSignUp';
-import AdminSignUp from './components/admin/adminSignUp/adminSignUp';
 import CustomerProductDashBoard from './components/customer/products/productDashBoard';
 import SellerProductDashBoard from './components/seller/products/productDashBoard';
 
@@ -18,10 +16,7 @@ class Main extends Component {
             <div>
 
                 <Route path="/login"> <CustomerLogin /> </Route>
-
-                <Route path="/customerSignUp"><CustomerSignUp /></Route>
-                <Route path="/sellerSignUp"><SellerSignUp /></Route>
-                <Route path="/adminSignUp"><AdminSignUp /></Route>
+                <Route path="/signUp"><CustomerSignUp /></Route>
                 <Route path="/seller/product"><SellerProductDashBoard /></Route>
                 <Route path="/customer/product"><CustomerProductDashBoard /></Route>
                 <Route path="/customer/home"><CustomerHome /></Route>
