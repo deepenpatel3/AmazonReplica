@@ -43,10 +43,10 @@ router.post("/signIn", (req, res) => {
 })
 
 router.post("/signUp", function (req, res) {
-    console.log('inside customer signup api', req.body);
+    console.log('inside signup api', req.body);
 
-    kafka.make_request('account', { "path": "customer_signup", "body": req.body }, function (err, result) {
-        console.log('got back from kafka customer_signup');
+    kafka.make_request('account', { "path": "signup", "body": req.body }, function (err, result) {
+        console.log('got back from kafka signup');
         if (err) {
             console.log('error', err)
             res.send({
@@ -57,9 +57,10 @@ router.post("/signUp", function (req, res) {
             if (result.signInSuccess) {
                 var payload = {
                     signInSuccess: result.signInSuccess,
-                    CID: result.CID,
+                    id: result.id,
                     name: result.name,
-                    message: result.message
+                    message: result.message,
+                    role: result.role
                 }
             }
             else {

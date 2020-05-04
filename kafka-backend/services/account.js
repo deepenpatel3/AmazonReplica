@@ -14,16 +14,8 @@ exports.serve = function serve(msg, callback) {
         case "login":
             login(msg, callback);
             break;
-        case "customer_signup":
-            customer_signup(msg, callback);
-            break;
-
-        case "seller_signup":
-            seller_signup(msg, callback);
-            break;
-
-        case "admin_signup":
-            admin_signup(msg, callback);
+        case "signup":
+            signup(msg, callback);
             break;
         case "customer_payment":
             customer_payment(msg, callback);
@@ -66,7 +58,19 @@ function update_cart(msg, callback) {
             console.log("ERROR : " + err)
         })
 }
-
+function customer_payment(msg, callback) {
+    Customer.findOne({ _id: msg.body.id }).populate('Cart.ProductID')
+        .exec((err, customer) => {
+            if (err) {
+                console.log('Customer Payment error', err)
+                callback(null, { message: "Please try again" })
+            }
+            if (customer) {
+                console.log("customer payment details")
+                callback(null, { Payments: customer.Payments, Address: customer.Address, Cart: customer.Cart })
+            }
+        })
+}
 
 function login(msg, callback) {
     let password = msg.body.password;
@@ -147,82 +151,68 @@ function login(msg, callback) {
             break;
 
     }
-
-    function customer_signup(msg, callback) {
-
-        Customer.findOne({ Email: msg.body.email }, (err, customer) => {
-            if (err) {
-                console.log('customer signup error', err)
-                callback(null, { signInSuccess: false, message: "Please try again" })
-            }
-            if (customer) {
-                console.log("customer already exists")
-                callback(null, { signInSuccess: false, message: "Customer already exists" })
-            } else {
-                console.log("about to signup")
-                let hash = bcrypt.hashSync(msg.body.password, salt);
-                let newCustomer = new Customer({
-                    Name: msg.body.name, Email: msg.body.email, Password: hash
-                })
-                newCustomer.save(() => { callback(null, { signInSuccess: true, CID: newCustomer._id, name: newCustomer.Name, message: "Successfully Signed up" }) });
-            }
-        })
-    }
-
-
-
-    function seller_signup(msg, callback) {
-        Seller.findOne({ Email: msg.body.email }, (err, seller) => {
-            if (err) {
-                console.log('seller signup error', err)
-                callback(null, { signInSuccess: false, message: "Please try again" })
-            }
-            if (seller) {
-                console.log("seller already exists")
-                callback(null, { signInSuccess: false, message: "Seller already exists" })
-            } else {
-                console.log("about to signup")
-                let hash = bcrypt.hashSync(msg.body.password, salt);
-                let newSeller = new Seller({
-                    Name: msg.body.name, Email: msg.body.email, Password: hash
-                })
-                newSeller.save(() => { callback(null, { signInSuccess: true, SID: newSeller._id, name: newSeller.Name, message: "Successfully Signed up" }) });
-            }
-        })
-    }
-
-    function admin_signup(msg, callback) {
-        Admin.findOne({ Email: msg.body.email }, (err, admin) => {
-            if (err) {
-                console.log('admin signup error', err)
-                callback(null, { signInSuccess: false, message: "Please try again" })
-            }
-            if (admin) {
-                console.log("admin already exists")
-                callback(null, { signInSuccess: false, message: "Admin already exists" })
-            } else {
-                console.log("about to signup")
-                let hash = bcrypt.hashSync(msg.body.password, salt);
-                let newAdmin = new Admin({
-                    Name: msg.body.name, Email: msg.body.email, Password: hash
-                })
-                newAdmin.save(() => { callback(null, { signInSuccess: true, AID: newAdmin._id, name: newAdmin.Name, message: "Successfully Signed up" }) });
-            }
-        })
-    }
-
-
-    function customer_payment(msg, callback) {
-        Customer.findOne({ _id: msg.body.id }).populate('Cart.ProductID')
-            .exec((err, customer) => {
+}
+function signup(msg, callback) {
+    switch (msg.body.role) {
+        case "Customer":
+            Customer.findOne({ Email: msg.body.email, Name: msg.body.name }, (err, customer) => {
                 if (err) {
-                    console.log('Customer Payment error', err)
-                    callback(null, { message: "Please try again" })
+                    console.log('customer signup error', err)
+                    callback(null, { signInSuccess: false, message: "Please try again" })
                 }
                 if (customer) {
-                    console.log("customer payment details")
-                    callback(null, { Payments: customer.Payments, Address: customer.Address, Cart: customer.Cart })
+                    console.log("customer already exists")
+                    callback(null, { signInSuccess: false, message: "Customer already exists" })
+                } else {
+                    console.log("about to signup")
+                    let hash = bcrypt.hashSync(msg.body.password, salt);
+                    let newCustomer = new Customer({
+                        Name: msg.body.name, Email: msg.body.email, Password: hash
+                    })
+                    newCustomer.save(() => { callback(null, { signInSuccess: true, id: newCustomer._id, name: newCustomer.Name, message: "Successfully Signed up", role: "customer" }) });
                 }
             })
+            break;
+        case "Seller":
+            Seller.findOne({ Email: msg.body.email, Name: msg.body.name }, (err, seller) => {
+                if (err) {
+                    console.log('seller signup error', err)
+                    callback(null, { signInSuccess: false, message: "Please try again" })
+                }
+                if (seller) {
+                    console.log("seller already exists")
+                    callback(null, { signInSuccess: false, message: "Seller already exists" })
+                } else {
+                    console.log("about to signup")
+                    let hash = bcrypt.hashSync(msg.body.password, salt);
+                    let newSeller = new Seller({
+                        Name: msg.body.name, Email: msg.body.email, Password: hash
+                    })
+                    newSeller.save(() => { callback(null, { signInSuccess: true, id: newSeller._id, name: newSeller.Name, message: "Successfully Signed up", role: "seller" }) });
+                }
+            })
+            break;
+        case "Admin":
+            Admin.findOne({ Email: msg.body.email, Name: msg.body.name }, (err, admin) => {
+                if (err) {
+                    console.log('admin signup error', err)
+                    callback(null, { signInSuccess: false, message: "Please try again" })
+                }
+                if (admin) {
+                    console.log("admin already exists")
+                    callback(null, { signInSuccess: false, message: "Admin already exists" })
+                } else {
+                    console.log("about to signup")
+                    let hash = bcrypt.hashSync(msg.body.password, salt);
+                    let newAdmin = new Admin({
+                        Name: msg.body.name, Email: msg.body.email, Password: hash
+                    })
+                    newAdmin.save(() => { callback(null, { signInSuccess: true, id: newAdmin._id, name: newAdmin.Name, message: "Successfully Signed up", role: "admin" }) });
+                }
+            })
+            break;
     }
+
 }
+
+
