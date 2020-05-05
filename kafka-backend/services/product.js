@@ -96,6 +96,7 @@ function get_all_product(msg, callback) {
             // sort: msg.sort 
         };
         Product.paginate(condition, options, function (err, result) {
+
             if (err) {
                 callback(err, null);
             }
