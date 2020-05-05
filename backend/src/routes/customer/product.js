@@ -15,9 +15,12 @@ router.get("/products", function (req, res) {
     const data = {
         page: req.query.page,
         limit: req.query.limit,
+        name: req.body.name,
+        Categories: req.body.Categories,
+        SellerId: req.body.SellerId
     }
 
-    // console.log("Data: ",JSON.stringify(data));
+    console.log("Data: ", JSON.stringify(data));
     if (parseInt(data.page) < 6) {
         let redisKey = "pg_" + data.page
         redisClient.get(redisKey, (err, result) => {
@@ -74,5 +77,6 @@ router.get("/products", function (req, res) {
             }
         });
     }
-});
+})
+
 module.exports = router;
