@@ -78,7 +78,7 @@ router.post("/addProduct", function (req, res) {
     // });
 });
 
-router.get("/updateProduct", function (req, res) {
+router.post("/updateProduct", function (req, res) {
     const data = {
         req: req.body
     }
@@ -103,7 +103,7 @@ router.get("/updateProduct", function (req, res) {
     });
 });
 
-router.get("/deleteProduct", function (req, res) {
+router.post("/deleteProduct", function (req, res) {
     const data = {
         req: req.body
     }

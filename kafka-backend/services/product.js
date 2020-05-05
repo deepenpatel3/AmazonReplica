@@ -14,12 +14,32 @@ exports.serve = function serve(msg, callback) {
             add_seller_product(msg, callback)
             break;
         case "update_seller_product":
-            update_seller_product(msg.body, callback)
+            update_seller_product(msg.body.req, callback)
             break;
         case "delete_seller_product":
-            delete_seller_product(msg.body, callback)
+            delete_seller_product(msg.body.req, callback)
+            break;
+        case "update_rating":
+            update_rating(msg.body, callback)
             break;
     }
+}
+
+
+function update_rating(msg, callback) {
+
+    Product.findById({ _id: msg.id }, (err, product) => {
+        if (err) {
+            console.log("rating update error", err);
+            callback(err, null);
+        } else {
+            product.Count = product.Count + 1 
+            console.log('Count', product.Count)
+            product.Rating = (msg.Rating + (product.Rating*(product.Count -1))) / (product.Count);
+            console.log(" Rating " , product.Rating)
+            product.save(() => { callback(null, { rating: product.Rating }) })
+        }
+    })
 }
 
 function add_seller_product(msg, callback) {
@@ -31,6 +51,7 @@ function add_seller_product(msg, callback) {
         Price: msg.body.Price,
         Description: msg.body.Description,
         Categories: msg.body.Categories,
+        Count: 0,
         Reviews: [],
         Seller: {
             SellerId: msg.body.SellerId,
@@ -49,11 +70,11 @@ function add_seller_product(msg, callback) {
 }
 
 function update_seller_product(msg, callback) {
-    Product.findOneAndUpdate({ _id: msg.id },
+    Product.updateOne({ _id: msg.id },
         {
             $set: {
                 Name: msg.Name,
-                Rating: msg.Rating,
+                // Rating: msg.Rating,
                 Offers: msg.Offers,
                 Price: msg.Price,
                 Description: msg.Description,
@@ -87,7 +108,9 @@ function get_all_product(msg, callback) {
     if (msg.SellerId) {
         console.log("inside if");
         condition = { Name: { $regex: '.*' + msg.name + '.*' }, "Seller.SellerId": msg.SellerId }
-        if (msg.Categories.length !== 0) condition.Categories = { $all: msg.Categories }
+        if (msg.Categories) {
+            if (msg.Categories.length !== 0) condition.Categories = { $all: msg.Categories }
+        }
         console.log("condition: ", condition)
         const options = {
             page: msg.page,
@@ -109,14 +132,17 @@ function get_all_product(msg, callback) {
         console.log("inside ELSE");
         console.log("msg", msg)
         condition = { $or: [{ Name: { $regex: '.*' + msg.name + '.*' } }, { "Seller.Name": { $regex: '.*' + msg.name + '.*' } }] }
-        if (msg.Categories.length !== 0) {
-            condition = {
-                $or: [{ "Seller.Name": { $regex: '.*' + msg.name + '.*' } }, { Name: { $regex: '.*' + msg.name + '.*' } }], Categories: { $all: msg.Categories }
+        if (msg.Categories) {
+            if (msg.Categories.length !== 0) {
+                condition = {
+                    $or: [{ "Seller.Name": { $regex: '.*' + msg.name + '.*' } }, { Name: { $regex: '.*' + msg.name + '.*' } }], Categories: { $all: msg.Categories }
+                }
             }
         }
         const options = {
             page: msg.page,
             limit: msg.limit,
+            populate : 'Seller.SellerId'
             // Sorting will be implemented here...
             // sort: msg.sort
         };

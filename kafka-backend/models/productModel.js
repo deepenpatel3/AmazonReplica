@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 const Review = require('./reviewModel');
+const Seller = require('./sellerModel');
 
 var sellerSchema = new Schema({
-    SellerId: {type: String, required: true},
+    SellerId: {type: Schema.Types.ObjectId, required: true, ref : Seller },
     Name: {type: String, required: true},
     SellerProfileUrl: {type: String}
 });
@@ -14,6 +15,7 @@ var productSchema = new Schema({
     Name: {type: String, required: true},
     Images: [{type: String}],
     Rating: {type: Number, required: true},
+    Count : {type : Number},
     Offers:[{type: String}],
     Price: {type: Number, required: true},
     Description:{type: String, required: true},
