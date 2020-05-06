@@ -12,49 +12,53 @@ redisClient.on("error", (err) => {
 });
 
 router.get("/products", function (req, res) {
+    console.log("@@@@@ PRODUCTS CALLED")
     const data = {
         page: req.query.page,
         limit: req.query.limit,
-        sellerId: req.query.sellerId,
+        name: req.query.name,
+        Categories: req.query.Categories,
+        SellerId: req.query.SellerId
     }
 
-    // console.log("Data: ",JSON.stringify(data));
-    if (parseInt(data.page) < 6 && (!data.sellerId)) {
-        let redisKey = "pg_" + data.page
-        redisClient.get(redisKey, (err, result) => {
-            if (result) {
-                console.log("@@@@@@@@@@\nCALLED FROM CACHE MEMORY")
-                res.status(200);
-                res.json(JSON.parse(result))
-                res.end();
-                return;
-            }
-            else {
-                kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
-                    if (!result) {
-                        console.log("Inside err");
-                        res.status(404);
-                        res.json({
-                            status: "error",
-                            msg: "Products not found",
-                        })
-                        res.end();
-                        return;
-                    } else {
-                        console.log("Inside data");
-                        // console.log("Data:", JSON.stringify(results));
-                        res.status(200);
-                        res.json(result)
-                        res.end();
-                        redisClient.setex(redisKey, 3600, JSON.stringify(result))
-                        return;
-                    }
-                });
-            }
-        })
+    console.log("Data: ", JSON.stringify(data));
+    // if (parseInt(data.page) < 6) {
 
-    }
-    else {
+    //     let redisKey = "pg_" + data.page
+    //     redisClient.get(redisKey, (err, result) => {
+    //         if (result) {
+    //             console.log("@@@@@@@@@@\nCALLED FROM CACHE MEMORY")
+    //             res.status(200);
+    //             res.json(JSON.parse(result))
+    //             res.end();
+    //             return;
+    //         }
+    //         else {
+    //             kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
+    //                 if (!result) {
+    //                     console.log("Inside err");
+    //                     res.status(404);
+    //                     res.json({
+    //                         status: "error",
+    //                         msg: "Products not found",
+    //                     })
+    //                     res.end();
+    //                     return;
+    //                 } else {
+    //                     console.log("Inside data");
+    //                     // console.log("Data:", JSON.stringify(results));
+    //                     res.status(200);
+    //                     res.json(result)
+    //                     res.end();
+    //                     redisClient.setex(redisKey, 3600, JSON.stringify(result))
+    //                     return;
+    //                 }
+    //             });
+    //         }
+    //     })
+
+    // }
+    // else {
         kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
             if (!result) {
                 console.log("Inside err");
@@ -74,6 +78,34 @@ router.get("/products", function (req, res) {
                 return;
             }
         });
+    // }
+})
+
+router.post("/updateRating", function (req, res) {
+    const data = {
+        id : req.body.id,
+        Rating : req.body.Rating
     }
+    // console.log("Data: ",JSON.stringify(data));
+    kafka.make_request('product', { "path": "update_rating", "body": data }, function (err, result) {
+        if (!result) {
+            console.log("Inside err");
+            res.status(404);
+            res.json({
+                status: "error",
+                msg: "Ratings not found",
+            })
+            res.end();
+        } else {
+            console.log("Inside Edit Rating data");
+            // console.log("Data:", JSON.stringify(results));
+            res.status(200);
+            res.json(result)
+            res.end();
+            return;
+        }
+    });
 });
+
+
 module.exports = router;
