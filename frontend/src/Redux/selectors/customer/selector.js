@@ -4,3 +4,15 @@ export const getProducts = (productData) => {
     }
     return [];
 };
+
+export const getFilterName = (productData) => {
+    if(productData){
+        return productData.name;
+    }
+}
+
+export const getFilterCategories = (productData) => {
+    if(productData){
+        return productData.categories;
+    }
+}

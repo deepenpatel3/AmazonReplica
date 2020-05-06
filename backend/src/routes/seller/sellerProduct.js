@@ -33,8 +33,6 @@ const upload = multer({
     }),
 }).array('Images', 5);
 
-console.log("Key: ", process.env.accessKeyId);
-console.log("Key: ", process.env.secretAccessKey);
 router.post("/addProduct", function (req, res) {
 
 

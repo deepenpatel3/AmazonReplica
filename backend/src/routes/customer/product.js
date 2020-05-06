@@ -13,15 +13,15 @@ redisClient.on("error", (err) => {
 
 router.post("/products", function (req, res) {
     const data = {
-        page: req.query.page,
-        limit: req.query.limit,
+        page: req.body.page,
+        limit: req.body.limit,
         name: req.body.name,
         Categories: req.body.Categories,
         SellerId: req.body.SellerId 
     }
 
     console.log("Data: ", JSON.stringify(data));
-    if (parseInt(data.page) < 6) {
+    if (parseInt(data.page) < 0) {
 
         let redisKey = "pg_" + data.page
         redisClient.get(redisKey, (err, result) => {
@@ -35,7 +35,7 @@ router.post("/products", function (req, res) {
             else {
                 kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
                     if (!result) {
-                        console.log("Inside err");
+                        console.log("Inside err"); 
                         res.status(404);
                         res.json({
                             status: "error",

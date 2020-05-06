@@ -5,7 +5,8 @@ const Review = require('./reviewModel');
 const Seller = require('./sellerModel');
 
 var sellerSchema = new Schema({
-    SellerId: {type: Schema.Types.ObjectId, required: true, ref : Seller },
+    // SellerId: {type: Schema.Types.ObjectId, required: true, ref : Seller },
+    SellerId: {type: String, required: true},
     Name: {type: String, required: true},
     SellerProfileUrl: {type: String}
 });

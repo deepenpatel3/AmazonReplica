@@ -2,7 +2,8 @@ import { SELLER_GET_PRODUCTS, SELLER_ADD_PRODUCT, SELLER_UPDATE_PRODUCT } from '
 import update from 'react-addons-update';
 
 const initialState = {
-    signInSuccess: null, message: ""
+    name : "",
+    categories : []
 };
 
 const sellerProductReducer = (state = initialState, action) => {
@@ -22,6 +23,8 @@ const sellerProductReducer = (state = initialState, action) => {
                 hasNextPage: action.payload.hasNextPage,
                 prevPage: action.payload.prevPage,
                 nextPage: action.payload.nextPage,
+                name : action.payload.name,
+                categories : action.payload.categories
             }
         case SELLER_ADD_PRODUCT:
 

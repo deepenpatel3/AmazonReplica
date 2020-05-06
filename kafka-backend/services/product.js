@@ -115,10 +115,16 @@ function get_all_product(msg, callback) {
     let condition = {}
     if (msg.SellerId) {
         console.log("inside if");
-        condition = { Name: { $regex: '.*' + msg.name + '.*' }, "Seller.SellerId": msg.SellerId }
-        if (msg.Categories) {
-            if (msg.Categories.length !== 0) condition.Categories = { $all: msg.Categories }
+        if(msg.Name){
+            condition.Name = { $regex: '.*' + msg.name + '.*' };
         }
+        if(msg.SellerId){
+            condition["Seller.SellerId"] = msg.SellerId;
+        }
+        // condition = { Name: { $regex: '.*' + msg.name + '.*' }, "Seller.SellerId": msg.SellerId }
+        // if (msg.Categories) {
+        //     if (msg.Categories.length !== 0) condition.Categories = { $all: msg.Categories }
+        // }
         console.log("condition: ", condition)
         const options = {
             page: msg.page,
@@ -126,6 +132,7 @@ function get_all_product(msg, callback) {
             // Sorting will be implemented here...
             // sort: msg.sort 
         };
+    // SellerId: {type: Schema.Types.ObjectId, required: true, ref : Seller },
         Product.paginate(condition, options, function (err, result) {
 
             if (err) {
