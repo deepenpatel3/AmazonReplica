@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { GET_CART } from "../../../Redux/constants/action-types";
+import { GET_CART, GET_ORDERS } from "../../../Redux/constants/action-types";
 const { backendURL } = require("../../../config");
 
 
@@ -32,5 +32,14 @@ export const updateCart = (data) => dispatch => {
 
 export const setCart = (data) => ({
     type: GET_CART,
+    payload : data
+})
+
+export const getOrders = (data) => dispatch => {
+    dispatch(setOrders(data))
+}
+
+export const setOrders = (data) => ({
+    type : GET_ORDERS,
     payload : data
 })

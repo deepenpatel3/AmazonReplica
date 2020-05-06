@@ -143,7 +143,7 @@ class Payment extends Component {
 
                     
                 </Modal> 
-                <Navbar />
+
                 <div className="container">
                     <div className="row" style={{ marginTop: "2%" }} >
                         <div className="col-md-3 card" style={{ padding: "1%" }} ><b>1. Shipping Address</b></div>
