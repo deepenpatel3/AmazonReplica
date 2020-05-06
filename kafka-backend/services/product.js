@@ -2,7 +2,7 @@ const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
 
 exports.serve = function serve(msg, callback) {
-    console.log("msg", msg);
+    // console.log("msg", msg);
     // console.log("In Service path:", msg.path);
     switch (msg.path) {
         case "add_product":
@@ -18,9 +18,29 @@ exports.serve = function serve(msg, callback) {
             update_seller_product(msg.body.req, callback)
             break;
         case "delete_seller_product":
-            delete_seller_product(msg.body, callback)
+            delete_seller_product(msg.body.req, callback)
+            break;
+        case "update_rating":
+            update_rating(msg.body, callback)
             break;
     }
+}
+
+
+function update_rating(msg, callback) {
+
+    Product.findById({ _id: msg.id }, (err, product) => {
+        if (err) {
+            console.log("rating update error", err);
+            callback(err, null);
+        } else {
+            product.Count = product.Count + 1 
+            console.log('Count', product.Count)
+            product.Rating = (msg.Rating + (product.Rating*(product.Count -1))) / (product.Count);
+            console.log(" Rating " , product.Rating)
+            product.save(() => { callback(null, { rating: product.Rating }) })
+        }
+    })
 }
 
 function add_seller_product(msg, callback) {
@@ -32,7 +52,8 @@ function add_seller_product(msg, callback) {
         Price: msg.body.Price,
         Description: msg.body.Description,
         Categories: msg.body.Categories,
-        Reviews : [],
+        Count: 0,
+        Reviews: [],
         Seller: {
             SellerId: msg.body.SellerId,
             Name: msg.body.SellerName,
@@ -61,7 +82,7 @@ function update_seller_product(msg, callback) {
         {
             $set: {
                 Name: msg.Name,
-                Rating: msg.Rating,
+                // Rating: msg.Rating,
                 Offers: msg.Offers,
                 Price: msg.Price,
                 Description: msg.Description,
@@ -90,38 +111,55 @@ function delete_seller_product(msg, callback) {
 
 
 function get_all_product(msg, callback) {
-    if (msg.sellerId) {
-        // console.log("In Get Students kafka backend");
+
+    let condition = {}
+    if (msg.SellerId) {
+        console.log("inside if");
+        condition = { Name: { $regex: '.*' + msg.name + '.*' }, "Seller.SellerId": msg.SellerId }
+        if (msg.Categories) {
+            if (msg.Categories.length !== 0) condition.Categories = { $all: msg.Categories }
+        }
+        console.log("condition: ", condition)
         const options = {
             page: msg.page,
             limit: msg.limit,
+            // Sorting will be implemented here...
+            // sort: msg.sort 
         };
-        // console.log("msg: ",JSON.stringify(msg));
-        Product.paginate({ "Seller.SellerId": msg.sellerId }, options, function (err, result) {
+        Product.paginate(condition, options, function (err, result) {
+
             if (err) {
-                // console.log("Error: ",err);
                 callback(err, null);
             }
             else {
-                // console.log("Products found");
                 callback(null, result);
             }
         });
     }
     else {
-        // console.log("In Get Students kafka backend");
+        console.log("inside ELSE");
+        console.log("msg", msg)
+        condition = { $or: [{ Name: { $regex: '.*' + msg.name + '.*' } }, { "Seller.Name": { $regex: '.*' + msg.name + '.*' } }] }
+        if (msg.Categories) {
+            if (msg.Categories.length !== 0) {
+                condition = {
+                    $or: [{ "Seller.Name": { $regex: '.*' + msg.name + '.*' } }, { Name: { $regex: '.*' + msg.name + '.*' } }], Categories: { $all: msg.Categories }
+                }
+            }
+        }
         const options = {
             page: msg.page,
             limit: msg.limit,
+            populate : 'Seller.SellerId'
+            // Sorting will be implemented here...
+            // sort: msg.sort
         };
-        // console.log("msg: ",JSON.stringify(msg));
-        Product.paginate({}, options, function (err, result) {
+        console.log("condition: ", condition);
+        Product.paginate(condition, options, function (err, result) {
             if (err) {
-                // console.log("Error: ",err);
                 callback(err, null);
             }
             else {
-                // console.log("Products found");
                 callback(null, result);
             }
         });
