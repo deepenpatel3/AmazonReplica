@@ -91,14 +91,14 @@ router.post("/addProduct", function (req, res) {
 
 });
 
-router.get("/updateProduct", function (req, res) {
+router.post("/updateProduct", function (req, res) {
     const data = {
         req: req.body
     }
     // console.log("Data: ",JSON.stringify(data));
     kafka.make_request('product', { "path": "update_seller_product", "body": data }, function (err, result) {
         if (!result) {
-            console.log("Inside err");
+            console.log("Inside err updateProduct");
             res.status(404);
             res.json({
                 status: "error",
@@ -106,7 +106,7 @@ router.get("/updateProduct", function (req, res) {
             })
             res.end();
         } else {
-            console.log("Inside data");
+            console.log("Inside result updateProduct ", JSON.stringify(result));
             // console.log("Data:", JSON.stringify(results));
             res.status(200);
             res.json(result)
@@ -116,7 +116,7 @@ router.get("/updateProduct", function (req, res) {
     });
 });
 
-router.get("/deleteProduct", function (req, res) {
+router.post("/deleteProduct", function (req, res) {
     const data = {
         req: req.body
     }

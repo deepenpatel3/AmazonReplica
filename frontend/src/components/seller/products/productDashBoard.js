@@ -83,40 +83,46 @@ class ProductDashBoard extends Component {
             totalDocs: null,
             ProductDetailsView: false,
             SelectedProduct: null,
+            SelectedId: null,
             modalShow: false,
             imageModalShow: false,
             ProductImages: [],
             cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
+            SelectedCetagories: [],
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.handleImageShow = this.handleImageShow.bind(this);
-        this.handleImageClose = this.handleImageClose.bind(this);
     }
 
 
     handleChange = (e, value) => {
         e.preventDefault();
-        this.props.getProducts(this.props.productData,localStorage.getItem("id"), value, this.state.limit);
+        this.props.getProducts(this.props.productData, localStorage.getItem("id"), value, this.state.limit);
     };
 
     handleDelete = (id) => () => {
-        var arr = this.state.cetagoriesSet;
+        var arr = this.state.SelectedCetagories;
         arr.splice(id, 1);
         this.setState({
-            cetagoriesSet: arr,
+            SelectedCetagories: arr,
         });
     };
-    handleImageShow = (e) => {
+
+    handleSelectListener = (e) => {
+        console.log("SelectedCetagory: ", e.target.value)
+        for (var i = 0; i < this.state.SelectedCetagories.length; i++) {
+            if (this.state.SelectedCetagories[i] == e.target.value) {
+                return;
+            }
+        }
+        var arr = this.state.SelectedCetagories;
+        arr.push(e.target.value);
         this.setState({
-            imageModalShow: true,
-        })
+            SelectedCetagories: arr
+        });
+
     }
-    handleImageClose = (e) => {
-        this.setState({
-            imageModalShow: false,
-        })
-    }
+
     handleClose = (e) => {
         // e.preventDefault();
         this.setState({
@@ -136,12 +142,13 @@ class ProductDashBoard extends Component {
         console.log("Product id: ", id);
         this.setState({
             SelectedProduct: this.state.products[id],
+            SelectedId: id,
             ProductDetailsView: true,
         });
     };
 
     onFileUploadChangeHandler = event => {
-        console.log("Images Files: ",JSON.stringify(event.target.files));
+        console.log("Images Files: ", JSON.stringify(event.target.files));
         this.setState({
             ProductImages: event.target.files,
         })
@@ -208,7 +215,7 @@ class ProductDashBoard extends Component {
         if (this.state.ProductDetailsView) {
             return (
                 <Styles>
-                    <ProductDetailsDashBoard Product={this.state.SelectedProduct} onBackClickListner={this.onBackClickListner} />
+                    <ProductDetailsDashBoard Product={this.state.SelectedProduct} id={this.state.SelectedId} onBackClickListner={this.onBackClickListner} />
                 </Styles>
             )
         } else {
@@ -232,9 +239,21 @@ class ProductDashBoard extends Component {
                                 </Form.Row>
                                 <Form.Row>
                                     <Form.Group as={Col} controlId="employer">
-                                        <Form.Label className="signup-form-lable">Categories</Form.Label>
+                                        <Form.Group controlId="exampleForm.ControlSelect1">
+                                            <Form.Label>Categories</Form.Label>
+                                            <Form.Control as="select" onChange={this.handleSelectListener}>
+                                                {
+                                                    this.state.cetagoriesSet.map((data, id) => {
+                                                        return (
+                                                            <option>{data}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </Form.Control>
+                                        </Form.Group>
+
                                         <GridList cellHeight={40} spacing={1} cols={Math.min(this.state.cetagoriesSet.length, 4)} >
-                                            {this.state.cetagoriesSet.map((data, id) => {
+                                            {this.state.SelectedCetagories.map((data, id) => {
                                                 return (
                                                     <GridListTile className="category-chip">
                                                         <Chip
@@ -283,41 +302,41 @@ class ProductDashBoard extends Component {
                         </Modal.Footer>
                     </Modal>
                     <div className="product-filter-bar"></div>
-                        <Row>
-                            <Col sm={2} md={2}>
-                                <div className="product-sidebar">
-                                    Hey
+                    <Row>
+                        <Col sm={2} md={2}>
+                            <div className="product-sidebar">
+                                Hey
                             </div>
-                            </Col>
-                            <Col >
-                                <Row>
-                                    <Paper className="add-product-button-bar">
-                                        <MaterialUiButton
-                                            variant="contained"
-                                            color="primary"
-                                            size="large"
-                                            className="add-product-button"
-                                            startIcon={<AddIcon />}
-                                            onClick={this.handleShow}
-                                        >
-                                            Add Product
+                        </Col>
+                        <Col >
+                            <Row>
+                                <Paper className="add-product-button-bar">
+                                    <MaterialUiButton
+                                        variant="contained"
+                                        color="primary"
+                                        size="large"
+                                        className="add-product-button"
+                                        startIcon={<AddIcon />}
+                                        onClick={this.handleShow}
+                                    >
+                                        Add Product
                                     </MaterialUiButton>
-                                    </Paper>
-                                </Row>
-                                <Row className="product-dashboard">
-                                    {this.state.products &&
-                                        <GridList cellHeight={50} >
-                                            {this.state.products.map((product, id) => (
-                                                <ProductTile Product={product} id={id} onProductCardListner={this.onProductCardListner} />
-                                            ))}
-                                        </GridList>
-                                    }
-                                </Row>
-                                <Row className="product-dashboard-pagination">
-                                    <Pagination count={this.state.totalPages} page={this.state.activePage} onChange={this.handleChange} size="large" shape="rounded" />
-                                </Row>
-                            </Col>
-                        </Row>
+                                </Paper>
+                            </Row>
+                            <Row className="product-dashboard">
+                                {this.state.products &&
+                                    <GridList cellHeight={50} >
+                                        {this.state.products.map((product, id) => (
+                                            <ProductTile Product={product} id={id} onProductCardListner={this.onProductCardListner} />
+                                        ))}
+                                    </GridList>
+                                }
+                            </Row>
+                            <Row className="product-dashboard-pagination">
+                                <Pagination count={this.state.totalPages} page={this.state.activePage} onChange={this.handleChange} size="large" shape="rounded" />
+                            </Row>
+                        </Col>
+                    </Row>
                 </Styles >
             );
         }

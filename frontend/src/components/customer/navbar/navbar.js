@@ -24,7 +24,7 @@ class Navbar extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            cart: []
+            cart: [],
         }
     }
     componentWillMount = () => {
@@ -33,6 +33,7 @@ class Navbar extends Component {
     }
     logout = () => {
         this.props.logout();
+
     }
     componentDidUpdate = (prevProps) => {
         if (prevProps.cart !== this.props.cart) {

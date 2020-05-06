@@ -15,7 +15,7 @@ exports.serve = function serve(msg, callback) {
             add_seller_product(msg, callback)
             break;
         case "update_seller_product":
-            update_seller_product(msg.body, callback)
+            update_seller_product(msg.body.req, callback)
             break;
         case "delete_seller_product":
             delete_seller_product(msg.body, callback)
@@ -54,11 +54,10 @@ function add_seller_product(msg, callback) {
             console.log("Erro in adding product: ", err)
             callback(err, null);
         })
-
 }
 
 function update_seller_product(msg, callback) {
-    Product.findOneAndUpdate({ _id: msg.id },
+    Product.updateOne({ _id: msg._id },
         {
             $set: {
                 Name: msg.Name,
@@ -70,16 +69,16 @@ function update_seller_product(msg, callback) {
             }
         }, { new: true }).exec()
         .then(result => {
-            console.log("result", result)
+            console.log("----------------------------update_seller_product result", result)
             callback(null, { value: true })
         })
         .catch(err => {
-            console.log("ERROR : " + err)
+            console.log("update_seller_product ERROR : " + err)
         })
 }
 
 function delete_seller_product(msg, callback) {
-    Product.deleteOne({ _id: msg.id }, { new: true }).exec()
+    Product.deleteOne({ _id: msg._id }, { new: true }).exec()
         .then(result => {
             console.log("result", result)
             callback(null, { value: true })
