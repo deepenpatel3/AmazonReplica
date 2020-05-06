@@ -2,7 +2,7 @@ const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
 
 exports.serve = function serve(msg, callback) {
-    // console.log("msg", msg);
+    console.log("msg", msg);
     // console.log("In Service path:", msg.path);
     switch (msg.path) {
         case "add_product":
@@ -115,24 +115,17 @@ function get_all_product(msg, callback) {
     let condition = {}
     if (msg.SellerId) {
         console.log("inside if");
-        if(msg.Name){
-            condition.Name = { $regex: '.*' + msg.name + '.*' };
+        condition = { Name: { $regex: '.*' + msg.name + '.*' }, "Seller.SellerId": msg.SellerId }
+        if (msg.Categories) {
+            if (msg.Categories.length !== 0) condition.Categories = { $all: msg.Categories }
         }
-        if(msg.SellerId){
-            condition["Seller.SellerId"] = msg.SellerId;
-        }
-        // condition = { Name: { $regex: '.*' + msg.name + '.*' }, "Seller.SellerId": msg.SellerId }
-        // if (msg.Categories) {
-        //     if (msg.Categories.length !== 0) condition.Categories = { $all: msg.Categories }
-        // }
         console.log("condition: ", condition)
         const options = {
             page: msg.page,
             limit: msg.limit,
             // Sorting will be implemented here...
-            // sort: msg.sort 
+            sort: msg.sort 
         };
-    // SellerId: {type: Schema.Types.ObjectId, required: true, ref : Seller },
         Product.paginate(condition, options, function (err, result) {
 
             if (err) {
@@ -157,9 +150,9 @@ function get_all_product(msg, callback) {
         const options = {
             page: msg.page,
             limit: msg.limit,
-            populate : 'Seller.SellerId'
+            populate: 'Seller.SellerId',
             // Sorting will be implemented here...
-            // sort: msg.sort
+            sort: msg.sort
         };
         console.log("condition: ", condition);
         Product.paginate(condition, options, function (err, result) {
@@ -173,4 +166,3 @@ function get_all_product(msg, callback) {
     }
 
 }
-  

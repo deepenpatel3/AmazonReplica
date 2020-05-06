@@ -2,7 +2,8 @@ import { CUSTOMER_GET_PRODUCTS } from '../../constants/action-types';
 
 const initialState = {
     name : "",
-    categories : []
+    categories : [],
+    sort : "",
 };
 
 const customerProductReducer = (state = initialState, action) => {
@@ -23,7 +24,8 @@ const customerProductReducer = (state = initialState, action) => {
                 prevPage: action.payload.prevPage,
                 nextPage: action.payload.nextPage,
                 name : action.payload.name,
-                categories : action.payload.categories
+                categories : action.payload.categories,
+                sort: action.payload.sort,
             }
         default:
             return state;

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import { BrowserRouter, Redirect } from 'react-router-dom';
 import { Route } from 'react-router-dom';
+
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
 import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
 import CustomerProductDashBoard from './components/customer/products/productDashBoard';
@@ -12,11 +14,18 @@ import CustomerHome from './components/customer/home/home';
 import Cart from './components/customer/cart/cart';
 import Payment from "./components/customer/payment/payment";
 import SaveForLater from './components/customer/saveForLater/saveForLater';
-import { BrowserRouter, Redirect } from 'react-router-dom';
+
+
+import CustomerProfile from './components/customer/customerProfile/customerProfile';
+import SellerProfile from './components/seller/sellerProfile/sellerProfile';
+
+import Dashboard from './components/admin/adminDashboard/dashboard';
+
 
 class Main extends Component {
     render() {
         return (
+           
             <BrowserRouter>
                 <div>
                     <Route path="/login"> <CustomerLogin /> </Route>
@@ -34,6 +43,11 @@ class Main extends Component {
                     <Route path="/customer/saveForLater"><SaveForLater /></Route>
 
                     <Route path="/admin"><AdminNavBar></AdminNavBar></Route>
+
+                    <Route path="/customer/Profile"><CustomerProfile /></Route>
+                <Route path="/seller/Profile"><SellerProfile /></Route>
+                <Route path="/admin/Dashboard"><Dashboard /></Route>
+
                 </div>
             </BrowserRouter>
         )

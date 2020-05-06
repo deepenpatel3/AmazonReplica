@@ -33,7 +33,7 @@ export const getProducts = (productData, SellerId, page, limit, Name, Categories
         name: Name,
         Categories: Categories,
     }
-    console.log("SellerId", SellerId);
+    console.log("data", JSON.stringify(data));
     // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
     axios.post(`${backendURL}/customer/product/products`, data, config)
         .then(response => {

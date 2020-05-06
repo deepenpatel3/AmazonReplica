@@ -17,7 +17,8 @@ import AddIcon from '@material-ui/icons/Add';
 import Chip from '@material-ui/core/Chip';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from 'axios';
-
+import { getFilterCategories, getFilterName} from '../../../Redux/selectors/customer/selector';
+import Typography from '@material-ui/core/Typography';
 
 
 const Styles = styled.div`
@@ -89,9 +90,11 @@ class ProductDashBoard extends Component {
             ProductImages: [],
             cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
             SelectedCetagories: [],
+            filterCategoires: [],
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
     }
 
 
@@ -153,6 +156,57 @@ class ProductDashBoard extends Component {
             ProductImages: event.target.files,
         })
     }
+    handleCheckBoxChange = (e) => {
+        // e.preventDefault();
+        const category = e.target.name;
+        const isChecked = e.target.checked;
+        if(isChecked){
+            var isFound = false;
+            for (var i=0; i < this.state.filterCategoires.length; i++){
+                if(category == this.state.filterCategoires[i]){
+                    isFound =true;
+                    break;
+                }
+            }
+            if(!isFound){
+                var arr = this.state.filterCategoires;
+                arr.push(category);
+                this.setState({
+                    filterCategoires: arr,
+                });
+                // this.state.filterCategoires.push(category);
+            }
+        }else{
+            var isFound = false;
+            var id = 0;
+            for (var i=0; i< this.state.filterCategoires.length; i++){
+                if(category == this.state.filterCategoires[i]){
+                    isFound =true;
+                    id = i;
+                    break;
+                }
+            }
+            if(isFound){
+                var arr = this.state.filterCategoires;
+                arr.splice(id, 1);
+                this.setState({
+                    filterCategoires: arr,
+                });
+            }
+           
+        }
+        this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit, this.props.filterName, this.state.filterCategoires);
+        // console.log("filterCategoires: ",JSON.stringify(this.state.filterCategoires));
+    }
+
+    isCategoryInFilter = (category) => {
+        for (var i=0; i< this.state.filterCategoires.length; i++){
+            if(category == this.state.filterCategoires[i]){
+                return true;
+            }
+        }
+        return false
+    }
 
     onAddProductClick = (e) => {
         e.preventDefault();
@@ -179,7 +233,7 @@ class ProductDashBoard extends Component {
 
     componentDidMount() {
         var sellerId = localStorage.getItem("id");
-        this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit);
+        this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit, this.props.filterName, this.props.filterCategoires);
         if (!this.props.productData) {
             this.setState({
                 products: this.props.productData.products
@@ -192,12 +246,13 @@ class ProductDashBoard extends Component {
                     nextPage: this.props.productData.nextPage,
                     prevPage: this.props.productData.prevPage,
                     activePage: this.props.productData.page,
+                    filterCategoires: this.props.filterCategoires,
                 });
             }
         }
     }
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps.products: ", JSON.stringify(nextProps.productData));
+        // console.log("nextProps.products: ", JSON.stringify(nextProps.productData));
         if (nextProps.productData.page) {
             this.setState({
                 totalDocs: nextProps.productData.totalDocs,
@@ -208,6 +263,11 @@ class ProductDashBoard extends Component {
                 activePage: nextProps.productData.page,
                 products: nextProps.productData.products,
             })
+        }
+        if(nextProps.filterCategoires){
+            this.setState({
+                filterCategoires: nextProps.filterCategoires,
+            });
         }
     };
 
@@ -304,8 +364,38 @@ class ProductDashBoard extends Component {
                     <div className="product-filter-bar"></div>
                     <Row>
                         <Col sm={2} md={2}>
-                            <div className="product-sidebar">
-                                Hey
+                            <div style={{ padding: "5px" }} className="product-sidebar">
+                                <Row style={{ paddingLeft: "15px" }}>
+                                    <Typography variant="h6" gutterBottom>
+                                        Filter
+                                     </Typography>
+                                </Row>
+                                <div style={{ paddingLeft: "25px" }}>
+                                    <Row>
+                                        <Typography variant="subtitle1" gutterBottom>
+                                            Categories
+                                     </Typography>
+                                    </Row>
+                                    {
+                                        this.state.cetagoriesSet.map((data, id) => {
+                                            return (
+                                                <Form.Check type="checkbox" onChange={this.handleCheckBoxChange} defaultChecked={this.isCategoryInFilter(data)} name={data} label={data} />
+                                                // <Row>{data}</Row>
+                                            )
+                                        })
+                                    }
+                                </div>
+                                <Row style={{ paddingTop:"10px", paddingLeft: "25px" }}>
+                                    <Typography variant="subtitle1" gutterBottom>
+                                        Sorted By
+                                     </Typography>
+                                </Row>
+                                <Form.Control as="select">
+                                    <option>None</option>
+                                    <option>Price: Low to High</option>
+                                    <option>Price: High to Low</option>
+                                    <option>Rating</option>
+                                </Form.Control>
                             </div>
                         </Col>
                         <Col >
@@ -347,6 +437,8 @@ class ProductDashBoard extends Component {
 const mapStateToProps = state => {
     return {
         productData: state.sellerProductData,
+        filterCategoires: getFilterCategories(state.sellerProductData),
+        filterName: getFilterName(state.sellerProductData),
     };
 };
 

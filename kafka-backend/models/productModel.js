@@ -9,7 +9,7 @@ var sellerSchema = new Schema({
     SellerId: {type: String, required: true},
     Name: {type: String, required: true},
     SellerProfileUrl: {type: String}
-});
+}); 
 
 var productSchema = new Schema({
     Seller: sellerSchema,
