@@ -27,6 +27,13 @@ const setLoginCredentials = (token) => {
         payload: { ...decoded }
     }
 }
+export const logout = () => {
+    
+    localStorage.clear();
+    return {
+        type: CUSTOMER_LOGOUT
+    }
+}
 
 export const customerSignUp = (data) => dispatch => {
     console.log("inside signup action");
@@ -38,6 +45,3 @@ export const customerSignUp = (data) => dispatch => {
         })
 };
 
-export const logout = () => ({
-    type: CUSTOMER_LOGOUT
-})
