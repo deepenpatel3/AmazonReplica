@@ -1,7 +1,7 @@
 const Product = require('../models/productModel');
 
 exports.serve = function serve(msg, callback) {
-    // console.log("msg", msg);
+    console.log("msg", msg);
     // console.log("In Service path:", msg.path);
     switch (msg.path) {
         case "add_product":

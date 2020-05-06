@@ -5,6 +5,7 @@ var topicsToCreate =  require('./topics/topic');
 const account = require("./services/account");
 const product = require("./services/product");
 const review = require("./services/review");
+const profile = require("./services/profile");
 
 var options = {
     useNewUrlParser: true,
@@ -86,5 +87,7 @@ function response(data, res, producer) {
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest("account",account);
+handleTopicRequest("profile",profile);
 handleTopicRequest("product",product);
-handleTopicRequest("review", review)
+handleTopicRequest("review", review);
+
