@@ -26,8 +26,16 @@ export const getProducts = (productData, sellerId, page, limit) => dispatch => {
             page = 1
         }
     }
+    const data = {
+        page: page,
+        limit: req.query.limit,
+        name: req.body.name,
+        Categories: req.body.Categories,
+        SellerId: req.body.SellerId 
+    }
     console.log("SellerId", sellerId);
-    axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
+    // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
+    axios.post(`${backendURL}/customer/product/products`, config)
         .then(response => {
             // console.log("All Student", JSON.stringify(response));
             if (response.status == 200) {

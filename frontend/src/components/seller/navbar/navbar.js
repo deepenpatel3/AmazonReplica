@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 // import { Link } from 'react-router-dom';
-import { getCart } from "../../../Redux/actions/customer/cartActions";
 import { connect } from 'react-redux';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
@@ -20,18 +19,13 @@ class Navbar extends Component {
         }
     }
     componentWillMount = () => {
-        this.props.getCart({ id: localStorage.getItem("id") })
         this.logout =  this.logout.bind(this)
     }
     logout = () => {
         this.props.logout();
     }
     componentDidUpdate = (prevProps) => {
-        if (prevProps.cart !== this.props.cart) {
-            this.setState({
-                cart: this.props.cart
-            })
-        }
+       
     }
     render() {
         if(!localStorage.getItem("id") || !(localStorage.getItem("type") == "seller")){
@@ -88,6 +82,6 @@ const map = state => {
         cart: state.cart.cart
     }
 }
-export default connect(map, { getCart, logout })(Navbar);
+export default connect(map, {logout })(Navbar);
 
 
