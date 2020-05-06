@@ -4,9 +4,7 @@ import { Row, Col, Carousel, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import GridList from '@material-ui/core/GridList';
-// import GridListTile from '@material-ui/core/GridListTile';
-// import Navbar from '../navbar/navbar';
-// import ProductTile from './productTile';
+import GridListTile from '@material-ui/core/GridListTile';
 import { Icon, Typography, Chip, Divider, Button, InputLabel, MenuItem, Paper } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import Rating from '@material-ui/lab/Rating';
@@ -19,7 +17,7 @@ import Image from 'material-ui-image';
 import ReviewTile from './reviewTile';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import { getReviewsForProduct } from '../../../Redux/actions/customer/reviewActions';
-import { updateCart } from '../../../Redux/actions/customer/cartActions' 
+import { updateCart } from '../../../Redux/actions/customer/cartActions'
 
 const Styles = styled.div`
 .product-details-addtocartbar{
@@ -129,29 +127,50 @@ class ProductDetailsDashBoard extends Component {
             Offers: this.props.Product.Offers,
             Description: this.props.Product.Description,
             Categories: this.props.Product.Categories,
-            cart : [],
-            saveForLater : [],
-            qty : 1
+            cart: [],
+            saveForLater: [],
+            qty: 1,
+            NewReviewText: "",
+
         }
         this.addToCart = this.addToCart.bind(this);
         this.qtyHandler = this.qtyHandler.bind(this);
     }
     qtyHandler = e => {
         this.setState({
-            qty : e.target.value
+            qty: e.target.value
         })
     }
+
+    addRating = (event) => {
+        this.setState({
+            Rating: event.value
+        })
+    }
+
+    addReview = () => {
+        if(this.state.NewReviewText){
+            const newReview = {
+                ProductID: this.props.Product._id,
+            };
+
+            this.setState({
+                NewReviewText: ""
+            })
+        }
+    }
+
     addToCart = () => {
         let newCart = this.state.cart;
         let product = {
-            ProductID : this.props.Product._id,
-            Quantity : this.state.qty,
-            Price : this.state.Price,
+            ProductID: this.props.Product._id,
+            Quantity: this.state.qty,
+            Price: this.state.Price,
             IsGift: false,
-            GiftMessage : ""
+            GiftMessage: ""
         }
         newCart.push(product)
-        this.props.updateCart({id : localStorage.getItem('id'), Cart : this.state.cart , SaveForLater : this.state.saveForLater})
+        this.props.updateCart({ id: localStorage.getItem('id'), Cart: this.state.cart, SaveForLater: this.state.saveForLater })
     }
     componentDidMount() {
         this.props.getReviewsForProduct(this.props.Product._id);
@@ -166,8 +185,8 @@ class ProductDetailsDashBoard extends Component {
         console.log("nextProps.products: ", JSON.stringify(nextProps.reviewData));
         this.setState({
             Reviews: nextProps.reviewData.reviews,
-            cart : nextProps.cart,
-            saveForLater : nextProps.saveForLater
+            cart: nextProps.cart,
+            saveForLater: nextProps.saveForLater
         })
     };
 
@@ -223,22 +242,20 @@ class ProductDetailsDashBoard extends Component {
                             <Typography variant="h6" component="h6">
                                 By {this.state.SellerName}
                             </Typography>
-                            <Rating name="half-rating-read" value={this.state.ProductRating} precision={0.2} readOnly />
+                            <Rating name="half-rating-read" value={this.state.ProductRating} precision={0.2} onChange={this.addRating} />
                             <Divider variant="inset" component="li" className="product-details-divider" />
-                            <Typography variant="h6" color="primary" component="h6">
-                                Price: $ {this.state.Price}
-                            </Typography>
-                            <Row className="product-details-chips">
-                                <GridList cellHeight={40} cols={3}>
+                            <div>
+                                <Typography variant="h6" color="primary" component="h2" gutterBottom>
+                                    Price: $ {this.state.Price}
+                                </Typography>
+                            </div>
+                            <Row className="product-details-chips" style={{ width: "100%" }}>
+                                <GridList cellHeight={35} spacing={2} cols={Math.min(this.state.Categories.length, 4)} >
                                     {this.state.Categories.map((category) => {
                                         return (
-                                            <div>
-                                                <Chip
-                                                    icon={<CategoryIcon />}
-                                                    color="primary"
-                                                    label={category}
-                                                />
-                                            </div>
+                                            <GridListTile style={{ padding: "2px", width: "115px" }}>
+                                                <Chip variant="outlined" color="primary" style={{ float: "center" }} label={category} icon={<CategoryIcon fontSize="small" />} />
+                                            </GridListTile>
                                         )
                                     })}
                                 </GridList>
@@ -255,10 +272,14 @@ class ProductDetailsDashBoard extends Component {
                             {this.state.Offers.map((offer) => {
                                 return (
                                     <Row className="product-details-offer-row">
-                                        <LocalOfferIcon className="product-details-offer-icon" color="action" ></LocalOfferIcon>
-                                        <Typography variant="span" color="" component="span">
-                                            {offer}
-                                        </Typography>
+                                        <Col sm={1} md={1}>
+                                            <LocalOfferIcon className="product-details-offer-icon" color="action" ></LocalOfferIcon>
+                                        </Col>
+                                        <Col sm={8} md={8}>
+                                            <Typography variant="span" color="" component="span">
+                                                {offer}
+                                            </Typography>
+                                        </Col>
                                     </Row>
                                 )
                             })}
@@ -280,7 +301,7 @@ class ProductDetailsDashBoard extends Component {
                                     value={this.state.quantity}
                                     label="Qty"
                                     className="product-details-quantity"
-                                    onChange = {this.qtyHandler}
+                                    onChange={this.qtyHandler}
                                 >
                                     <MenuItem value="">
                                         <em>None</em>
@@ -297,7 +318,7 @@ class ProductDetailsDashBoard extends Component {
                                 color="secondary"
                                 className="product-details-add-to-cart-button"
                                 startIcon={<AddShoppingCartIcon />}
-                                onClick = {this.addToCart}
+                                onClick={this.addToCart}
                             >
                                 Add To Cart
                             </Button>
@@ -319,7 +340,7 @@ class ProductDetailsDashBoard extends Component {
                         <Form.Control as="textarea"
                             placeholder="Write your review here.."
                             rows="3" />
-                        <div className="review-submit-button" > 
+                        <div className="review-submit-button" >
                             <Button type="submit" variant="contained" color="primary">Submit</Button>
                         </div>
                     </Form.Group>
@@ -338,10 +359,10 @@ class ProductDetailsDashBoard extends Component {
 const mapStateToProps = state => {
     return {
         reviewData: state.customerReviewData,
-        cart : state.cart.cart,
-        saveForLater : state.cart.saveForLater
+        cart: state.cart.cart,
+        saveForLater: state.cart.saveForLater
     };
 };
 
 
-export default connect(mapStateToProps, { getReviewsForProduct , updateCart })(ProductDetailsDashBoard);
+export default connect(mapStateToProps, { getReviewsForProduct, updateCart })(ProductDetailsDashBoard);
