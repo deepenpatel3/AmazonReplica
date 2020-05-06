@@ -4,7 +4,7 @@ import CustomerGraph from './customerGraph'
 import OrderGraph from './orderGraph'
 import ProductGraph from './productGraph'
 import ProductRatingGraph from './productRatingGraph';
-import ProductviewGraph from './productviewGraph';
+import ProductviewGraph from './productViewGraph';
 import SellerGraph from './sellerGraph';
 
 class AnalyticsDashboard extends Component {

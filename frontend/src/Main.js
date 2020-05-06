@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter, Redirect } from 'react-router-dom';
 import { Route } from 'react-router-dom';
+
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
 import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
 import CustomerProductDashBoard from './components/customer/products/productDashBoard';

@@ -1,10 +1,10 @@
-import { SELLER_ADD_PRODUCT, SELLER_GET_PRODUCTS } from "../../constants/action-types";
+import { SELLER_ADD_PRODUCT, SELLER_GET_PRODUCTS, SELLER_UPDATE_PRODUCT } from "../../constants/action-types";
 import axios from "axios";
 const { backendURL } = require("../../../config");
 
 const ROOT_URL = backendURL + "/seller/product";
 
-export const getProducts = (productData, sellerId, page, limit) => dispatch => {
+export const getProducts = (productData, SellerId, page, limit, Name, Categories) => dispatch => {
     axios.defaults.withCredentials = true;
     console.log(" Inside getProducts :");
     console.log(" page :", page);
@@ -26,14 +26,26 @@ export const getProducts = (productData, sellerId, page, limit) => dispatch => {
             page = 1
         }
     }
-    console.log("SellerId", sellerId);
-    axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
+    const data = {
+        page: page,
+        limit: limit,
+        SellerId: SellerId, 
+        name: Name,
+        Categories: Categories,
+    }
+    console.log("data", JSON.stringify(data));
+    // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
+    axios.post(`${backendURL}/customer/product/products`, data, config)
         .then(response => {
             // console.log("All Student", JSON.stringify(response));
+            let data = { ...response.data }
+                data.name = Name;
+                data.categories = Categories 
+
             if (response.status == 200) {
                 dispatch({
                     type: SELLER_GET_PRODUCTS,
-                    payload: response.data,
+                    payload: data,
                 })
             }
         },
@@ -44,9 +56,18 @@ export const getProducts = (productData, sellerId, page, limit) => dispatch => {
 
 export const addProduct = (product, productImages) => dispatch => {
 
+
+
+    console.log("Images: ", JSON.stringify(productImages));
+
     const formData = new FormData();
     formData.append('Product', JSON.stringify(product));
-    formData.append('Images', productImages);
+    formData.append('Name', product.Name);
+    formData.append('SellerName', product.SellerName);
+    for (const key in productImages) {
+        formData.append('Images', productImages[key]);
+    }
+
 
     // const token = localStorage.getItem("token");
     const config = {
@@ -71,4 +92,29 @@ export const addProduct = (product, productImages) => dispatch => {
             error => {
                 console.log(" addProduct error:", JSON.stringify(error));
             })
+}
+
+export const updateSellerProduct = (product, id) => dispatch => {
+    if (typeof (product) == "undefined" || typeof (id) == "undefined") {
+        return;
+    }
+
+    const data = {
+        product: product,
+        index: id,
+    }
+    axios.post(`${ROOT_URL}/updateProduct`, product)
+        .then(response => {
+            console.log("updateProduct: ", JSON.stringify(response));
+            if (response.status == 200) {
+                dispatch({
+                    type: SELLER_UPDATE_PRODUCT,
+                    payload: data,
+                })
+            }
+        },
+            error => {
+                console.log(" updateProduct error:", JSON.stringify(error));
+            })
+
 }

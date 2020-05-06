@@ -4,48 +4,54 @@ const { backendURL } = require("../../../config");
 
 const ROOT_URL = backendURL +"/customer/product";
 
-export const getProducts = (productData, page,limit,Name,Categories) => dispatch => {
+export const getProducts = (productData, page, limit, Name, Categories) => dispatch => {
     axios.defaults.withCredentials = true;
-    console.log(" Inside getProducts :");
-    console.log(" page :",page);
-    console.log(" limit :",limit);
-    console.log(" Name : ", Name);
-    
+    // console.log(" Inside getProducts :");
+    // console.log(" page :", page);
+    // console.log(" limit :", limit);
+    if(!Name){
+        Name = ""
+    }
     const token = localStorage.getItem("token");
     const config = {
         headers: {
             Authorization: "Bearer " + token
         }
     }
-    if(Name === undefined){
-        Name = ""
-    }
-    if(!page){
+    if (!page) {
         page = 1;
     }
-    if(!limit){
+    if (!limit) {
         limit = 8;
     }
-    if(productData){
-        if (page > productData.totalPages){
+    if (productData) {
+        if (page > productData.totalPages) {
             page = 1
         }
     }
-    
-    axios.get(`${ROOT_URL}/products?page=${page}&limit=${limit}&name=${Name}`,config)
+    const data = {
+        page: page,
+        limit: limit,
+        name: Name,
+        Categories: Categories,
+    }
+    console.log("data", JSON.stringify(data));
+    // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
+    axios.post(`${ROOT_URL}/products`, data, config)
         .then(response => {
             // console.log("All Student", JSON.stringify(response));
+            let data = { ...response.data }
+                data.name = Name;
+                data.categories = Categories 
+
             if (response.status == 200) {
-                let data1 = { ...response.data }
-                data1.name = Name;
-                data1.categories = Categories 
                 dispatch({
                     type: CUSTOMER_GET_PRODUCTS,
-                    payload: data1,
+                    payload: data,
                 })
             }
         },
             error => {
-                console.log(" error:", JSON.stringify(error));
+                console.log(" studentDetails error:", JSON.stringify(error));
             })
 }

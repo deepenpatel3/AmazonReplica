@@ -13,11 +13,11 @@ redisClient.on("error", (err) => {
 
 router.post("/products", function (req, res) {
     const data = {
-        page: req.query.page,
-        limit: req.query.limit,
+        page: req.body.page,
+        limit: req.body.limit,
         name: req.body.name,
         Categories: req.body.Categories,
-        SellerId: req.body.SellerId
+        SellerId: req.body.SellerId 
     }
 
     // console.log("Data: ", JSON.stringify(data));

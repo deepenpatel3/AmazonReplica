@@ -6,8 +6,12 @@ import customerPaymentReducer from "./customer/payment"
 import customerProductReducer from "./customer/productReducer";
 import customerReviewReducer from "./customer/reviewReducer";
 import sellerProductReducer from "./seller/productReducer";
-
 import cartReducer from "./customer/cartReducer";
+
+import storage from 'redux-persist/lib/storage';
+
+
+
 const rootReducer = combineReducers({
     sellerLogin : sellerLoginReducer,
     customerLogin : customerLoginReducer,
@@ -19,4 +23,15 @@ const rootReducer = combineReducers({
     sellerProductData: sellerProductReducer,
 })
 
-export default rootReducer;
+
+const allReducers = (state, action) => {
+    // if (action.type === SIGN_OUT) {
+    //     // for all keys defined in your persistConfig(s)
+    //     storage.removeItem('persist:root')
+    //     // storage.removeItem('persist:otherKey')
+    //     state = undefined;
+    // }
+    return rootReducer(state, action);
+};
+export default allReducers;
+// export default rootReducer;
