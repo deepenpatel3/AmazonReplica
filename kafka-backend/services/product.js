@@ -1,5 +1,8 @@
 const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
+const Customer = require("../models/customerModel");
+
+var mysql = require("../models/mysql");
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);
@@ -23,9 +26,110 @@ exports.serve = function serve(msg, callback) {
         case "update_rating":
             update_rating(msg.body, callback)
             break;
+        case "get_customer_orders":
+            get_customer_orders(msg.body, callback);
+            break;
+        case "get_seller_orders":
+            get_seller_orders(msg.body, callback);
+            break;
+        case "place_order":
+            place_order(msg.body, callback);
+            break;
+        case "update_order":
+            update_order(msg.body, callback);
+            break;
     }
 }
 
+function get_customer_orders(msg, callback) {
+    let query = "select * from `Order` where CustomerID=" + msg.CustomerID + "";
+    mysql.executeQuery(query, function (err, result) {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("orders ", result)
+            callback(null, { orders: result });
+        }
+    })
+}
+
+function get_seller_orders(msg, callback) {
+    let query = "select * from `Order` where SellerID=" + msg.SellerID + "";
+    mysql.executeQuery(query, function (err, result) {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("orders ", result)
+            callback(null, { orders: result });
+        }
+    })
+}
+
+function update_order(msg, callback) {
+    if (msg.status) {
+        let query = "update `Order` set Tracking_Status=" + msg.status + " where Order_id='" + msg.OrderID + "'";
+        mysql.executeQuery(query, function (err, result) {
+            if (err) {
+                console.log("error ", err);
+                callback(err, null);
+            } else {
+                callback(null, { success: true });
+            }
+        })
+    } else {
+        let query = "delete from `Order` where Order_id=" + msg.OrderID + "";
+        mysql.executeQuery(query, function (err, result) {
+            if (err) {
+                console.log("error ", err);
+                callback(err, null);
+            } else {
+                callback(null, { success: true });
+            }
+        })
+    }
+
+}
+function place_order(msg, callback) {
+    // console.log(msg);
+    Customer.findById({ _id: msg.CustomerID }, (err, customer) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            let date = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
+            console.log(date);
+            customer.Cart.forEach(async (product, i) => {
+                // console.log(i, " ", product);
+                await Product.find({ _id: product.ProductID }, { Seller: 1 }, (err, result) => {
+                    console.log("Seller ", result);
+
+                    let query = "insert into `Order`(ProductID, CustomerID, SellerID, Price, Qty, Tracking_Status, IsGift,GiftMessage, CardNumber, CardName, Address, OrderDate) VALUES('" + product.ProductID + "', '" + msg.CustomerID + "','" + result[0].Seller.SellerId + "','" + product.Price + "','" + product.Quantity + "','Accepted', '" + product.IsGift + "','" + product.GiftMessage + "','" + msg.CardNumber + "','" + msg.CardName + "','" + msg.Address + "','" + date + "') ";
+                    mysql.executeQuery(query, function (err, result) {
+                        if (err) {
+                            console.log("error ", err);
+                            // callback(err, null);
+                        } else {
+                            // console.log("orders ", result)
+                            // callback(null, { orders: result });
+                        }
+                    })
+                })
+            })
+            callback(null, { success: true })
+        }
+    })
+    // mysql.executeQuery(query, function (err, result) {
+    //     if (err) {
+    //         console.log("error ", err);
+    //         callback(err, null);
+    //     } else {
+    //         console.log("orders ", result)
+    //         callback(null, { orders: result });
+    //     }
+    // })
+}
 
 function update_rating(msg, callback) {
 
@@ -34,10 +138,10 @@ function update_rating(msg, callback) {
             console.log("rating update error", err);
             callback(err, null);
         } else {
-            product.Count = product.Count + 1 
+            product.Count = product.Count + 1
             console.log('Count', product.Count)
-            product.Rating = (msg.Rating + (product.Rating*(product.Count -1))) / (product.Count);
-            console.log(" Rating " , product.Rating)
+            product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
+            console.log(" Rating ", product.Rating)
             product.save(() => { callback(null, { rating: product.Rating }) })
         }
     })
