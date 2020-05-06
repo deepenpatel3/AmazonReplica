@@ -224,11 +224,6 @@ function delete_seller_product(msg, callback) {
 
 
 function get_all_product(msg, callback) {
-<<<<<<< HEAD
-    console.log("@@@@@ PRODUCTS CALLED")
-=======
-
->>>>>>> 53640a38307274d04f2e5138e305bde659977f89
     let condition = {}
     if (msg.SellerId) {
         console.log("inside if");
@@ -267,11 +262,7 @@ function get_all_product(msg, callback) {
         const options = {
             page: msg.page,
             limit: msg.limit,
-<<<<<<< HEAD
-            populate : 'Seller.SellerId'
-=======
             populate: 'Seller.SellerId'
->>>>>>> 53640a38307274d04f2e5138e305bde659977f89
             // Sorting will be implemented here...
             // sort: msg.sort
         };
