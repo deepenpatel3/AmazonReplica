@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 // import { Link } from 'react-router-dom';
 import { getCart } from "../../../Redux/actions/customer/cartActions";
+import { getProducts } from "../../../Redux/actions/customer/productActions";
 import { connect } from 'react-redux';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
@@ -25,8 +26,23 @@ class Navbar extends Component {
         super(props)
         this.state = {
             cart: [],
-            redirect : false 
+            redirect : false,
+            prdouctData : {},
+            name : ""
         }
+        this.ChangeHandler = this.ChangeHandler.bind(this);
+        this.clickHandler = this.clickHandler(this);
+    }
+    clickHandler = () => () => {        
+        this.props.getProducts(this.state.productData,1,8,this.state.name)
+        this.setState({
+            name : ""
+        })
+    }
+    ChangeHandler = e => {
+        this.setState({
+            name : e.target.value
+        })
     }
     componentWillMount = () => {
         this.props.getCart({ id: localStorage.getItem("id") })
@@ -44,10 +60,14 @@ class Navbar extends Component {
                 cart: this.props.cart
             })
         }
+        // if (prevProps.productData !== this.props.productData) {
+        //     this.setState({
+        //         productData: this.props.productData
+        //     })
+        // }
     }
     render() {
         // let redirect = this.state.redirect;
-
         if(!localStorage.getItem("id") || !(localStorage.getItem("type") == "customer")){
             return(
             <Redirect to="/login" />
@@ -58,8 +78,8 @@ class Navbar extends Component {
                 <BNavbar style={{ backgroundColor: "#252f3d", padding: "0" }}>
                     <BNavbar.Brand style={{ marginLeft: "1%" }} href="/customer/product"><img src="/navbar_logo.jpeg" width="150" height="55" alt="amazon" /></BNavbar.Brand>
                     <Form inline>
-                        <FormControl type="text" placeholder="Search" style={{ width: "900px" , borderRadius : "0px" }} className="mr-sm-7" />
-                        <Button variant="warning" style = {{ mardinRight : "2%"}}><SearchIcon style={{paddingTop : "10%"}}/></Button>
+                        <FormControl type="text" placeholder="Search" style={{ width: "900px" , borderRadius : "0px" }} className="mr-sm-7" onChange = { this.ChangeHandler } value = {this.state.name}  />
+                        <Button variant="warning" onClick = {this.clickHandler} type="button" ><SearchIcon style={{paddingTop : "10%"}}/></Button>
                     </Form>
                     <Nav className="mr-auto"></Nav>
                     <Nav>
@@ -105,9 +125,10 @@ class Navbar extends Component {
 }
 const map = state => {
     return {
-        cart: state.cart.cart
+        cart: state.cart.cart,
+        productData: state.customerProductData
     }
 }
-export default connect(map, { getCart, logout })(Navbar);
+export default connect(map, { getCart, logout, getProducts  })(Navbar);
 
 

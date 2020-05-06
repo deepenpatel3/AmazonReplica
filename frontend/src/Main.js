@@ -21,9 +21,7 @@ class Main extends Component {
                 <div>
                     <Route path="/login"> <CustomerLogin /> </Route>
                     
-                    <Route path="/customerSignUp"><CustomerSignUp /></Route>
-                    {/* <Route path="/sellerSignUp"><SellerSignUp /></Route>
-                    <Route path="/adminSignUp"><AdminSignUp /></Route> */}
+                    <Route path="/signUp"><CustomerSignUp /></Route>
 
                     <Route path="/seller"><SellerNavBar></SellerNavBar></Route>
                     <Route path="/seller/product"><SellerProductDashBoard /></Route>
