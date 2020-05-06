@@ -19,6 +19,8 @@ import SaveForLater from './components/customer/saveForLater/saveForLater';
 import CustomerProfile from './components/customer/customerProfile/customerProfile';
 import SellerProfile from './components/seller/sellerProfile/sellerProfile';
 
+import Dashboard from './components/admin/adminDashboard/dashboard';
+
 class Main extends Component {
     render() {
         return (
@@ -37,9 +39,10 @@ class Main extends Component {
                 <Route path="/customer/payment"><Payment /></Route>
                 <Route path="/customer/saveForLater"><SaveForLater /></Route>
               */}
-
                 <Route path="/customer/Profile"><CustomerProfile /></Route>
                 <Route path="/seller/Profile"><SellerProfile /></Route>
+                <Route path="/admin/Dashboard"><Dashboard /></Route>
+
             </div>
         )
     }

@@ -8,28 +8,28 @@ var path = require('path');
 var app = express();
 
 var storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    console.log("multer file", file);
-    cb(null, "./uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({
-     storage:storage 
+    destination: (req, file, cb) => {
+      console.log("multer file", file);
+      cb(null, "./uploads");
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
+    }
   });
+  
+  const upload = multer({
+       storage:storage 
+    });
 /*
 app.post("/upload_file",upload.any(),(req,res)=>{
-  res.send();
+    res.send();
 });
 */
 app.use('../../uploads', express.static(path.join(__dirname, '/uploads')));
 
-router.post("/fetchprofile",(req,res)=>{
+router.post("/fetchprofile_seller",(req,res)=>{
     console.log("inside fetch profile",req.body);
-    kafka.make_request("profile",{ "path": "fetch_profile", "body": data },req.body,(err,results)=>{
+    kafka.make_request("seller_profile",{ "path": "fetchprofile_seller", "body": data },req.body,(err,results)=>{
         console.log("fetching profile",typeof results);
         if(err){
             console.log("inside error");
@@ -52,8 +52,7 @@ router.post("/fetchprofile",(req,res)=>{
     });
 })
 
-router.post("/updatenamepic", upload.array('photos', 5), function(req, res) {
-    console.log("Inside Update Profile Post Request ");
+router.post("/updatenamepic_seller",upload.array('photos', 5), function(req, res) {
     let UpdatedImages = []
     for (let i = 0; i < req.file.Images.length; i++) {
          UpdatedImages[i] = req.protocol + "://" + req.hostname + ':3001/' + req.file[i].path;
@@ -65,9 +64,10 @@ router.post("/updatenamepic", upload.array('photos', 5), function(req, res) {
         req : req,
     }
 
+    console.log("Inside Update name pic Post Request seller ");
     console.log("request body is", req.body);
-    kafka.make_request("profile",{ "path": "namepic_func", "body": data }, req.body, function(err, results) {
-      console.log("Inside name pic update Profile ");
+    kafka.make_request("seller_profile",{ "path": "namepic_func_seller", "body": data }, req.body, function(err, results) {
+      console.log("Inside name pic update Profile seller");
       console.log(typeof results);
   
       if (err) {
@@ -91,11 +91,11 @@ router.post("/updatenamepic", upload.array('photos', 5), function(req, res) {
     });
   });
   
-router.post("/updateaddress", function(req, res) {
+router.post("/updateaddress_seller", function(req, res) {
     console.log("Inside Update Profile Post Request ");
     console.log("request body is", req.body);
-    kafka.make_request("profile",{ "path": "address_func", "body": data }, req.body, function(err, results) {
-      console.log("Inside Address Update Profile ");
+    kafka.make_request("seller_profile",{ "path": "address_func_seller", "body": data }, req.body, function(err, results) {
+      console.log("Inside Address Update Profile seller");
       console.log(typeof results);
   
       if (err) {
@@ -119,32 +119,4 @@ router.post("/updateaddress", function(req, res) {
     });
   });
 
-  router.post("/updatecard", function(req, res) {
-    console.log("Inside Update Card Profile Post Request");
-    console.log("request body is", req.body);
-    kafka.make_request("profile",{ "path": "paymentcard_func", "body": data }, req.body, function(err, results) {
-      console.log("Inside Payment Update Profile ");
-      console.log(typeof results);
-  
-      if (err) {
-        console.log("Inside err");
-        res.json({
-          status: "error",
-          msg: err
-        });
-      } else {
-        console.log("inside else1");
-        if (results.code === "400") {
-          // console.log(results.value);
-          console.log("inside 400");
-          res.sendStatus(400).end();
-        } else if (results.code === "200") {
-          res.code = "200";
-          console.log(" Payment is updated");
-          res.sendStatus(200).end("Payment of the profile is updated");
-        }
-      }
-    });
-  });
-
-  module.exports=router;
+module.exports=router;

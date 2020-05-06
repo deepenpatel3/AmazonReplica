@@ -6,6 +6,7 @@ import 'react-credit-cards/es/styles-compiled.css';
 import {Card, Form, Button, InputGroup, FormControl, ControlLabel} from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import { CardBody } from "react-bootstrap/Card";
+import Axios from "axios";
 
 class PaymentCard extends Component{
     constructor(props) {
@@ -97,7 +98,7 @@ class PaymentCard extends Component{
             var card=[...this.state.card];
             var index1=card_id;
             if(index1>-1){
-                address.splice(index1,1);
+                card.splice(index1,1);
             }
             console.log(card);
             var email = this.props.loginStateStore.result.email;
@@ -176,7 +177,7 @@ class PaymentCard extends Component{
             var card = [...this.state.card];
             const cardid = this.state.cardid;
             card[cardid].obj_cvc = e.target.value;
-            console.log("cvc", cvc);
+            console.log("card", card);
             this.setState({ 
                 card: card 
             });
@@ -217,7 +218,7 @@ class PaymentCard extends Component{
           }
     
 
-    canceleditcardchanges = e => {
+        canceleditcardchanges = e => {
         e.preventDefault();
         this.fetchprofiledbcall();
       };
@@ -462,8 +463,6 @@ class PaymentCard extends Component{
             )
         }
     }
-
-export default PaymentCard;
 
 const mapStateToProps = state => ({
     loginStateStore:state.card
