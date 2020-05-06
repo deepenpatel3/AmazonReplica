@@ -11,17 +11,16 @@ redisClient.on("error", (err) => {
     console.log(err)
 });
 
-router.get("/products", function (req, res) {
-    console.log("@@@@@ PRODUCTS CALLED")
+router.post("/products", function (req, res) {
     const data = {
         page: req.query.page,
         limit: req.query.limit,
-        name: req.query.name,
-        Categories: req.query.Categories,
-        SellerId: req.query.SellerId
+        name: req.body.name,
+        Categories: req.body.Categories,
+        SellerId: req.body.SellerId
     }
 
-    console.log("Data: ", JSON.stringify(data));
+    // console.log("Data: ", JSON.stringify(data));
     // if (parseInt(data.page) < 6) {
 
     //     let redisKey = "pg_" + data.page
@@ -59,32 +58,32 @@ router.get("/products", function (req, res) {
 
     // }
     // else {
-        kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
-            if (!result) {
-                console.log("Inside err");
-                res.status(404);
-                res.json({
-                    status: "error",
-                    msg: "Products not found",
-                })
-                res.end();
-                return;
-            } else {
-                console.log("Inside data");
-                // console.log("Data:", JSON.stringify(results));
-                res.status(200);
-                res.json(result)
-                res.end();
-                return;
-            }
-        });
+    kafka.make_request('product', { "path": "get_all_product", "body": data }, function (err, result) {
+        if (!result) {
+            console.log("Inside err");
+            res.status(404);
+            res.json({
+                status: "error",
+                msg: "Products not found",
+            })
+            res.end();
+            return;
+        } else {
+            console.log("Inside data");
+            // console.log("Data:", JSON.stringify(results));
+            res.status(200);
+            res.json(result)
+            res.end();
+            return;
+        }
+    });
     // }
 })
 
 router.post("/updateRating", function (req, res) {
     const data = {
-        id : req.body.id,
-        Rating : req.body.Rating
+        id: req.body.id,
+        Rating: req.body.Rating
     }
     // console.log("Data: ",JSON.stringify(data));
     kafka.make_request('product', { "path": "update_rating", "body": data }, function (err, result) {

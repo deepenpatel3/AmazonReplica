@@ -1,10 +1,12 @@
 var connection = new require('./kafka/Connection');
 var { mongoDB } = require('./config');
 var mongoose = require("mongoose");
-var topicsToCreate =  require('./topics/topic'); 
+var topicsToCreate = require('./topics/topic');
 const account = require("./services/account");
 const product = require("./services/product");
 const review = require("./services/review");
+const profile = require("./services/profile");
+const analytics = require("./services/analytics")
 
 var options = {
     useNewUrlParser: true,
@@ -23,12 +25,12 @@ mongoose.connect(mongoDB, options, (err) => {
 
 const client = connection.getClient();
 
-console.log("Topics: ",JSON.stringify(topicsToCreate));
-client.createTopics(topicsToCreate, true, function (err, data) { 
-    if(err){
-        console.log("In Topic Creation: ",err);
+console.log("Topics: ", JSON.stringify(topicsToCreate));
+client.createTopics(topicsToCreate, true, function (err, data) {
+    if (err) {
+        console.log("In Topic Creation: ", err);
         return;
-    } 
+    }
     console.log("Topics are created: ");
     console.log(data);
 });
@@ -60,6 +62,11 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
+            case "analytics":
+                analytics.serve(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
         }
     });
 }
@@ -85,6 +92,8 @@ function response(data, res, producer) {
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
-handleTopicRequest("account",account);
-handleTopicRequest("product",product);
-handleTopicRequest("review", review)
+handleTopicRequest("account", account);
+handleTopicRequest("profile", profile);
+handleTopicRequest("product", product);
+handleTopicRequest("review", review);
+handleTopicRequest("analytics")
