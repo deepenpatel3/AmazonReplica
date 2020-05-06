@@ -4,7 +4,8 @@ const kafka = require("../../../kafka/client");
 
 
 router.get("/", (req, res) => {
-    let most_sold_products = [], top_10_sellers = [];
+    let most_sold_products = [], top_10_sellers = [], orders_per_day = []
+    
 
     kafka.make_request('analytics', { "path": "most_sold_products", "body": req.query }, function (err, result) {
         console.log("got back from most sold products kafka");
@@ -26,9 +27,22 @@ router.get("/", (req, res) => {
                     top_10_sellers = result;
                     console.log(top_10_sellers);
 
+                    kafka.make_request('analytics', { "path": "orders_per_day", "body": req.query }, function (err, result) {
+                        console.log("got back from orders_per_day kafka");
+                        if (!result) {
+                            console.log("err ", err);
+                            res.end();
+                        } else {
+                            res.status(200);
+                            orders_per_day = result;
+                            console.log(orders_per_day);
+
+                        }
+                    });
                 }
             });
         }
-    });
+    })
 })
+
 module.exports = router;
