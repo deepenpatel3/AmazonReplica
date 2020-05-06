@@ -30,7 +30,7 @@ app.use(cors({ origin: frontendURL, credentials: true }));
 
 const redisClient = redis.createClient(6379);
 
-redisClient.on("error" , (err) => {
+redisClient.on("error", (err) => {
     console.log(err)
 });
 
@@ -52,27 +52,28 @@ app.use(function (req, res, next) {
 });
 
 const customerAccount = require("./src/routes/customer/account");
-const sellerAccount = require("./src/routes/seller/account");
-const adminAccount = require("./src/routes/admin/account");
-const customerProfile= require("./src/routes/customer/profile");
+// const sellerAccount = require("./src/routes/seller/account");
+// const adminAccount = require("./src/routes/admin/account");
+const customerProfile = require("./src/routes/customer/profile");
 const customerPayment = require("./src/routes/customer/payment")
 const customerProduct = require("./src/routes/customer/product");
 const customerReview = require("./src/routes/customer/review");
 const sellerProduct = require("./src/routes/seller/sellerProduct");
-
+const orders = require("./src/routes/customer/orders");
+const adminAnalytics = require("./src/routes/admin/analytics");
 
 app.use("/customer", customerAccount);
-app.use("/seller", sellerAccount);
-app.use("/admin", adminAccount);
+// app.use("/seller", sellerAccount);
+// app.use("/admin", adminAccount);
 app.use("/customer/product", customerProduct);
 app.use("/customer/review", customerReview);
-app.use("/seller/product",sellerProduct)
-
+app.use("/seller/product", sellerProduct)
+app.use("/orders", orders);
 //customer profile
-app.use("/customer/profile",customerProfile)
-
+app.use("/customer/profile", customerProfile)
+app.use("/admin/analytics", adminAnalytics);
 //Customer Payment
-app.use("/customer/payment",customerPayment)
+app.use("/customer/payment", customerPayment)
 
 app.listen(3001);
 console.log("Server Listening on port 3001");
