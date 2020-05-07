@@ -109,14 +109,35 @@ function remove_category(msg, callback) {
 }
 
 function get_customer_orders(msg, callback) {
-    let query = "select * from `Order` where CustomerID=" + msg.CustomerID + "";
+    let query = "select * from `Order` where CustomerID='" + msg.CustomerID + "'";
     mysql.executeQuery(query, function (err, result) {
         if (err) {
             console.log("error ", err);
             callback(err, null);
         } else {
-            console.log("orders ", result)
-            callback(null, { orders: result });
+            // console.log("orders ", result);
+            result.forEach((order, i) => {
+                Product.findOne({ _id: order.ProductID }, { Name: 1 }, (err, productName) => {
+                    if (err) {
+                        console.log("error ", err);
+                        callback(err, null);
+                    } else {
+                        order.productName = productName.Name;
+                        Seller.findOne({ _id: order.SellerID }, { Name: 1 }, (err, sellerName) => {
+                            if (err) {
+                                console.log("error ", err);
+                                callback(err, null);
+                            } else {
+                                order.sellerName = sellerName.Name;
+
+                                if (i === result.length - 1)
+                                    callback(null, result)
+                            }
+                        })
+                    }
+                })
+            })
+            // callback(null, { orders: result });
         }
     })
 }
@@ -184,7 +205,7 @@ function place_order(msg, callback) {
                     })
                 })
             })
-            Customer.updateOne({_id : msg.CustomerID},{$set : {Cart : []}}).exec().then(result =>{
+            Customer.updateOne({ _id: msg.CustomerID }, { $set: { Cart: [] } }).exec().then(result => {
                 console.log("Inside deleting cart")
                 callback(null, { success: true })
             })
@@ -236,14 +257,14 @@ function add_seller_product(msg, callback) {
     product
         .save()
         .then(result => {
-            Seller.update({"_id": msg.body.SellerId},{$push:{ "Products": result._id }}).then((res) =>{
+            Seller.update({ "_id": msg.body.SellerId }, { $push: { "Products": result._id } }).then((res) => {
                 console.log("res in adding product: ", JSON.stringify(res));
                 callback(null, result);
-            }).catch((err) =>{
+            }).catch((err) => {
                 console.log("Erro in adding product: ", err)
                 callback(err, null);
             });
-            
+
         })
         .catch(err => {
             console.log("Erro in adding product: ", err)
@@ -298,7 +319,7 @@ function get_all_product(msg, callback) {
             page: msg.page,
             limit: msg.limit,
             // Sorting will be implemented here...
-            sort: msg.sort 
+            sort: msg.sort
         };
         Product.paginate(condition, options, function (err, result) {
 
