@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { getOrders } from '../../../Redux/actions/customer/cartActions';
 import Stepper from 'react-stepper-horizontal';
+import {Link} from 'react-router-dom';
 class Orders extends Component {
     constructor(props) {
         super(props);
@@ -39,7 +40,7 @@ class Orders extends Component {
             orders = this.state.orders.map((elem, i) => {
                 return <div key={i} className="card card-body">
                     <div>
-                        <h5>{elem.productName}</h5>
+                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h5>{elem.productName}</h5></Link>
                         <h6>shipped from :: {elem.sellerName}</h6>
                         <button className="btn btn-secondary float-right" type="button" data-toggle="collapse" data-target={"#collapseExample" + i} aria-expanded="false" aria-controls={"collapseExample" + i}>
                             View Details
