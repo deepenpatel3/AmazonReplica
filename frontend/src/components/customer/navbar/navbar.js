@@ -2,6 +2,7 @@ import React, { Component } from "react";
 // import { Link } from 'react-router-dom';
 import { getCart } from "../../../Redux/actions/customer/cartActions";
 import { getProducts } from "../../../Redux/actions/customer/productActions";
+import { getFilterCategories, getFilterName } from '../../../Redux/selectors/customer/selector';
 import { connect } from 'react-redux';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
@@ -32,12 +33,13 @@ class Navbar extends Component {
         }
         this.ChangeHandler = this.ChangeHandler.bind(this);
         this.clickHandler = this.clickHandler(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
     clickHandler = () => () => {        
-        this.props.getProducts(this.state.productData,1,8,this.state.name)
-        this.setState({
-            name : ""
-        })
+        this.props.getProducts(this.state.productData,1,8,this.state.name, this.props.filterCategoires)
+        // this.setState({
+        //     name : ""
+        // })
     }
     ChangeHandler = e => {
         this.setState({
@@ -66,6 +68,15 @@ class Navbar extends Component {
         //     })
         // }
     }
+    handleKeyPress(e) {
+        // 
+        if (e.key === 'Enter') {   
+            e.preventDefault();
+            console.log("Enter key pressed!")      
+            this.props.getProducts(this.state.productData,1,8,this.state.name, this.props.filterCategoires)
+        }
+      }
+
     render() {
         // let redirect = this.state.redirect;
         if(!localStorage.getItem("id") || !(localStorage.getItem("type") == "customer")){
@@ -78,7 +89,7 @@ class Navbar extends Component {
                 <BNavbar style={{ backgroundColor: "#252f3d", padding: "0" }}>
                     <BNavbar.Brand style={{ marginLeft: "1%" }} href="/customer/product"><img src="/navbar_logo.jpeg" width="150" height="55" alt="amazon" /></BNavbar.Brand>
                     <Form inline>
-                        <FormControl type="text" placeholder="Search" style={{ width: "900px" , borderRadius : "0px" }} className="mr-sm-7" onChange = { this.ChangeHandler } value = {this.state.name}  />
+                        <FormControl type="text" placeholder="Search" style={{ width: "900px" , borderRadius : "0px" }} className="mr-sm-7" onChange = { this.ChangeHandler } onKeyPress={this.handleKeyPress} value = {this.state.name}  />
                         <Button variant="warning" onClick = {this.clickHandler} type="button" ><SearchIcon style={{paddingTop : "10%"}}/></Button>
                     </Form>
                     <Nav className="mr-auto"></Nav>
@@ -112,7 +123,6 @@ class Navbar extends Component {
                                     <StyledBadge badgeContent={this.state.cart.length} color="secondary">
                                         <ShoppingCartIcon />
                                     </StyledBadge>
-
                                 </Link>
                             </li>
 
@@ -126,7 +136,9 @@ class Navbar extends Component {
 const map = state => {
     return {
         cart: state.cart.cart,
-        productData: state.customerProductData
+        productData: state.customerProductData,
+        filterCategoires: getFilterCategories(state.customerProductData),
+        filterName: getFilterName(state.customerProductData),
     }
 }
 export default connect(map, { getCart, logout, getProducts  })(Navbar);

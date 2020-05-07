@@ -54,6 +54,7 @@ app.use(function (req, res, next) {
 const customerAccount = require("./src/routes/customer/account");
 // const sellerAccount = require("./src/routes/seller/account");
 // const adminAccount = require("./src/routes/admin/account");
+
 const customerProfile = require("./src/routes/customer/profile");
 const customerPayment = require("./src/routes/customer/payment")
 const customerProduct = require("./src/routes/customer/product");

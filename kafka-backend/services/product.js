@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const Seller = require('../models/sellerModel');
 const Customer = require("../models/customerModel");
 
 var mysql = require("../models/mysql");
@@ -110,13 +111,16 @@ function place_order(msg, callback) {
                             console.log("error ", err);
                             // callback(err, null);
                         } else {
-                            // console.log("orders ", result)
+                            console.log("orders ", result)
                             // callback(null, { orders: result });
                         }
                     })
                 })
             })
-            callback(null, { success: true })
+            Customer.updateOne({_id : msg.CustomerID},{$set : {Cart : []}}).exec().then(result =>{
+                console.log("Inside deleting cart")
+                callback(null, { success: true })
+            })
         }
     })
     // mysql.executeQuery(query, function (err, result) {
@@ -149,7 +153,7 @@ function update_rating(msg, callback) {
 function add_seller_product(msg, callback) {
     const product = new Product({
         Name: msg.body.Name,
-        Images: msg.file.Images,
+        Images: msg.body.Images,
         Rating: 0,
         Offers: msg.body.Offers,
         Price: msg.body.Price,
@@ -159,22 +163,29 @@ function add_seller_product(msg, callback) {
         Reviews: [],
         Seller: {
             SellerId: msg.body.SellerId,
-            Name: msg.body.sellerName
+            Name: msg.body.SellerName,
         }
     });
     product
         .save()
         .then(result => {
-            callback(null, result);
+            Seller.update({"_id": msg.body.SellerId},{$push:{ "Products": result._id }}).then((res) =>{
+                console.log("res in adding product: ", JSON.stringify(res));
+                callback(null, result);
+            }).catch((err) =>{
+                console.log("Erro in adding product: ", err)
+                callback(err, null);
+            });
+            
         })
         .catch(err => {
+            console.log("Erro in adding product: ", err)
             callback(err, null);
         })
-
 }
 
 function update_seller_product(msg, callback) {
-    Product.updateOne({ _id: msg.id },
+    Product.updateOne({ _id: msg._id },
         {
             $set: {
                 Name: msg.Name,
@@ -186,16 +197,16 @@ function update_seller_product(msg, callback) {
             }
         }, { new: true }).exec()
         .then(result => {
-            console.log("result", result)
+            console.log("----------------------------update_seller_product result", result)
             callback(null, { value: true })
         })
         .catch(err => {
-            console.log("ERROR : " + err)
+            console.log("update_seller_product ERROR : " + err)
         })
 }
 
 function delete_seller_product(msg, callback) {
-    Product.deleteOne({ _id: msg.id }, { new: true }).exec()
+    Product.deleteOne({ _id: msg._id }, { new: true }).exec()
         .then(result => {
             console.log("result", result)
             callback(null, { value: true })
@@ -220,7 +231,7 @@ function get_all_product(msg, callback) {
             page: msg.page,
             limit: msg.limit,
             // Sorting will be implemented here...
-            // sort: msg.sort 
+            sort: msg.sort 
         };
         Product.paginate(condition, options, function (err, result) {
 
@@ -246,9 +257,9 @@ function get_all_product(msg, callback) {
         const options = {
             page: msg.page,
             limit: msg.limit,
-            populate: 'Seller.SellerId'
+            populate: 'Seller.SellerId',
             // Sorting will be implemented here...
-            // sort: msg.sort
+            sort: msg.sort
         };
         console.log("condition: ", condition);
         Product.paginate(condition, options, function (err, result) {

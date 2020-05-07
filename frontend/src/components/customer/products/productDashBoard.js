@@ -10,6 +10,8 @@ import Pagination from '@material-ui/lab/Pagination';
 import Navbar from '../navbar/navbar';
 import ProductTile from './productTile';
 import ProductDetailsDashBoard from './productDetailsDashBoard';
+import Typography from '@material-ui/core/Typography';
+import { getFilterCategories, getFilterName } from '../../../Redux/selectors/customer/selector';
 import { getProducts } from '../../../Redux/actions/customer/productActions';
 
 const Styles = styled.div`
@@ -49,13 +51,17 @@ class ProductDashBoard extends Component {
             totalDocs: null,
             ProductDetailsView: false,
             SelectedProduct: null,
+            cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
+            SelectedCetagories: [],
+            filterCategoires: [],
         }
+        this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
     }
 
     handleChange = (e, value) => {
         e.preventDefault();
         this.props.getProducts(this.props.productData, value, this.state.limit);
-      };
+    };
 
     handlePageNext = (e) => {
         e.preventDefault();
@@ -77,8 +83,61 @@ class ProductDashBoard extends Component {
         });
     }
 
+    handleCheckBoxChange = (e) => {
+        // e.preventDefault();
+        const category = e.target.name;
+        const isChecked = e.target.checked;
+        if (isChecked) {
+            var isFound = false;
+            for (var i = 0; i < this.state.filterCategoires.length; i++) {
+                if (category == this.state.filterCategoires[i]) {
+                    isFound = true;
+                    break;
+                }
+            }
+            if (!isFound) {
+                var arr = this.state.filterCategoires;
+                arr.push(category);
+                this.setState({
+                    filterCategoires: arr,
+                });
+                // this.state.filterCategoires.push(category);
+            }
+        } else {
+            var isFound = false;
+            var id = 0;
+            for (var i = 0; i < this.state.filterCategoires.length; i++) {
+                if (category == this.state.filterCategoires[i]) {
+                    isFound = true;
+                    id = i;
+                    break;
+                }
+            }
+            if (isFound) {
+                var arr = this.state.filterCategoires;
+                arr.splice(id, 1);
+                this.setState({
+                    filterCategoires: arr,
+                });
+            }
+
+        }
+        this.props.getProducts(this.props.productData, 1, this.state.limit, this.props.filterName, this.state.filterCategoires);
+        console.log("filterCategoires: ",JSON.stringify(this.state.filterCategoires));
+    }
+
+    isCategoryInFilter = (category) => {
+        for (var i = 0; i < this.state.filterCategoires.length; i++) {
+            if (category == this.state.filterCategoires[i]) {
+                return true;
+            }
+        }
+        return false
+    }
+
     componentDidMount() {
-        this.props.getProducts(this.props.productData, 1, this.state.limit);
+        // this.props.getProducts(this.props.productData, 1, this.state.limit);
+        this.props.getProducts(this.props.productData, 1, this.state.limit, this.props.filterName, this.props.filterCategoires);
         if (!this.props.productData) {
             this.setState({
                 products: this.props.productData.products
@@ -123,9 +182,39 @@ class ProductDashBoard extends Component {
                     <div className="product-filter-bar"></div>
                     <Row>
                         <Col sm={2} md={2}>
-                            <div className="product-sidebar">
-                                Hey
-                        </div>
+                            <div style={{ padding: "5px" }} className="product-sidebar">
+                                <Row style={{ paddingLeft: "15px" }}>
+                                    <Typography variant="h6" gutterBottom>
+                                        Filter
+                                     </Typography>
+                                </Row>
+                                <div style={{ paddingLeft: "25px" }}>
+                                    <Row>
+                                        <Typography variant="subtitle1" gutterBottom>
+                                            Categories
+                                     </Typography>
+                                    </Row>
+                                    {
+                                        this.state.cetagoriesSet.map((data, id) => {
+                                            return (
+                                                <Form.Check type="checkbox" onChange={this.handleCheckBoxChange} defaultChecked={this.isCategoryInFilter(data)} name={data} label={data} />
+                                                // <Row>{data}</Row>
+                                            )
+                                        })
+                                    }
+                                </div>
+                                <Row style={{ paddingTop: "10px", paddingLeft: "25px" }}>
+                                    <Typography variant="subtitle1" gutterBottom>
+                                        Sorted By
+                                     </Typography>
+                                </Row>
+                                <Form.Control as="select">
+                                    <option>None</option>
+                                    <option>Price: Low to High</option>
+                                    <option>Price: High to Low</option>
+                                    <option>Rating</option>
+                                </Form.Control>
+                            </div>
                         </Col>
                         <Col>
                             <div className="product-dashboard">
@@ -136,12 +225,12 @@ class ProductDashBoard extends Component {
                                 </GridList>
                             </div>
                             <div className="product-dashboard-pagination">
-                                <Pagination count={this.state.totalPages}  page={this.state.activePage} onChange={this.handleChange} size="large" shape="rounded" />
+                                <Pagination count={this.state.totalPages} page={this.state.activePage} onChange={this.handleChange} size="large" shape="rounded" />
                             </div>
                         </Col>
                     </Row>
                     <Row>
-                    <div className="product-dashboard-pagination"></div>
+                        <div className="product-dashboard-pagination"></div>
                     </Row>
                 </Styles>
             );
@@ -153,8 +242,10 @@ class ProductDashBoard extends Component {
 const mapStateToProps = state => {
     return {
         productData: state.customerProductData,
+        filterCategoires: getFilterCategories(state.customerProductData),
+        filterName: getFilterName(state.customerProductData),
     };
 };
 
 
-export default connect(mapStateToProps, {getProducts})(ProductDashBoard);
+export default connect(mapStateToProps, { getProducts })(ProductDashBoard);

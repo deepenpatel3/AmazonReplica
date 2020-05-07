@@ -15,7 +15,7 @@ var productSchema = new Schema({
     Images: [{type: String}],
     Rating: {type: Number, required: true},
     Offers:[{type: String}],
-    Price: {type: Number, required: true},
+    Price: {type: Number, required: true}, 
     Description:{type: String, required: true},
     Reviews: [{type:  Schema.Types.ObjectId, required: true , ref: Review}],
     Categories: [{type: String}],
