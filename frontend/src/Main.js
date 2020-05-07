@@ -13,11 +13,8 @@ import Orders from './components/customer/orders/orders'
 import Cart from './components/customer/cart/cart';
 import Payment from "./components/customer/payment/payment";
 import SaveForLater from './components/customer/saveForLater/saveForLater';
-
-
 import CustomerProfile from './components/customer/customerProfile/customerProfile';
 import SellerProfile from './components/seller/sellerProfile/sellerProfile';
-
 import Dashboard from './components/admin/adminDashboard/dashboard';
 
 

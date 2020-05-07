@@ -6,22 +6,22 @@ const Seller = require('./sellerModel');
 
 var sellerSchema = new Schema({
     // SellerId: {type: Schema.Types.ObjectId, required: true, ref : Seller },
-    SellerId: {type: String, required: true},
-    Name: {type: String, required: true},
-    SellerProfileUrl: {type: String}
-}); 
+    SellerId: { type: String, required: true },
+    Name: { type: String, required: true },
+    SellerProfileUrl: { type: String }
+});
 
 var productSchema = new Schema({
     Seller: sellerSchema,
-    Name: {type: String, required: true},
-    Images: [{type: String}],
-    Rating: {type: Number, required: true},
-    Count : {type : Number},
-    Offers:[{type: String}],
-    Price: {type: Number, required: true},
-    Description:{type: String, required: true},
-    Reviews: [{type:  Schema.Types.ObjectId, required: true , ref: Review}],
-    Categories: [{type: String}],
+    Name: { type: String, required: true },
+    Images: [{ type: String }],
+    Rating: { type: Number, required: true },
+    Count: { type: Number },
+    Offers: [{ type: String }],
+    Price: { type: Number, required: true },
+    Description: { type: String, required: true },
+    Reviews: [{ type: Schema.Types.ObjectId, required: true, ref: Review }],
+    Categories: [{ type: String }],
 });
 
 

@@ -38,7 +38,9 @@ class Orders extends Component {
             orders = this.state.orders.map((elem, i) => {
                 return <div key={i} className="card card-body">
                     <div>
-                        <h5>{elem.Name}</h5>
+
+                        <h5>{elem.productName}</h5>
+                        <h6>shipped from :: {elem.sellerName}</h6>
                         <button className="btn btn-light float-right" type="button" data-toggle="collapse" data-target={"#collapseExample" + i} aria-expanded="false" aria-controls={"collapseExample" + i}>
                             View Details
                         </button>
