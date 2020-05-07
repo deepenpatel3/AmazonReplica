@@ -38,6 +38,9 @@ exports.serve = function serve(msg, callback) {
         case "update_order":
             update_order(msg.body, callback);
             break;
+        case "particular_product":
+            particular_product(msg.body, callback);
+            break;
     }
 }
 
@@ -117,7 +120,7 @@ function place_order(msg, callback) {
                     })
                 })
             })
-            Customer.updateOne({_id : msg.CustomerID},{$set : {Cart : []}}).exec().then(result =>{
+            Customer.updateOne({ _id: msg.CustomerID }, { $set: { Cart: [] } }).exec().then(result => {
                 console.log("Inside deleting cart")
                 callback(null, { success: true })
             })
@@ -169,14 +172,14 @@ function add_seller_product(msg, callback) {
     product
         .save()
         .then(result => {
-            Seller.update({"_id": msg.body.SellerId},{$push:{ "Products": result._id }}).then((res) =>{
+            Seller.update({ "_id": msg.body.SellerId }, { $push: { "Products": result._id } }).then((res) => {
                 console.log("res in adding product: ", JSON.stringify(res));
                 callback(null, result);
-            }).catch((err) =>{
+            }).catch((err) => {
                 console.log("Erro in adding product: ", err)
                 callback(err, null);
             });
-            
+
         })
         .catch(err => {
             console.log("Erro in adding product: ", err)
@@ -231,7 +234,7 @@ function get_all_product(msg, callback) {
             page: msg.page,
             limit: msg.limit,
             // Sorting will be implemented here...
-            sort: msg.sort 
+            sort: msg.sort
         };
         Product.paginate(condition, options, function (err, result) {
 
@@ -272,4 +275,17 @@ function get_all_product(msg, callback) {
         });
     }
 
+}
+
+
+function particular_product(msg, callback) {
+    Product.find({ _id: msg.id }).exec()
+        .then(result => {
+            console.log("result", result)
+            callback(null, { value: result })
+        })
+        .catch(err => {
+            console.log("ERROR : " + err)
+            callback(err, null)
+        })
 }
