@@ -1,11 +1,11 @@
 const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
 const Customer = require("../models/customerModel");
-
+const Category = require("../models/categoryModel");
 var mysql = require("../models/mysql");
 
 exports.serve = function serve(msg, callback) {
-    console.log("msg", msg);
+    // console.log("msg", msg);
     // console.log("In Service path:", msg.path);
     switch (msg.path) {
         case "add_product":
@@ -41,18 +41,106 @@ exports.serve = function serve(msg, callback) {
         case "particular_product":
             particular_product(msg.body, callback);
             break;
+        case "add_category":
+            add_category(msg.body, callback);
+            break;
+        case "remove_category":
+            remove_category(msg.body, callback);
+            break;
+        case "get_category_products":
+            get_category_products(msg.body, callback);
+            break;
+
     }
 }
 
+function get_category_products(msg, callback) {
+    Product.find({ Categories: msg.Category }, { "Seller.Name": 1, Price: 1 }, (err, products) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            callback(null, products);
+        }
+    })
+}
+
+function add_category(msg, callback) {
+    Category.findOne({}, (err, category) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("category", category);
+            if (category.length === 0) {
+                let newCategory = new Category({
+                    Categories: [msg.Category]
+                })
+                newCategory.save(() => { callback(null, true) });
+            } else {
+                category.Categories.push(msg.Category);
+                category.save(() => { callback(null, true) });
+            }
+        }
+    })
+}
+
+function remove_category(msg, callback) {
+    Product.find({ Categories: msg.Category }, (err, products) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("products: ", products.length);
+            if (products.length === 0) {
+                Category.findOne({}, (err, category) => {
+                    if (err) {
+                        console.log("error ", err);
+                        callback(err, null);
+                    } else {
+                        console.log("category", category);
+                        category.Categories.splice(category.Categories.indexOf(msg.Category), 1);
+                        category.save(() => { callback(null, { message: "Successfully Deleted" }) })
+                    }
+                })
+            } else {
+                callback(null, { message: "Category can not be deleted." })
+            }
+        }
+    })
+
+}
+
 function get_customer_orders(msg, callback) {
-    let query = "select * from `Order` where CustomerID=" + msg.CustomerID + "";
+    let query = "select * from `Order` where CustomerID='" + msg.CustomerID + "'";
     mysql.executeQuery(query, function (err, result) {
         if (err) {
             console.log("error ", err);
             callback(err, null);
         } else {
-            console.log("orders ", result)
-            callback(null, { orders: result });
+            // console.log("orders ", result);
+            result.forEach((order, i) => {
+                Product.findOne({ _id: order.ProductID }, { Name: 1 }, (err, productName) => {
+                    if (err) {
+                        console.log("error ", err);
+                        callback(err, null);
+                    } else {
+                        order.productName = productName.Name;
+                        Seller.findOne({ _id: order.SellerID }, { Name: 1 }, (err, sellerName) => {
+                            if (err) {
+                                console.log("error ", err);
+                                callback(err, null);
+                            } else {
+                                order.sellerName = sellerName.Name;
+
+                                if (i === result.length - 1)
+                                    callback(null, result)
+                            }
+                        })
+                    }
+                })
+            })
+            // callback(null, { orders: result });
         }
     })
 }
@@ -153,6 +241,23 @@ function update_rating(msg, callback) {
     })
 }
 
+
+function update_rating(msg, callback) {
+
+    Product.findById({ _id: msg.id }, (err, product) => {
+        if (err) {
+            console.log("rating update error", err);
+            callback(err, null);
+        } else {
+            product.Count = product.Count + 1 
+            console.log('Count', product.Count)
+            product.Rating = (msg.Rating + (product.Rating*(product.Count -1))) / (product.Count);
+            console.log(" Rating " , product.Rating)
+            product.save(() => { callback(null, { rating: product.Rating }) })
+        }
+    })
+}
+
 function add_seller_product(msg, callback) {
     const product = new Product({
         Name: msg.body.Name,
@@ -221,7 +326,6 @@ function delete_seller_product(msg, callback) {
 
 
 function get_all_product(msg, callback) {
-
     let condition = {}
     if (msg.SellerId) {
         console.log("inside if");
