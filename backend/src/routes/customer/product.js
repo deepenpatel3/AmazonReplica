@@ -101,7 +101,7 @@ router.post("/updateRating", function (req, res) {
             // console.log("Data:", JSON.stringify(results));
             res.status(200);
             res.json(result)
-            res.end();
+            res.end(); 
             return;
         }
     });
