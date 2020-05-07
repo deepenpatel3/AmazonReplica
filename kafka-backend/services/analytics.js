@@ -22,7 +22,7 @@ exports.serve = function serve(msg, callback) {
             break;
         case "orders_per_day":
             orders_per_day(msg, callback)
-            break
+            break;
     }
 }
 
@@ -34,14 +34,14 @@ function most_sold_products(msg, callback) {
             console.log("error ", err);
             callback(err, null);
         } else {
-            // console.log(result)
+            console.log(result);
             let value = [];
-            result.forEach(async (product, i) => {
-                await Product.findById({ _id: product.ProductID }, (err, result) => {
-                    if (result) {
-                        value.push({ Name: result.Name, Orders: product.Orders });
+            result.forEach((elem, i) => {
+                Product.findById({ _id: elem.ProductID }, (err, product) => {
+                    if (product) {
+                        value.push({ Name: product.Name, Orders: elem.Orders });
                     }
-                    if (i === 4) {
+                    if (i === result.length - 1) {
                         callback(null, value);
                     }
                 })
@@ -58,13 +58,13 @@ function top_5_sellers(msg, callback) {
             callback(err, null);
         } else {
             let value = [];
-            result.forEach(async (seller, i) => {
-                await Seller.findById({ _id: seller.SellerID }, (err, result) => {
-                    if (result) {
-                        console.log("seller", result.Name, " Sales: ", seller.Sales);
-                        value.push({ Name: result.Name, Sales: seller.Sales });
+            result.forEach(async (elem, i) => {
+                await Seller.findById({ _id: elem.SellerID }, (err, seller) => {
+                    if (seller) {
+                        // console.log("seller", seller.Name, " Sales: ", elem.Sales);
+                        value.push({ Name: seller.Name, Sales: elem.Sales });
                     }
-                    if (i === 4) {
+                    if (i === result.length - 1) {
                         callback(null, value);
                     }
                 })
@@ -82,13 +82,13 @@ function top_5_customers(msg, callback) {
         } else {
             // console.log(result)
             let value = [];
-            result.forEach(async (customer, i) => {
-                await Customer.findById({ _id: customer.CustomerID }, (err, result) => {
-                    if (result) {
-                        console.log("customer", result.Name, " purchase : ", customer.Purchase_amount);
-                        value.push({ Name: result.Name, Purchase_amount: customer.Purchase_amount });
+            result.forEach(async (elem, i) => {
+                await Customer.findById({ _id: elem.CustomerID }, (err, customer) => {
+                    if (customer) {
+                        // console.log("customer", result.Name, " purchase : ", customer.Purchase_amount);
+                        value.push({ Name: customer.Name, Purchase_amount: elem.Purchase_amount });
                     }
-                    if (i === 4) {
+                    if (i === result.length - 1) {
                         callback(null, value);
                     }
                 })
