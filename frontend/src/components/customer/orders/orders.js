@@ -30,6 +30,7 @@ class Orders extends Component {
             })
         }
     }
+    
     render() {
         let orders = null;
         if (this.state.orders.length === 0) {
@@ -38,20 +39,19 @@ class Orders extends Component {
             orders = this.state.orders.map((elem, i) => {
                 return <div key={i} className="card card-body">
                     <div>
-
                         <h5>{elem.productName}</h5>
                         <h6>shipped from :: {elem.sellerName}</h6>
-                        <button className="btn btn-light float-right" type="button" data-toggle="collapse" data-target={"#collapseExample" + i} aria-expanded="false" aria-controls={"collapseExample" + i}>
+                        <button className="btn btn-secondary float-right" type="button" data-toggle="collapse" data-target={"#collapseExample" + i} aria-expanded="false" aria-controls={"collapseExample" + i}>
                             View Details
                         </button>
                         <h6>Status : {elem.Tracking_Status}</h6>
-                        <h6>Delivery Date : {elem.DeliveryDate}</h6>
+                        <h6>Order Date : {elem.OrderDate}</h6>
                         <Stepper steps={ [{title: 'Accepted'}, {title: 'Dispatched'}, {title: 'Out for Delivery'}, {title: 'Delivered'}] } activeStep={ this.getStatus(elem.Tracking_Status) } />
                     </div>
-                    <div className="collapse" id={"collapseExample" + i}>
+                    <div className="collapse" id={"collapseExample" + i} style={{marginTop : "5%"}}>
                         <div className="card card-body">
-                            Billing Details : {elem.billingDetails} <br/>
-                            PaymentDetails :{elem.PaymentDetails}   <br/>
+                            Billing Details : {elem.CardName} <br/>
+                            Payment Details : {elem.CardNumber}   <br/>
                             Address : {elem.Address}
                         </div>
                     </div>

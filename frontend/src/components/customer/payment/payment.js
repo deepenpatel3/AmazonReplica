@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 // import Navbar from "../navbar/navbar";
-import { getPaymentDetails } from "../../../Redux/actions/customer/payment"
+import { getPaymentDetails , addCard } from "../../../Redux/actions/customer/payment"
 import { connect } from 'react-redux'
 import { Modal, Button } from 'react-bootstrap';
-import { placeOrder } from "../../../Redux/actions/customer/cartActions"
+import { placeOrder  } from "../../../Redux/actions/customer/cartActions"
+
 class Payment extends Component {
     //This is payment component
     constructor(props) {
@@ -75,6 +76,7 @@ class Payment extends Component {
             this.handleClose()
         })
         // action for add card
+        this.props.addCard(card)
     }
     SelectAdd = i => {
         this.handleCloseAdd();
@@ -317,4 +319,4 @@ const mapStateToProps = state => {
         cart: state.customerPayment.cart
     }
 }
-export default connect(mapStateToProps, { getPaymentDetails, placeOrder })(Payment);
+export default connect(mapStateToProps, { getPaymentDetails, placeOrder, addCard })(Payment);
