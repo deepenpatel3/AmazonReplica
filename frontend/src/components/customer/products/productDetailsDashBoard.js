@@ -18,8 +18,8 @@ import ReviewTile from './reviewTile';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import { getReviewsForProduct, addReview } from '../../../Redux/actions/customer/reviewActions';
 import { updateCart } from '../../../Redux/actions/customer/cartActions'
-import {productViewClickListnerApi} from '../../../Redux/actions/admin/analyticsActions';
-import {giveRatingToProduct} from '../../../Redux/actions/customer/productActions';
+import { productViewClickListnerApi } from '../../../Redux/actions/admin/analyticsActions';
+import { giveRatingToProduct } from '../../../Redux/actions/customer/productActions';
 
 const Styles = styled.div`
 .product-details-addtocartbar{
@@ -145,7 +145,7 @@ class ProductDetailsDashBoard extends Component {
         })
     }
 
-    addRating = (event,value) => {
+    addRating = (event, value) => {
         this.setState({
             Rating: value
         })
@@ -204,7 +204,7 @@ class ProductDetailsDashBoard extends Component {
     };
 
     render() {
-        if(this.props.reviewData.productId != this.props.Product._id){
+        if (this.props.reviewData.productId != this.props.Product._id) {
             this.props.getReviewsForProduct(this.props.Product._id);
         }
         var reviews = []
@@ -219,9 +219,11 @@ class ProductDetailsDashBoard extends Component {
 
         return (
             <Styles>
-                <div className="product-details-bar">
-                    <ArrowBackIcon className="product-details-back-button" onClick={this.props.onBackClickListner} type=""></ArrowBackIcon>
-                </div>
+                {this.props.onBackClickListner &&
+                    <div className="product-details-bar">
+                        <ArrowBackIcon className="product-details-back-button" onClick={this.props.onBackClickListner} type=""></ArrowBackIcon>
+                    </div>
+                }
                 <Row >
                     <Col sm={4.5} md={4.5}>
                         <div className="product-details-image-section">
