@@ -17,7 +17,7 @@ var sellerSchema = new Schema({
     Password:  {type: String, required: true},
     ProfileURL:  {type: String, required: false},
     Address: addressSchema,
-    Products: [{type: String}],
+    Products: [{type: String , ref : "product"}],
     Description:{type: String, required: false},
 },
     {
