@@ -5,13 +5,35 @@ import {getProduct} from '../../../Redux/actions/customer/cartActions'
 class ProductDetails extends Component {
     constructor(props){
         super(props);
+        this.state ={
+            product : {}
+        }       
     }
     componentWillMount(){
         this.props.getProduct(this.props.match.params.id)
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.product !== this.props.product){
+            this.setState({
+                product : nextProps.product
+            })
+        }
+    }
+    isEmpty = (obj) => {
+        for(var key in obj) {
+            if(obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
     render(){
+        let details = null;
+        if(!this.isEmpty(this.state.product))
+            details = <ProductDetailsDashboard Product={this.state.product } /> 
+            // details = JSON.stringify(this.state.product)
+        
         return <div> 
-            <ProductDetailsDashboard Product={this.props.product } /> 
+            {details}
         </div>
     }
 }

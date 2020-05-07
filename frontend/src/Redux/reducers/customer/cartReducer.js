@@ -22,8 +22,8 @@ function cartReducer(state = initialState, action) {
             orders : action.payload
         });
     }
-    else if (action === GET_PRODUCT){
-        console.log("action payload : ", action.payload)
+    else if (action.type === GET_PRODUCT){
+        console.log("action payload PRODUCT : ", action.payload)
         return Object.assign({}, state, { 
             product : action.payload
         });

@@ -53,10 +53,13 @@ export const getOrders = (data) => dispatch => {
 }
 
 export const getProduct = data => dispatch =>{
-    console.log("Inside place Order")
+    console.log("Inside get product")
     axios.post(backendURL + "/customer/product/particularProduct",{id : data}).then(res => {
-        console.log(res.data.value[0])
-        dispatch(setProduct(res.data))
+        console.log(res.data)
+        dispatch ({
+            type : GET_PRODUCT,
+            payload : res.data
+        })
     }).catch((err) => {
         console.log("ERROR ::::>" + err )
     })
