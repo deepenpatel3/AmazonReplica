@@ -1,9 +1,11 @@
 
-import { GET_CART } from "../../../Redux/constants/action-types";
+import { GET_CART, GET_ORDERS, GET_PRODUCT } from "../../../Redux/constants/action-types";
 
 const initialState = {
     cart : [],
-    saveForLater : []
+    saveForLater : [],
+    orders : [],
+    product : {}
 };
 
 function cartReducer(state = initialState, action) {
@@ -12,6 +14,18 @@ function cartReducer(state = initialState, action) {
         return Object.assign({}, state, { 
             cart: action.payload.Cart ,
             saveForLater : action.payload.SaveForLater
+        });
+    }
+    else if (action.type === GET_ORDERS) {
+        console.log("action payload : ", action.payload)
+        return Object.assign({}, state, { 
+            orders : action.payload
+        });
+    }
+    else if (action.type === GET_PRODUCT){
+        console.log("action payload PRODUCT : ", action.payload)
+        return Object.assign({}, state, { 
+            product : action.payload
         });
     }
     return state;

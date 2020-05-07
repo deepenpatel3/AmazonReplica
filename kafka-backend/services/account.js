@@ -26,9 +26,42 @@ exports.serve = function serve(msg, callback) {
         case "update_cart":
             update_cart(msg, callback)
             break;
+        case "addCard":
+            addCard(msg.body,callback)
     }
 }
-
+function addCard(msg, callback) {
+    console.log("@@@@"+msg)
+    var res = {};
+    Customer.findOneAndUpdate({ _id: msg.id },
+      {
+        $push: {
+            Payments : {
+            Number : msg.Number,
+            NameOnCard : msg.NameOnCard,
+            ExpDate : new Date(+new Date() +  180* 24 * 60 * 60 * 1000) 
+          }
+        }
+      },
+      function (err, user) {
+        if (err) {
+          res.code = "400";
+          res.value =
+            "The user is not valid";
+          console.log(res.value);
+          callback(null, null);
+          //res.sendStatus(400).end();
+        } else {
+          res.code = "200";
+          res.value = "Card Added Successful"
+          console.log("Card Added Successful");
+          callback(null, res);
+          //res.sendStatus(200).end();
+        }
+      }
+    );
+  }
+  
 function get_cart(msg, callback) {
 
     Customer.findOne({ "_id": msg.body.id }).populate("Cart.ProductID").populate("SaveForLater.ProductID").exec()

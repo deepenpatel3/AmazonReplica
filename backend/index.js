@@ -62,18 +62,22 @@ const customerReview = require("./src/routes/customer/review");
 const sellerProduct = require("./src/routes/seller/sellerProduct");
 const orders = require("./src/routes/customer/orders");
 const adminAnalytics = require("./src/routes/admin/analytics");
+const adminSideSeller = require("./src/routes/admin/sellerData");
+const category = require("./src/routes/admin/category");
+const adminSideOrder = require("./src/routes/admin/orders");
 
 app.use("/customer", customerAccount);
-// app.use("/seller", sellerAccount);
-// app.use("/admin", adminAccount);
 app.use("/customer/product", customerProduct);
 app.use("/customer/review", customerReview);
 app.use("/seller/product", sellerProduct)
 app.use("/orders", orders);
-//customer profile
+
 app.use("/customer/profile", customerProfile)
 app.use("/admin/analytics", adminAnalytics);
+app.use("/admin/seller", adminSideSeller);
+app.use("/admin/orders", adminSideOrder);
 //Customer Payment
+app.use("/admin/category", category);
 app.use("/customer/payment", customerPayment)
 
 app.listen(3001);

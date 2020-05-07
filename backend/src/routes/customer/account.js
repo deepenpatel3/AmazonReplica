@@ -99,4 +99,16 @@ router.post("/updateCart", function (req, res) {
     });
 })
 
+router.post("/addCard", function (req, res) {
+    console.log('inside get cart', req.body);
+
+    kafka.make_request('account', { "path": "addCard", "body": req.body }, function (err, result) {
+        console.log('got back from kafka addcard');
+
+        console.log("customer add card result- ", result);
+        res.send(result.value)
+
+    });
+})
+
 module.exports = router;
