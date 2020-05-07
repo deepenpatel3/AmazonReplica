@@ -8,35 +8,28 @@ class Orders extends Component {
         this.state = {
             orders: []
         };
+        this.getStatus = this.getStatus.bind(this)
     }
-
+    getStatus = (status) => {
+        if (status === "Accepted")
+            return 0;
+        else if (status === "Dispatched")
+            return 1;
+        else if (status === "Out for Delivery")
+            return 2;
+        else if (status === "Delivered")
+            return 3;
+    }
     componentDidMount() {
         this.props.getOrders({ CustomerID : localStorage.getItem("id") });
-        let orders = [
-            {
-                OrderId: 1,
-                Name: "Order 1",
-                DeliveryDate: "12/12/12",
-                status: "IN TRANSIT",
-                billingDetails: "NAME OF THE PERSON",
-                PaymentDetails: "123456789012",
-                Address: "ADDRESS",
-            },
-            {
-                OrderId: 2,
-                Name: "Order 2",
-                DeliveryDate: "12/12/12",
-                status: "IN TRANSIT",
-                billingDetails: "NAME OF THE PERSON",
-                PaymentDetails: "123456789012",
-                Address: "ADDRESS",
-            }
-        ]
-        this.setState({
-            orders: orders
-        })
     }
-
+    componentDidUpdate(prevProps){
+        if(prevProps.orders !== this.props.orders){
+            this.setState({
+                orders : this.props.orders
+            })
+        }
+    }
     render() {
         let orders = null;
         if (this.state.orders.length === 0) {
@@ -44,22 +37,20 @@ class Orders extends Component {
         } else {
             orders = this.state.orders.map((elem, i) => {
                 return <div key={i} className="card card-body">
-
-
                     <div>
                         <h5>{elem.Name}</h5>
                         <button className="btn btn-light float-right" type="button" data-toggle="collapse" data-target={"#collapseExample" + i} aria-expanded="false" aria-controls={"collapseExample" + i}>
                             View Details
                         </button>
-                        <h6>Status : {elem.status}</h6>
+                        <h6>Status : {elem.Tracking_Status}</h6>
                         <h6>Delivery Date : {elem.DeliveryDate}</h6>
-                        <Stepper steps={ [{title: 'Accepted'}, {title: 'Dispatched'}, {title: 'Out for Delivery'}, {title: 'Delivered'}] } activeStep={ 2 } />
+                        <Stepper steps={ [{title: 'Accepted'}, {title: 'Dispatched'}, {title: 'Out for Delivery'}, {title: 'Delivered'}] } activeStep={ this.getStatus(elem.Tracking_Status) } />
                     </div>
-                    <div class="collapse" id={"collapseExample" + i}>
-                        <div class="card card-body">
-                            Billing Details : {elem.billingDetails}<br />
-                                PaymentDetails :{elem.PaymentDetails}<br />
-                                Address : {elem.Address}
+                    <div className="collapse" id={"collapseExample" + i}>
+                        <div className="card card-body">
+                            Billing Details : {elem.billingDetails} <br/>
+                            PaymentDetails :{elem.PaymentDetails}   <br/>
+                            Address : {elem.Address}
                         </div>
                     </div>
                 </div>
