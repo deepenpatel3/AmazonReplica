@@ -50,6 +50,13 @@ exports.serve = function serve(msg, callback) {
         case "get_category_products":
             get_category_products(msg.body, callback);
             break;
+        case "list_of_orders":
+            list_of_orders(msg.body, callback);
+            break;
+        case "change_status":
+            changeStatus(msg.body, callback);
+            break;
+
 
     }
 }
@@ -249,10 +256,10 @@ function update_rating(msg, callback) {
             console.log("rating update error", err);
             callback(err, null);
         } else {
-            product.Count = product.Count + 1 
+            product.Count = product.Count + 1
             console.log('Count', product.Count)
-            product.Rating = (msg.Rating + (product.Rating*(product.Count -1))) / (product.Count);
-            console.log(" Rating " , product.Rating)
+            product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
+            console.log(" Rating ", product.Rating)
             product.save(() => { callback(null, { rating: product.Rating }) })
         }
     })
@@ -392,4 +399,54 @@ function particular_product(msg, callback) {
             console.log("ERROR : " + err)
             callback(err, null)
         })
+}
+
+function list_of_orders(msg, callback) {
+    if (msg.name) {
+        let query = "select * from `Order` where SellerName LIKE '%" + msg.name + "%'";
+        mysql.executeQuery(query, function (err, result) {
+            if (err) {
+                console.log("error ", err);
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+    else if (msg.status) {
+        let query = "select * from `Order` where Tracking_Status = '" + msg.status + "'";
+        mysql.executeQuery(query, function (err, result) {
+            if (err) {
+                console.log("error ", err);
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+    else {
+        let query = "select * from `Order`";
+        mysql.executeQuery(query, function (err, result) {
+            if (err) {
+                console.log("error ", err);
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+
+}
+
+function changeStatus(msg, callback) {
+    let query = "update `Order` set Tracking_Status = '"+msg.status+"' where Order_id = '"+msg.Order_id+"'";
+    mysql.executeQuery(query, function (err, result) {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            callback(null, {value : "Updated Successfully"});
+        }
+    })
+
 }
