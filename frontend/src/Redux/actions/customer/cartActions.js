@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { GET_CART, GET_ORDERS } from "../../../Redux/constants/action-types";
+import { GET_CART, GET_ORDERS, GET_PRODUCT } from "../../../Redux/constants/action-types";
 const { backendURL } = require("../../../config");
 
 
@@ -52,9 +52,26 @@ export const getOrders = (data) => dispatch => {
     })
 }
 
+export const getProduct = data => dispatch =>{
+    console.log("Inside get product")
+    axios.post(backendURL + "/customer/product/particularProduct",{id : data}).then(res => {
+        console.log(res.data)
+        dispatch ({
+            type : GET_PRODUCT,
+            payload : res.data
+        })
+    }).catch((err) => {
+        console.log("ERROR ::::>" + err )
+    })
+}
 
 export const setOrders = (data) => ({
     type : GET_ORDERS,
+    payload : data
+})
+
+export const setProduct = (data) => ({
+    type : GET_PRODUCT,
     payload : data
 })
 

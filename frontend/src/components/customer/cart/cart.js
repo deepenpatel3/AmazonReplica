@@ -213,7 +213,7 @@ class Cart extends Component {
                                 <img src={elem.ProductID.Images[0]} width="150px" height="150px" alt="Oops "></img>
                             </div>
                             <div className="col-md-9">
-                                <Link to="/customer/home">{elem.ProductID.Name} </Link><br />
+                                <Link to={"/customer/productDetails/" + elem.ProductID._id}>{elem.ProductID.Name} </Link><br />
                                 Shipped from : <Link to="/customer/home">{elem.ProductID.Seller.Name}</Link> <br />
                                 Gift Option :
                                 <form className="form-inline">
@@ -282,7 +282,7 @@ class Cart extends Component {
                                 <img src={elem.ProductID.Images[0]} width="150px" height="150px" alt="Oops "></img>
                             </div>
                             <div className="col-md-9">
-                                <Link to="/customer/home">{elem.ProductID.Name} </Link><br />
+                                <Link to={"/customer/productDetails/" + elem.ProductID._id}>{elem.ProductID.Name} </Link><br />
                             Shipped from : <Link to="/customer/home">{elem.ProductID.Seller.Name}</Link> <br />
                             Gift Option :
                                 <form className="form-inline">

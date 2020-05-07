@@ -386,7 +386,7 @@ function particular_product(msg, callback) {
     Product.find({ _id: msg.id }).exec()
         .then(result => {
             console.log("result", result)
-            callback(null, { value: result })
+            callback(null, result[0])
         })
         .catch(err => {
             console.log("ERROR : " + err)
