@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { GET_PAYMENT_DETAILS } from "../../../Redux/constants/action-types";
+import { GET_PAYMENT_DETAILS , ADD_PAYMENT_DETAILS} from "../../../Redux/constants/action-types";
 const { backendURL } = require("../../../config");
 
 export function getPaymentDetails(data){
@@ -16,6 +16,18 @@ export function getPaymentDetails(data){
                 // callback(res)
             })
         }
+}
+export const addCard = card =>dispatch=> {
+
+    card.id = localStorage.getItem("id")
+    console.log("@@@@" , card )
+    axios.post(backendURL + "/customer/addCard" , card).then(res => {
+        console.log(res.data)
+        dispatch({
+            type : ADD_PAYMENT_DETAILS,
+            payload : card
+        })
+    }) 
 }
 
 // return function (dispatch) {

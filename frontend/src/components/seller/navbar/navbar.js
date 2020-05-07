@@ -68,7 +68,7 @@ class Navbar extends Component {
                     <BNavbar.Brand style={{ marginLeft: "1%" }} href="/customer/product"><img src="/navbar_logo.jpeg" width="150" height="55" alt="amazon" /></BNavbar.Brand>
                     <Form inline>
                         <FormControl type="text" placeholder="Search" style={{ width: "900px" , borderRadius : "0px" }} className="mr-sm-7" onChange = { this.ChangeHandler } onKeyPress={this.handleKeyPress} value = {this.state.name}  />
-                        <Button variant="warning" onClick = {this.clickHandler} type="button" ><SearchIcon style={{paddingTop : "10%"}}/></Button>
+                        <Button variant="warning" onClick = {this.clickHandler} type="button"  style={{marginTop : "1.5%" , height : "2.4em"}} ><SearchIcon style={{paddingTop : "5%" }}/></Button>
                     </Form>
                     <Nav className="mr-auto"></Nav>
                     <Nav>

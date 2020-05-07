@@ -15,6 +15,7 @@ redisClient.on("error", (err) => {
 
 
 router.get("/", (req, res) => {
+
     let most_sold_products = [], top_10_sellers = [], top_5_customers = [], top_10_products = [], orders_per_day = [], top_10_viewed = []
 
     kafka.make_request('analytics', { "path": "most_sold_products", "body": req.query }, function (err, result) {
