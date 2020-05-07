@@ -152,7 +152,7 @@ router.post("/updateaddress", function(req, res) {
   router.post("/addCard", function(req, res) {
     console.log("Inside Added Card Profile Post Request");
     console.log("request body is", req.body);
-    kafka.make_request("profile",{ "path": "addCard", "body":  req.body},  function(err, results) {
+    kafka.make_request("profile",{ "path": "addCard", "body": req.body }, function(err, results) {
       console.log("Inside Payment Added card ");
       // console.log(typeof results);
   

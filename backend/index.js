@@ -62,7 +62,9 @@ const customerReview = require("./src/routes/customer/review");
 const sellerProduct = require("./src/routes/seller/sellerProduct");
 const orders = require("./src/routes/customer/orders");
 const adminAnalytics = require("./src/routes/admin/analytics");
+const adminSideSeller = require("./src/routes/admin/sellerData");
 const category = require("./src/routes/admin/category");
+
 
 app.use("/customer", customerAccount);
 app.use("/customer/product", customerProduct);
@@ -72,6 +74,8 @@ app.use("/orders", orders);
 
 app.use("/customer/profile", customerProfile)
 app.use("/admin/analytics", adminAnalytics);
+app.use("/admin/seller", adminSideSeller);
+//Customer Payment
 app.use("/admin/category", category);
 app.use("/customer/payment", customerPayment)
 
