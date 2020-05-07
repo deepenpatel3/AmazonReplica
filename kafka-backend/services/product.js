@@ -111,13 +111,16 @@ function place_order(msg, callback) {
                             console.log("error ", err);
                             // callback(err, null);
                         } else {
-                            // console.log("orders ", result)
+                            console.log("orders ", result)
                             // callback(null, { orders: result });
                         }
                     })
                 })
             })
-            callback(null, { success: true })
+            Customer.updateOne({_id : msg.CustomerID},{$set : {Cart : []}}).exec().then(result =>{
+                console.log("Inside deleting cart")
+                callback(null, { success: true })
+            })
         }
     })
     // mysql.executeQuery(query, function (err, result) {
