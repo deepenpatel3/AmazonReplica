@@ -14,10 +14,14 @@ import CustomerHome from './components/customer/home/home';
 import Cart from './components/customer/cart/cart';
 import Payment from "./components/customer/payment/payment";
 import SaveForLater from './components/customer/saveForLater/saveForLater';
-*/
 
 import CustomerProfile from './components/customer/customerProfile/customerProfile';
 import SellerProfile from './components/seller/sellerProfile/sellerProfile';
+*/
+import AnalyticsDashboard from './components/admin/adminDashboard/dashboard';
+import AdminInventory from './components/admin/adminInventory/inventory';
+import AdminOrders from './components/admin/adminOrder/orders';
+import AdminSellers from './components/admin/adminSellers/sellers';
 
 class Main extends Component {
     render() {
@@ -36,10 +40,15 @@ class Main extends Component {
                 <Route path="/customer/cart"><Cart /></Route>
                 <Route path="/customer/payment"><Payment /></Route>
                 <Route path="/customer/saveForLater"><SaveForLater /></Route>
-              */}
 
-                <Route path="/customer/Profile"><CustomerProfile /></Route>
+                 <Route path="/customer/Profile"><CustomerProfile /></Route>
                 <Route path="/seller/Profile"><SellerProfile /></Route>
+              */}
+              <Route path="/admin/dashboard"><AnalyticsDashboard /></Route>
+              <Route path="/admin/inventory"><AdminInventory /></Route>
+              <Route path="/admin/orders"><AdminOrders /></Route>
+              <Route path="/admin/sellers"><AdminSellers /></Route>
+               
             </div>
         )
     }
