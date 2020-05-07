@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter, Redirect } from 'react-router-dom';
 import { Route } from 'react-router-dom';
-
-import CustomerLogin from './components/customer/customerLogin/customerLogin';
-import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
-import CustomerProductDashBoard from './components/customer/products/productDashBoard';
-import SellerProductDashBoard from './components/seller/products/productDashBoard';
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
 import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
 import CustomerProductDashBoard from './components/customer/products/productDashBoard';
@@ -13,6 +8,8 @@ import SellerProductDashBoard from './components/seller/products/productDashBoar
 import CustomerNavBar from './components/customer/navbar/navbar';
 import SellerNavBar from './components/seller/navbar/navbar';
 import AdminNavBar from './components/admin/navbar/navbar';
+import Orders from './components/customer/orders/orders'
+
 import Cart from './components/customer/cart/cart';
 import Payment from "./components/customer/payment/payment";
 import SaveForLater from './components/customer/saveForLater/saveForLater';
@@ -39,6 +36,7 @@ class Main extends Component {
                     <Route path="/customer/cart"><Cart /></Route>
                     <Route path="/customer/payment"><Payment /></Route>
                     <Route path="/customer/saveForLater"><SaveForLater /></Route>
+                    <Route path="/customer/orders"><Orders /></Route>
 
                     <Route path="/admin"><AdminNavBar></AdminNavBar></Route>
 

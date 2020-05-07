@@ -17,6 +17,7 @@ exports.serve = function serve(msg, callback) {
       paymentcard_func(msg.body, callback);
       break;
     case "addCard":
+      console.log("Called by Backend")
       addCard(msg.body,callback)
       break;
   }
@@ -112,13 +113,15 @@ function paymentcard_func(msg, callback) {
 
 
 function addCard(msg, callback) {
+  console.log("@@@@"+msg)
   var res = {};
   Customer.findOneAndUpdate({ _id: msg.id },
     {
       $push: {
         cartSchema : {
           Number : msg.Number,
-          NameOnCard : msg.NameOnCard
+          NameOnCard : msg.NameOnCard,
+          ExpDate : new Date(+new Date() +  180* 24 * 60 * 60 * 1000) 
         }
       }
     },

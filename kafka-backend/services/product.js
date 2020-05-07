@@ -5,7 +5,7 @@ const Category = require("../models/categoryModel");
 var mysql = require("../models/mysql");
 
 exports.serve = function serve(msg, callback) {
-    console.log("msg", msg);
+    // console.log("msg", msg);
     // console.log("In Service path:", msg.path);
     switch (msg.path) {
         case "add_product":
@@ -238,6 +238,23 @@ function update_rating(msg, callback) {
     })
 }
 
+
+function update_rating(msg, callback) {
+
+    Product.findById({ _id: msg.id }, (err, product) => {
+        if (err) {
+            console.log("rating update error", err);
+            callback(err, null);
+        } else {
+            product.Count = product.Count + 1 
+            console.log('Count', product.Count)
+            product.Rating = (msg.Rating + (product.Rating*(product.Count -1))) / (product.Count);
+            console.log(" Rating " , product.Rating)
+            product.save(() => { callback(null, { rating: product.Rating }) })
+        }
+    })
+}
+
 function add_seller_product(msg, callback) {
     const product = new Product({
         Name: msg.body.Name,
@@ -306,7 +323,6 @@ function delete_seller_product(msg, callback) {
 
 
 function get_all_product(msg, callback) {
-
     let condition = {}
     if (msg.SellerId) {
         console.log("inside if");
