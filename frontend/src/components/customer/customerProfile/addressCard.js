@@ -245,14 +245,14 @@ class Address extends Component{
           }
     }  
 
-    canceleditaddresschanges = e => {
+    canceleditaddresschanges =e=> {
         e.preventDefault();
         this.fetchprofiledbcall();
       };
 
     saveeditaddresschanges=e=>{
         e.preventDefault();
-    console.log("edit education of the ", this.state.address);
+    console.log("edit address of the ", this.state.address);
     //var email = sessionStorage.getItem('key');
     var email = this.props.loginStateStore.result.email;
     console.log("Emaild id is:", email);
@@ -366,6 +366,18 @@ class Address extends Component{
                     />
                 </InputGroup>
 
+                <InputGroup className="mb-3">
+                    <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon5">Country</InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <FormControl
+                    placeholder="Country"
+                    aria-label="Country"
+                    aria-describedby="basic-addon6"
+                    onChange={this.handleChange}
+                    />
+                </InputGroup>
+                
                 <InputGroup className="mb-3">
                     <InputGroup.Prepend>
                     <InputGroup.Text id="basic-addon7">Pincode</InputGroup.Text>
@@ -622,8 +634,6 @@ class Address extends Component{
             )
         }
     }
-
-export default Address;
 
 const mapStateToProps = state => ({
     loginStateStore:state.address

@@ -1,11 +1,12 @@
 import React, { Component } from "react";
+import {connect} from "react-redux";
 import {Card} from "react-bootstrap";
 import CreateIcon from '@material-ui/icons/Create';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from 'react-avatar';
 import CardActions from '@material-ui/core/CardActions';
-import {logo} from '../../../images/amazonseller.png';
+//import {logo} from '../../../images/amazonseller.png';
 import '../sellerProfile/sellerProfile.css';
 import { Link } from 'react-router-dom';
 import Axios from "axios";
@@ -13,41 +14,107 @@ import Axios from "axios";
 class NamePic extends Component{
     constructor(props) {
         super(props);
+        console.log("inside constructor");
         this.state = {
-            userData:"",
             name:"",
-            profilepic:""
+            profileURL:"",
+            profileImage: ""
         };
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+        this.handleChange= this.handleChange.bind(this);
+        this.SubmitChange= this.SubmitChange.bind(this);
     }
-    onChange(e) {
+   
+    handleChange(e){
         this.setState({
-          [e.target.name]: e.target.value
+            [e.target.name]:e.target.value
         });
-      }
-
-      onSubmit(e) {
-        e.preventDefault();
-        let Token = localStorage.jwtToken;
-        const user = {
-          name: this.state.name
-        };
-
+    };
+    handleChangePic(e){
+        const target=e.target;
+        console.log(target.files);
+        var profilePhoto= target.files[0];
+        var data= new FormData();
+        data.append("photos",profilePhoto);
+        Axios.defaults.withCredentials=true;
         Axios
-        .post("http://localhost:3001/sellerprofile",user)
-        //,{
-        //headers: {
-        //Authorization: Token
-        //}
-        //})
+        .post("http://localhost:3001/upload_file",data)
         .then(response=>{
-            console.log(response.data);
-            this.setState({
-                name:response.data.name
+            if(response.status === 200){
+                console.log("Profile photo name:",profilePhoto.name);
+                this.setState({
+                    profileURL:profilePhoto.name
+                });
+            }
+        })
+        .catch(err=>{
+            if(err){
+            this.setState({ 
+                errorRedirect:true
             });
+            }
         });
+    };
+
+    SubmitChange(e){
+        e.preventDefault();
+        console.log("Inside submit changes");
+        var email= this.props.loginStateStore.result.email;
+        console.log("Email ID",email);
+        //let Token=localStorage.jwtToken;
+        const user={
+            email:email,
+            Name: this.state.name,
+            profileURL:this.state.profileURL       
+        };
+        console.log("user",user);
+        Axios
+            .post("http://localhost:3001/updatenamepic_seller",user)
+            //,{
+              //  headers: {
+                //    Authorization: Token
+               // }
+           // }
+            
+            .then(response=>{
+                if(response.status===200){
+                    console.log("inside response status 200!")
+                    var isupdated= this.state.isupdated+ 1;
+                    this.setState({
+                        isupdated: isupdated
+                    });
+                    this.fetchprofiledbcall();
+                }else{
+                    console.log("error updating");
+                }
+                console.log("state",this.state.isupdated);
+            })
+    };
+    fetchprofiledbcall=()=>{
+        console.log("component did mount");
+        if (
+            this.props.loginStateStore.result !== null && this.props.loginStateStore.result !== undefined){
+                var email = this.props.loginStateStore.result.email;
+                console.log("Emaild id is:", email);
+                const data = { 
+                    email: email 
+                };
+                Axios.post("http://localhost:3001/fetchProfile_seller", data).then(response => {
+                //update the state with the response data
+                console.log(response.data);
+                console.log("Response of didmount", response);
+                var output = response.data;
+                console.log("output is", output.docs);
+                this.setState({
+                    name:output.docs.data.Name
+                });
+          });
     }
+};
+
+componentDidMount(){
+    this.fetchprofiledbcall();
+}
+
         render(){
           
             return(
@@ -64,14 +131,14 @@ class NamePic extends Component{
                                             <tr>
                                                 <td>
                                                     <div className="avatar">
-                                                        <Avatar size="200" round={true} color="orange"/>
+                                                        <Avatar size="200" round={true} src={this.state.profileImage} alt="upload profile picture"  color="orange"/>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div className="cameraicon">
                                                         <CardActions>
                                                             <IconButton style={{width:50}}>
-                                                                <CameraAltIcon />      
+                                                            <CameraAltIcon label="profileURL" group type="file" onChange={this.handleChangePic} />   
                                                             </IconButton>
                                                         </CardActions>
                                                     </div>
@@ -80,10 +147,11 @@ class NamePic extends Component{
                                                     <div className="inner-name">
                                                         <div className="customername">
                                                             <Card.Title>      
-                                                                Seller Name     
-                                                                <IconButton style={{width:50}}>
-                                                                    <CreateIcon/>
-                                                                </IconButton>                                                  
+                                                            <Card.Title type="text" value={this.state.name} onChange={this.SubmitChange}/>
+                                                               
+                                                               <IconButton style={{width:50}}>
+                                                                   <CreateIcon onClick={this.handleChange}></CreateIcon>
+                                                               </IconButton>                                                                                 
                                                             </Card.Title>
                                                         </div>
                                                 </div>
@@ -98,4 +166,8 @@ class NamePic extends Component{
             )
         }
     }   
-export default NamePic;
+    const mapStateToProps = state => ({
+        loginStateStore:state.namepic
+    });
+    
+    export default connect(mapStateToProps,{})(NamePic);

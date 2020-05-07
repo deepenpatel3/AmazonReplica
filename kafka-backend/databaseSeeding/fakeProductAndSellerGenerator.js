@@ -7,8 +7,8 @@ var Product = require('../models/productModel');
 var Seller = require('../models/sellerModel');
 
 
-var SELLER_SIZE = 20;
-var PRODUCT_PER_SELLER = 5;
+var SELLER_SIZE = 100;
+var PRODUCT_PER_SELLER = 100;
 
 
 var options = {

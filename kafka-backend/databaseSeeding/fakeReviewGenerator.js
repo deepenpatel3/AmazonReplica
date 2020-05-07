@@ -32,7 +32,7 @@ let generateReview = (ProductID, CustomerId, CustomerName, CustomerUrl) => {
         CustomerId: CustomerId,
         CustomerName: CustomerName,
         CustomerUrl: CustomerUrl,
-        Vote: faker.random.number() % 30,
+        Vote: faker.random.number() % 31,
         ReviewText: faker.lorem.paragraph(),
     }
 }
@@ -41,8 +41,8 @@ let getReviews  = (products, customers) =>{
     var reviews = [];
     var product_offset = 0;
     for(var i=0; i< customers.length; i++){
-        var index = (product_offset *10);
-        for(var j=0; j<10; j++){
+        var index = (product_offset *100);
+        for(var j=0; j<100; j++){
             var p_i = (index + j)% products.length;
             reviews.push(generateReview(products[p_i].ProductID, customers[i].CustomerId, customers[i].CustomerName, customers[i].CustomerUrl));
         }
@@ -122,6 +122,8 @@ let generateReviews = () => {
 
 }
 
-// generateReviews().then((reviews) => {
-//     console.log("Review added: ", reviews.length);
-// });
+generateReviews().then((reviews) => {
+    console.log("Review added: ", reviews.length);
+}).catch((err)=>{
+    console.log(err);
+});

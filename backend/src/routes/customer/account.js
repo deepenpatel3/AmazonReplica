@@ -9,9 +9,10 @@ router.post("/signIn", (req, res) => {
 
     let body = {
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        role: req.body.role
     }
-    kafka.make_request('account', { "path": "customer_login", "body": body }, function (err, result) {
+    kafka.make_request('account', { "path": "login", "body": body }, function (err, result) {
         console.log('got back from kafka customer_login');
         if (err) {
             console.log('error', err)
@@ -24,9 +25,10 @@ router.post("/signIn", (req, res) => {
             if (result.signInSuccess) {
                 var payload = {
                     signInSuccess: result.signInSuccess,
-                    CID: result.CID,
+                    id: result.id,
                     name: result.name,
-                    message: result.message
+                    message: result.message,
+                    role: result.role
                 }
             }
             else {
@@ -41,10 +43,10 @@ router.post("/signIn", (req, res) => {
 })
 
 router.post("/signUp", function (req, res) {
-    console.log('inside customer signup api', req.body);
+    console.log('inside signup api', req.body);
 
-    kafka.make_request('account', { "path": "customer_signup", "body": req.body }, function (err, result) {
-        console.log('got back from kafka customer_signup');
+    kafka.make_request('account', { "path": "signup", "body": req.body }, function (err, result) {
+        console.log('got back from kafka signup');
         if (err) {
             console.log('error', err)
             res.send({
@@ -55,9 +57,10 @@ router.post("/signUp", function (req, res) {
             if (result.signInSuccess) {
                 var payload = {
                     signInSuccess: result.signInSuccess,
-                    CID: result.CID,
+                    id: result.id,
                     name: result.name,
-                    message: result.message
+                    message: result.message,
+                    role: result.role
                 }
             }
             else {
@@ -76,10 +79,10 @@ router.post("/getCart", function (req, res) {
 
     kafka.make_request('account', { "path": "get_cart", "body": req.body }, function (err, result) {
         console.log('got back from kafka customer_signup');
-        
-            console.log("customer get cart result- ", result);           
-            res.send(result.value)
-        
+
+        console.log("customer get cart result- ", result);
+        res.send(result.value)
+
     });
 })
 
@@ -88,10 +91,10 @@ router.post("/updateCart", function (req, res) {
 
     kafka.make_request('account', { "path": "update_cart", "body": req.body }, function (err, result) {
         console.log('got back from kafka customer_signup');
-        
-            console.log("customer get cart result- ", result);           
-            res.send(result.value)
-        
+
+        console.log("customer get cart result- ", result);
+        res.send(result.value)
+
     });
 })
 

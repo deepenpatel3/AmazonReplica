@@ -7,7 +7,7 @@ const { mongoDB } = require('../config');
 var Customer = require('../models/customerModel');
 var Product = require('../models/productModel');
 
-var CUSTOMERS_SIZE = 50;
+var CUSTOMERS_SIZE = 100;
 
 var options = {
     useNewUrlParser: true,

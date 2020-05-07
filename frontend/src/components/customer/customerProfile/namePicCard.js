@@ -139,7 +139,7 @@ class NamePic extends Component{
                                             <tr>
                                                 <td>
                                                     <div className="avatar">
-                                                        <Avatar size="200" round={true} color="grey" src={this.state.multerImage} alt="upload profile picture" />
+                                                        <Avatar size="200" round={true} color="grey" src={this.state.profileImage} alt="upload profile picture" />
 
                                                         
                                                     </div>

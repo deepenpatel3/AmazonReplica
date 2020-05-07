@@ -53,7 +53,7 @@ class SellerProfile extends Component {
                
                 <Address/>
                 <div className="spacing"></div>
-              
+             
                 <div className="spacing"></div>
                 <div className="row">
                     <div className="col-md-12" style={{ marginTop: "10%" }} >

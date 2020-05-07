@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import {Redirect} from 'react-router';
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -33,6 +34,11 @@ class Navbar extends Component {
         }
     }
     render() {
+        if(!localStorage.getItem("id") || !(localStorage.getItem("type") == "customer")){
+            return(
+            <Redirect to="/login" />
+            );
+        }
         return (
             <div>
                 <nav className="navbar navbar-dark bg-dark  navbar-expand-lg ">
@@ -40,16 +46,10 @@ class Navbar extends Component {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-                        <Link className="navbar-brand" to="/">amazon</Link>
+                        <Link className="navbar-brand" to="/customer/products">amazon</Link>
                         <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                             <li className="nav-item active">
-                                <Link className="nav-link" to="/customer/home">Home <span className="sr-only">(current)</span></Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="#">Link</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link disabled" to="#">Disabled</Link>
+                                <Link className="nav-link" to="/customer/products">Home <span className="sr-only">(current)</span></Link>
                             </li>
                         </ul>
                         <form className="form-inline ">
