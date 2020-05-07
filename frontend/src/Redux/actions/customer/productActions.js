@@ -57,3 +57,17 @@ export const getProducts = (productData, page, limit, Name, Categories, sort) =>
                 console.log(" studentDetails error:", JSON.stringify(error));
             })
 }
+
+export const giveRatingToProduct = (product_id, rating) => dispatch => {
+    console.log("Inside giveRatingToProduct");
+
+    const data ={
+        id: product_id,
+        Rating: rating,
+    }
+    console.log("Inside giveRatingToProduct",data);
+    axios.post(`${ROOT_URL}/updateRating`, data)
+        .then(response => {
+            // console.log("resonse", response.data)
+        })
+}

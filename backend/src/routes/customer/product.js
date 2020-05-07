@@ -86,7 +86,7 @@ router.post("/updateRating", function (req, res) {
         id: req.body.id,
         Rating: req.body.Rating
     }
-    // console.log("Data: ",JSON.stringify(data));
+    console.log("updateRating: ",JSON.stringify(data));
     kafka.make_request('product', { "path": "update_rating", "body": data }, function (err, result) {
         if (!result) {
             console.log("Inside err");

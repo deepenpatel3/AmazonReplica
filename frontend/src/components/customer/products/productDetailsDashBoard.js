@@ -16,8 +16,10 @@ import Select from '@material-ui/core/Select';
 import Image from 'material-ui-image';
 import ReviewTile from './reviewTile';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import { getReviewsForProduct } from '../../../Redux/actions/customer/reviewActions';
+import { getReviewsForProduct, addReview } from '../../../Redux/actions/customer/reviewActions';
 import { updateCart } from '../../../Redux/actions/customer/cartActions'
+import {productViewClickListnerApi} from '../../../Redux/actions/admin/analyticsActions';
+import {giveRatingToProduct} from '../../../Redux/actions/customer/productActions';
 
 const Styles = styled.div`
 .product-details-addtocartbar{
@@ -135,6 +137,7 @@ class ProductDetailsDashBoard extends Component {
         }
         this.addToCart = this.addToCart.bind(this);
         this.qtyHandler = this.qtyHandler.bind(this);
+        this.addRating = this.addRating.bind(this);
     }
     qtyHandler = e => {
         this.setState({
@@ -142,24 +145,33 @@ class ProductDetailsDashBoard extends Component {
         })
     }
 
-    addRating = (event) => {
+    addRating = (event,value) => {
         this.setState({
-            Rating: event.value
+            Rating: value
         })
+        this.props.giveRatingToProduct(this.props.Product._id, value);
     }
 
-    addReview = () => {
-        if(this.state.NewReviewText){
+    addReview = (e) => {
+        console.log("Inside add review")
+        if (this.state.NewReviewText) {
             const newReview = {
                 ProductID: this.props.Product._id,
+                CustomerId: localStorage.getItem("id"),
+                CustomerName: localStorage.getItem("name"),
+                CustomerUrl: localStorage.getItem("profileUrl"),
+                Vote: 0,
+                ReviewText: this.state.NewReviewText,
+
             };
 
             this.setState({
                 NewReviewText: ""
             })
+            this.props.addReview(newReview);
         }
     }
-
+    onValueChangeHandler = (e) => this.setState({ [e.target.name]: e.target.value })
     addToCart = () => {
         let newCart = this.state.cart;
         let product = {
@@ -174,6 +186,7 @@ class ProductDetailsDashBoard extends Component {
     }
     componentDidMount() {
         this.props.getReviewsForProduct(this.props.Product._id);
+        this.props.productViewClickListnerApi(this.props.Product._id);
         // if (this.props.reviewData || this.props.reviewData.productId == this.props.Product._id) {
         //     this.props.getReviewsForProduct(this.props.Product._id);
         //     this.setState({
@@ -182,7 +195,7 @@ class ProductDetailsDashBoard extends Component {
         // }
     }
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps.products: ", JSON.stringify(nextProps.reviewData));
+        // console.log("nextProps.products: ", JSON.stringify(nextProps.reviewData));
         this.setState({
             Reviews: nextProps.reviewData.reviews,
             cart: nextProps.cart,
@@ -190,9 +203,10 @@ class ProductDetailsDashBoard extends Component {
         })
     };
 
-
-
     render() {
+        if(this.props.reviewData.productId != this.props.Product._id){
+            this.props.getReviewsForProduct(this.props.Product._id);
+        }
         var reviews = []
         if (this.state.Reviews) {
             reviews = this.state.Reviews.map((review) => {
@@ -339,9 +353,11 @@ class ProductDetailsDashBoard extends Component {
                         </Typography>
                         <Form.Control as="textarea"
                             placeholder="Write your review here.."
+                            name="NewReviewText"
+                            onChange={this.onValueChangeHandler}
                             rows="3" />
                         <div className="review-submit-button" >
-                            <Button type="submit" variant="contained" color="primary">Submit</Button>
+                            <Button type="submit" variant="contained" onClick={this.addReview} color="primary">Submit</Button>
                         </div>
                     </Form.Group>
                 </Row>
@@ -365,4 +381,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, { getReviewsForProduct, updateCart })(ProductDetailsDashBoard);
+export default connect(mapStateToProps, { getReviewsForProduct, updateCart, addReview, productViewClickListnerApi, giveRatingToProduct })(ProductDetailsDashBoard);

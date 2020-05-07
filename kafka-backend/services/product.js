@@ -21,7 +21,7 @@ exports.serve = function serve(msg, callback) {
             update_seller_product(msg.body.req, callback)
             break;
         case "delete_seller_product":
-            delete_seller_product(msg.body.req, callback)
+            delete_seller_product(msg.body, callback)
             break;
         case "update_rating":
             update_rating(msg.body, callback)
@@ -210,7 +210,7 @@ function delete_seller_product(msg, callback) {
         .then(result => {
             console.log("result", result)
             callback(null, { value: true })
-        })
+        })    
         .catch(err => {
             console.log("ERROR : " + err)
         })

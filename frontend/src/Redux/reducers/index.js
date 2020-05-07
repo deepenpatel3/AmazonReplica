@@ -33,5 +33,5 @@ const allReducers = (state, action) => {
     // }
     return rootReducer(state, action);
 };
-export default allReducers;
+export default rootReducer;
 // export default rootReducer;
