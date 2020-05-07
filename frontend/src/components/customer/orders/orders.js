@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { getOrders } from '../../../Redux/actions/customer/cartActions';
+import Stepper from 'react-stepper-horizontal';
 class Orders extends Component {
     constructor(props) {
         super(props);
@@ -9,8 +10,8 @@ class Orders extends Component {
         };
     }
 
-    componentWillMount() {
-        this.props.getOrders({ id: localStorage.getItem("id") });
+    componentDidMount() {
+        this.props.getOrders({ CustomerID : localStorage.getItem("id") });
         let orders = [
             {
                 OrderId: 1,
@@ -32,40 +33,40 @@ class Orders extends Component {
             }
         ]
         this.setState({
-            orders : orders
+            orders: orders
         })
     }
 
     render() {
         let orders = null;
-        if(this.state.orders.length === 0 ){
+        if (this.state.orders.length === 0) {
             orders = "No Orders Placed";
-        }else {
+        } else {
             orders = this.state.orders.map((elem, i) => {
-                return <div key={i} className = "card card-body">
-                    
-                                
+                return <div key={i} className="card card-body">
+
+
                     <div>
-                        <h5>{elem.Name}</h5>     
-                        <button className="btn btn-light float-right" type="button" data-toggle="collapse" data-target={"#collapseExample"+i} aria-expanded="false" aria-controls={"collapseExample"+i}>
+                        <h5>{elem.Name}</h5>
+                        <button className="btn btn-light float-right" type="button" data-toggle="collapse" data-target={"#collapseExample" + i} aria-expanded="false" aria-controls={"collapseExample" + i}>
                             View Details
                         </button>
                         <h6>Status : {elem.status}</h6>
                         <h6>Delivery Date : {elem.DeliveryDate}</h6>
-                    
+                        <Stepper steps={ [{title: 'Accepted'}, {title: 'Dispatched'}, {title: 'Out for Delivery'}, {title: 'Delivered'}] } activeStep={ 2 } />
                     </div>
                     <div class="collapse" id={"collapseExample" + i}>
-                            <div class="card card-body">
-                                Billing Details : {elem.billingDetails}<br/>
-                                PaymentDetails :{elem.PaymentDetails}<br/>
+                        <div class="card card-body">
+                            Billing Details : {elem.billingDetails}<br />
+                                PaymentDetails :{elem.PaymentDetails}<br />
                                 Address : {elem.Address}
-                            </div>
                         </div>
+                    </div>
                 </div>
             })
         }
-        return <div className="container" style={{marginTop: "2%"}}>
-       {orders}
+        return <div className="container" style={{ marginTop: "2%" }}>
+            {orders}
         </div>
     }
 

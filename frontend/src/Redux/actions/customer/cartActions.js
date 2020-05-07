@@ -43,7 +43,11 @@ export const placeOrder = (data) => dispatch => {
 }
 
 export const getOrders = (data) => dispatch => {
-    dispatch(setOrders(data))
+    console.log("Inside place Order")
+    axios.get(backendURL + '/orders/' , data).then(res => {
+        console.log("ORDERS : " + res.data)
+        dispatch(setOrders(res.data))
+    })
 }
 
 
