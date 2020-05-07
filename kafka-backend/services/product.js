@@ -15,7 +15,7 @@ exports.serve = function serve(msg, callback) {
             get_all_product(msg.body, callback)
             break;
         case "add_seller_product":
-            add_seller_product(msg, callback)
+            add_seller_product(msg, callback) 
             break;
         case "update_seller_product":
             update_seller_product(msg.body.req, callback)
