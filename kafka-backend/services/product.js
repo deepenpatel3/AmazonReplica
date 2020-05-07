@@ -38,6 +38,9 @@ exports.serve = function serve(msg, callback) {
         case "update_order":
             update_order(msg.body, callback);
             break;
+        case "particular_product":
+            particular_product(msg.body, callback);
+            break;
         case "add_category":
             add_category(msg.body, callback);
             break;
@@ -376,4 +379,17 @@ function get_all_product(msg, callback) {
         });
     }
 
+}
+
+
+function particular_product(msg, callback) {
+    Product.find({ _id: msg.id }).exec()
+        .then(result => {
+            console.log("result", result)
+            callback(null, { value: result })
+        })
+        .catch(err => {
+            console.log("ERROR : " + err)
+            callback(err, null)
+        })
 }
