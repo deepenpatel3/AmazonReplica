@@ -13,15 +13,11 @@ import SellerProductDashBoard from './components/seller/products/productDashBoar
 import CustomerNavBar from './components/customer/navbar/navbar';
 import SellerNavBar from './components/seller/navbar/navbar';
 import AdminNavBar from './components/admin/navbar/navbar';
-
 import Cart from './components/customer/cart/cart';
 import Payment from "./components/customer/payment/payment";
 import SaveForLater from './components/customer/saveForLater/saveForLater';
-
-
 import CustomerProfile from './components/customer/customerProfile/customerProfile';
 import SellerProfile from './components/seller/sellerProfile/sellerProfile';
-
 import Dashboard from './components/admin/adminDashboard/dashboard';
 
 
