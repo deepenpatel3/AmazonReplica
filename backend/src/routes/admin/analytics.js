@@ -55,7 +55,7 @@ router.get("/", (req, res) => {
                                             res.status(200);
                                             orders_per_day = result;
                                             console.log(orders_per_day);
-
+                                            res.send(JSON.stringify({ orders_per_day: orders_per_day, most_sold_products: most_sold_products, top_10_sellers: top_10_sellers, top_5_customers: top_5_customers, top_10_products: top_10_products }))
                                         }
                                     });
                                 }
