@@ -1,7 +1,7 @@
 const Product = require('../models/productModel');
 const Seller = require('../models/sellerModel');
 const Customer = require("../models/customerModel");
-
+const Category = require("../models/categoryModel");
 var mysql = require("../models/mysql");
 
 exports.serve = function serve(msg, callback) {
@@ -38,7 +38,74 @@ exports.serve = function serve(msg, callback) {
         case "update_order":
             update_order(msg.body, callback);
             break;
+        case "add_category":
+            add_category(msg.body, callback);
+            break;
+        case "remove_category":
+            remove_category(msg.body, callback);
+            break;
+        case "get_category_products":
+            get_category_products(msg.body, callback);
+            break;
+
     }
+}
+
+function get_category_products(msg, callback) {
+    Product.find({ Categories: msg.Category }, { "Seller.Name": 1, Price: 1 }, (err, products) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            callback(null, products);
+        }
+    })
+}
+
+function add_category(msg, callback) {
+    Category.findOne({}, (err, category) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("category", category);
+            if (category.length === 0) {
+                let newCategory = new Category({
+                    Categories: [msg.Category]
+                })
+                newCategory.save(() => { callback(null, true) });
+            } else {
+                category.Categories.push(msg.Category);
+                category.save(() => { callback(null, true) });
+            }
+        }
+    })
+}
+
+function remove_category(msg, callback) {
+    Product.find({ Categories: msg.Category }, (err, products) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("products: ", products.length);
+            if (products.length === 0) {
+                Category.findOne({}, (err, category) => {
+                    if (err) {
+                        console.log("error ", err);
+                        callback(err, null);
+                    } else {
+                        console.log("category", category);
+                        category.Categories.splice(category.Categories.indexOf(msg.Category), 1);
+                        category.save(() => { callback(null, { message: "Successfully Deleted" }) })
+                    }
+                })
+            } else {
+                callback(null, { message: "Category can not be deleted." })
+            }
+        }
+    })
+
 }
 
 function get_customer_orders(msg, callback) {
