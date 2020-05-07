@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import Navbar from "../navbar/navbar";
+// import Navbar from "../navbar/navbar";
 import { getPaymentDetails } from "../../../Redux/actions/customer/payment"
 import { connect } from 'react-redux'
-import { Modal,Button } from 'react-bootstrap';
-
+import { Modal, Button } from 'react-bootstrap';
+import { placeOrder } from "../../../Redux/actions/customer/cartActions"
 class Payment extends Component {
     //This is payment component
     constructor(props) {
@@ -16,27 +16,76 @@ class Payment extends Component {
             savedAddress: {},
             product: [],
             finalPrice: "",
-            modalShow : false,
-            modalShowAddress : false
+            modalShow: false,
+            modalShowAddress: false,
+            modalOrder : false
         }
         this.SelectCard = this.SelectCard.bind(this);
         this.SelectAdd = this.SelectAdd.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleCloseOrder = this.handleCloseOrder.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleCloseAdd = this.handleCloseAdd.bind(this);
         this.handleShowAdd = this.handleShowAdd.bind(this);
+        this.changeHandler = this.changeHandler.bind(this);
+        this.addAddress = this.addAddress.bind(this);
+        this.addCard = this.addCard.bind(this);
+        this.placeOrder = this.placeOrder.bind(this);
     }
-
+    placeOrder = () => {
+        let data = {
+            CustomerID: localStorage.getItem("id"),
+            CardNumber: this.state.paymentMethod.Number,
+            CardName: this.state.paymentMethod.NameOnCard,
+            Address: this.state.savedAddress.Street + " , " + this.state.savedAddress.City + " , " + this.state.savedAddress.State + " , " + this.state.savedAddress.Country + " , " + this.state.savedAddress.Zipcode
+        }
+        this.props.placeOrder(data)
+        this.setState({modalShowOrder : true})
+    }
+    handleCloseOrder = () => this.setState({modalShowOrder : false})
+    changeHandler = e => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    }
+    addAddress = (e) => {
+        e.preventDefault();
+        let address = {
+            Street: this.state.Street,
+            City: this.state.City,
+            State: this.state.State,
+            Country: this.state.Country,
+            Zipcode: this.state.Zipcode
+        }
+        this.setState({
+            savedAddress: address
+        }, () => {
+            this.handleCloseAdd()
+        })
+    }
+    addCard = (e) => {
+        e.preventDefault();
+        let card = {
+            NameOnCard: this.state.NameOnCard,
+            Number: this.state.Number
+        }
+        this.setState({
+            paymentMethod: card
+        }, () => {
+            this.handleClose()
+        })
+        // action for add card
+    }
     SelectAdd = i => {
         this.handleCloseAdd();
         this.setState({
-            savedAddress : this.state.addresses[i]
+            savedAddress: this.state.addresses[i]
         })
     }
     SelectCard = (i) => {
         this.handleClose();
         this.setState({
-            paymentMethod : this.state.payment[i]
+            paymentMethod: this.state.payment[i]
         })
     }
     componentDidMount() {
@@ -69,12 +118,12 @@ class Payment extends Component {
             })
         }
     }
-    
 
-    handleClose = () => this.setState({modalShow:false});
-    handleShow = () => this.setState({modalShow:true});
-    handleCloseAdd = () => this.setState({modalShowAddress:false});
-    handleShowAdd = () => this.setState({modalShowAddress:true});
+
+    handleClose = () => this.setState({ modalShow: false });
+    handleShow = () => this.setState({ modalShow: true });
+    handleCloseAdd = () => this.setState({ modalShowAddress: false });
+    handleShowAdd = () => this.setState({ modalShowAddress: true });
 
     render() {
         console.log("Props:", this.props.savedAddress)
@@ -90,38 +139,73 @@ class Payment extends Component {
         today = mm + '/' + dd + '/' + yyyy;
         let address = null;
         let cards = null;
-        if(this.state.addresses.length > 0){
+        if (this.state.addresses.length > 0) {
             address = <div>{this.state.addresses.map((elem, i) => {
                 return (
-                    <div className="card" style={{margin: "2%",padding : "2%"}}>
+                    <div className="card" style={{ margin: "2%", padding: "2%" }}>
                         <span>
-                            {elem.Street} {elem.City} <button type="button" className="btn btn-warning" style={{float : "right"}} onClick={()=>this.SelectAdd(i)}>Select Address</button> <br></br>
+                            {elem.Street} {elem.City} <button type="button" className="btn btn-warning" style={{ float: "right" }} onClick={() => this.SelectAdd(i)}>Select Address</button> <br></br>
                             {elem.State}  {elem.Country}<br></br>
-                            {elem.Zipcode}<br></br> 
+                            {elem.Zipcode}<br></br>
                         </span>
                     </div>
                 )
             })}
-             </div>
+                <div className="card card-body">
+                    <form onSubmit={this.addAddress}>
+                        <div className="form-group">
+                            <input type="text" name="Street" placeholder="Enter Street" className="form-control" onChange={this.changeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="City" placeholder="Enter City" className="form-control" onChange={this.changeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="State" className="form-control" placeholder="Enter State" onChange={this.changeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="Country" placeholder="Enter Country" className="form-control" onChange={this.changeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="Zipcode" className="form-control" placeholder="Enter Zipcode" onChange={this.changeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="submit" className="form-control btn btn-warning" value="Add Address" />
+                        </div>
+                    </form>
+                </div>
+            </div>
         }
-        if(this.state.payment.length > 0){
+        if (this.state.payment.length > 0) {
             cards = <div>{this.state.payment.map((elem, i) => {
                 return (
-                    <div className="card" style={{margin: "2%",padding : "2%"}}>
+                    <div className="card" style={{ margin: "2%", padding: "2%" }}>
 
                         <span>
-                            Name : {elem.NameOnCard} <button type="button" className="btn btn-warning" style={{float : "right"}} onClick={()=>this.SelectCard(i)}>Select Card</button> <br/>
+                            Name : {elem.NameOnCard} <button type="button" className="btn btn-warning" style={{ float: "right" }} onClick={() => this.SelectCard(i)}>Select Card</button> <br />
                             Card No. : {elem.Number}
                         </span>
-                        
+
                     </div>
                 )
             })}
-             </div>
+                <div className="card card-body">
+                    <form onSubmit={this.addCard}>
+                        <div className="form-group">
+                            <input type="text" name="NameOnCard" placeholder="Enter Name On Card" className="form-control" onChange={this.changeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" name="Number" placeholder="Enter Card Number" className="form-control" onChange={this.changeHandler} />
+                        </div>
+                        <div className="form-group">
+                            <input type="submit" className="form-control btn btn-warning" value="Add Card" />
+                        </div>
+                    </form>
+                </div>
+            </div>
         }
         return (
             <div>
-                <Modal show= {this.state.modalShow} onHide={this.handleClose}>
+                <Modal show={this.state.modalShow} onHide={this.handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Change Card</Modal.Title>
                     </Modal.Header>
@@ -130,9 +214,9 @@ class Payment extends Component {
                         {cards}
                     </Modal.Body>
 
-                    
-                </Modal> 
-                <Modal show= {this.state.modalShowAddress} onHide={this.handleClose}>
+
+                </Modal>
+                <Modal show={this.state.modalShowAddress} onHide={this.handleCloseAdd}>
                     <Modal.Header closeButton>
                         <Modal.Title>Change Address</Modal.Title>
                     </Modal.Header>
@@ -141,15 +225,27 @@ class Payment extends Component {
                         {address}
                     </Modal.Body>
 
-                    
-                </Modal> 
+
+                </Modal>
+                <Modal show={this.state.modalShowOrder} onHide={this.handleCloseOrder}>
+
+                    <Modal.Body className="text-center">
+                        <span className="text-success">Order Placed Succesfully !!!</span><br/>
+                        You Paid <span className="text-danger">${Number.parseFloat(this.state.finalPrice).toFixed(2)}</span>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="warning" onClick={this.handleCloseOrder}>
+                            Okay
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
 
                 <div className="container">
                     <div className="row" style={{ marginTop: "2%" }} >
                         <div className="col-md-3 card" style={{ padding: "1%" }} ><b>1. Shipping Address</b></div>
                         <div className="col-md-6 card" style={{ padding: "1%" }}>
                             <div style={{ float: "left" }}>
-                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button"  onClick={this.handleShowAdd}>Change</button>
+                                <button style={{ float: "right", width: "20%", height: "30%" }} className="btn btn-secondary" type="button" onClick={this.handleShowAdd}>Change</button>
                                 {this.state.savedAddress.Street} {this.state.savedAddress.City}<br></br>
                                 {this.state.savedAddress.State}  {this.state.savedAddress.Country}<br></br>
                                 {this.state.savedAddress.Zipcode}<br></br>
@@ -160,7 +256,7 @@ class Payment extends Component {
                         <div className="col-md-3 card" style={{ padding: "1%" }}><b>2. Payment Method</b></div>
                         <div className="col-md-6 card" style={{ padding: "1%" }}>
                             <div style={{ float: "left" }}>
-                                <button style={{ float: "right", width: "20%", height: "30%" }} type="button" onClick={this.handleShow}>Change</button>
+                                <button style={{ float: "right", width: "20%", height: "30%" }} className="btn btn-secondary" type="button" onClick={this.handleShow}>Change</button>
                                 <b>Visa</b> ending in : {this.state.paymentMethod.Number}<br></br>
                                 <b>Billing Address : </b>{this.state.savedAddress.Street} {this.state.savedAddress.City} {this.state.savedAddress.State}<br></br>
                             </div>
@@ -198,7 +294,7 @@ class Payment extends Component {
                         <div className="col-md-9 card" style={{ padding: "2%" }}>
                             <div className="row">
                                 <div className="col-md-3">
-                                    <button className="btn btn-warning">Place Your Order</button>
+                                    <button className="btn btn-warning" onClick={this.placeOrder}>Place Your Order</button>
                                 </div>
                                 <div className="col-md-7">
 
@@ -221,4 +317,4 @@ const mapStateToProps = state => {
         cart: state.customerPayment.cart
     }
 }
-export default connect(mapStateToProps, { getPaymentDetails })(Payment);
+export default connect(mapStateToProps, { getPaymentDetails, placeOrder })(Payment);

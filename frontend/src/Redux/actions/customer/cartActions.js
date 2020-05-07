@@ -35,9 +35,17 @@ export const setCart = (data) => ({
     payload : data
 })
 
+export const placeOrder = (data) => dispatch => {
+    console.log("Inside place Order")
+    axios.post(backendURL + '/orders/placeOrder' , data).then(res => {
+        dispatch(getCart({id : localStorage.getItem("id")}))
+    })
+}
+
 export const getOrders = (data) => dispatch => {
     dispatch(setOrders(data))
 }
+
 
 export const setOrders = (data) => ({
     type : GET_ORDERS,

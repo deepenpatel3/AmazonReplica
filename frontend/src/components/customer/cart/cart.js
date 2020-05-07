@@ -340,7 +340,7 @@ class Cart extends Component {
 
         return (
             <div>
-                <Navbar />
+                {/* <Navbar /> */}
                 {/* CART : {JSON.stringify(this.state.cart)}<br />
                 SAVE FOR LATER : {JSON.stringify(this.state.saveForLater)}<br /> */}
                 <div className="card float-right" style={{ padding: "2%", marginTop: "6%", marginRight: "2%" }}>
