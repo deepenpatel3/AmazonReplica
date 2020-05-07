@@ -4,7 +4,7 @@ const { backendURL } = require("../../../config");
 
 const ROOT_URL = backendURL + "/seller/product";
 
-export const getProducts = (productData, SellerId, page, limit, Name, Categories) => dispatch => {
+export const getProducts = (productData, SellerId, page, limit, Name, Categories, sort) => dispatch => {
     axios.defaults.withCredentials = true;
     console.log(" Inside getProducts :");
     console.log(" page :", page);
@@ -32,6 +32,7 @@ export const getProducts = (productData, SellerId, page, limit, Name, Categories
         SellerId: SellerId, 
         name: Name,
         Categories: Categories,
+        sort: sort
     }
     console.log("data", JSON.stringify(data));
     // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
@@ -40,8 +41,8 @@ export const getProducts = (productData, SellerId, page, limit, Name, Categories
             // console.log("All Student", JSON.stringify(response));
             let data = { ...response.data }
                 data.name = Name;
-                data.categories = Categories 
-
+                data.categories = Categories;
+                data.sort = sort;
             if (response.status == 200) {
                 dispatch({
                     type: SELLER_GET_PRODUCTS,

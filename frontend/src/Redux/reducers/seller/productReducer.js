@@ -3,7 +3,8 @@ import update from 'react-addons-update';
 
 const initialState = {
     name : "",
-    categories : []
+    categories : [],
+    sort : ""
 };
 
 const sellerProductReducer = (state = initialState, action) => {
@@ -24,7 +25,8 @@ const sellerProductReducer = (state = initialState, action) => {
                 prevPage: action.payload.prevPage,
                 nextPage: action.payload.nextPage,
                 name : action.payload.name,
-                categories : action.payload.categories
+                categories : action.payload.categories,
+                sort : action.payload.sort,
             }
         case SELLER_ADD_PRODUCT:
 

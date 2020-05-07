@@ -17,7 +17,8 @@ router.post("/products", function (req, res) {
         limit: req.body.limit,
         name: req.body.name,
         Categories: req.body.Categories,
-        SellerId: req.body.SellerId 
+        SellerId: req.body.SellerId,
+        sort: req.body.sort, 
     }
 
     console.log("Data: ", JSON.stringify(data));
