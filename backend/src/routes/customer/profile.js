@@ -147,4 +147,34 @@ router.post("/updateaddress", function(req, res) {
     });
   });
 
+
+
+  router.post("/addCard", function(req, res) {
+    console.log("Inside Added Card Profile Post Request");
+    console.log("request body is", req.body);
+    kafka.make_request("profile",{ "path": "addCard", "body": data }, req.body, function(err, results) {
+      console.log("Inside Payment Added card ");
+      // console.log(typeof results);
+  
+      if (err) {
+        console.log("Inside err");
+        res.json({
+          status: "error",
+          msg: err
+        });
+      } else {
+        console.log("inside else1");
+        if (results.code === "400") {
+          // console.log(results.value);
+          console.log("inside 400");
+          res.sendStatus(400).end();
+        } else if (results.code === "200") {
+          res.code = "200";
+          console.log(" Payment is Added");
+          res.sendStatus(200).end("Payment of the profile is Added");
+        }
+      }
+    });
+  });
+
   module.exports=router;
