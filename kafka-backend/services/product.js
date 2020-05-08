@@ -85,8 +85,18 @@ function add_category(msg, callback) {
                 })
                 newCategory.save(() => { callback(null, true) });
             } else {
-                category.Categories.push(msg.Category);
-                category.save(() => { callback(null, true) });
+                let flag = true;
+                category.Categories.forEach((row, i) => {
+                    if (row === msg.Category) {
+                        console.log("cant add");
+                        flag = false;
+                        callback(err, null);
+                    } else if (i === category.Categories.length - 1 && flag === true) {
+                        console.log("adding category")
+                        category.Categories.push(msg.Category);
+                        category.save(() => { callback(null, true) });
+                    }
+                })
             }
         }
     })
@@ -439,13 +449,13 @@ function list_of_orders(msg, callback) {
 }
 
 function changeStatus(msg, callback) {
-    let query = "update `Order` set Tracking_Status = '"+msg.status+"' where Order_id = '"+msg.Order_id+"'";
+    let query = "update `Order` set Tracking_Status = '" + msg.status + "' where Order_id = '" + msg.Order_id + "'";
     mysql.executeQuery(query, function (err, result) {
         if (err) {
             console.log("error ", err);
             callback(err, null);
         } else {
-            callback(null, {value : "Updated Successfully"});
+            callback(null, { value: "Updated Successfully" });
         }
     })
 
