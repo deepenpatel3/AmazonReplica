@@ -177,15 +177,29 @@ function update_order(msg, callback) {
             }
         })
     } else {
-        let query = "delete from `Order` where Order_id=" + msg.OrderID + "";
+        let query = "select Tracking_Status from `Order` where Order_id=" + msg.OrderID + "";
         mysql.executeQuery(query, function (err, result) {
             if (err) {
                 console.log("error ", err);
                 callback(err, null);
             } else {
-                callback(null, { success: true });
+                console.log("res",result[0].Tracking_Status)
+                if(result[0].Tracking_Status === "Delivered"){
+                    callback(null, { message: "Order Cannot Be Canceled As Already Delivered" });                    
+                }
+                else{
+                    let query = "delete from `Order` where Order_id=" + msg.OrderID + "";
+                    mysql.executeQuery(query, function (err, result) {
+                        if (err) {
+                            console.log("error ", err);
+                            callback(err, null);
+                        } else {
+                            callback(null, { success: true });
+                        }
+                    })
+                }
             }
-        })
+        })    
     }
 
 }
@@ -328,6 +342,7 @@ function delete_seller_product(msg, callback) {
         })
         .catch(err => {
             console.log("ERROR : " + err)
+            callback(err , null)
         })
 }
 
