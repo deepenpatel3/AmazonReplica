@@ -4,8 +4,10 @@ import { GET_CART, GET_ORDERS, GET_PRODUCT } from "../../../Redux/constants/acti
 const initialState = {
     cart : [],
     saveForLater : [],
-    orders : [],
-    product : {}
+    product : {},
+    OpenOrders : [],
+    DeliveredOrders : [],
+    CancelledOrders : []
 };
 
 function cartReducer(state = initialState, action) {
@@ -19,7 +21,9 @@ function cartReducer(state = initialState, action) {
     else if (action.type === GET_ORDERS) {
         console.log("action payload : ", action.payload)
         return Object.assign({}, state, { 
-            orders : action.payload
+            OpenOrders : action.payload.OpenOrders,
+            DeliveredOrders : action.payload.DeliveredOrders,
+            CancelledOrders : action.payload.CancelledOrders
         });
     }
     else if (action.type === GET_PRODUCT){

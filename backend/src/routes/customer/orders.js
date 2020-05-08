@@ -49,9 +49,9 @@ router.get("/", function (req, res) {
     }
 });
 
-router.post("/placeOrder", (req, res) => {
+router.get("/placeOrder", (req, res) => {
 
-    kafka.make_request('product', { "path": "place_order", "body": req.body }, function (err, result) {
+    kafka.make_request('product', { "path": "place_order", "body": req.query }, function (err, result) {
         console.log("got back from place order kafka");
         if (!result) {
             console.log("Inside err");

@@ -41,7 +41,9 @@ const sellerProductReducer = (state = initialState, action) => {
         case SELLER_GET_ORDERS: 
             return {
                 ...state,
-                orders : action.payload.orders
+                OpenOrders : action.payload.OpenOrders,
+                CancelledOrders : action.payload.CancelledOrders,
+                DeliveredOrders : action.payload.Delivered
             }
         default:
             return state;

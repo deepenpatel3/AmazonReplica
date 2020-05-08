@@ -216,40 +216,36 @@ function place_order(msg, callback) {
             console.log("error ", err);
             callback(err, null);
         } else {
-            let date = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
-            console.log(date);
+            let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            console.log("date: ", date);
             customer.Cart.forEach(async (product, i) => {
                 // console.log(i, " ", product);
                 await Product.find({ _id: product.ProductID }, { Seller: 1 }, (err, result) => {
                     console.log("Seller ", result);
 
-                    let query = "insert into `Order`(ProductID, CustomerID, SellerID, Price, Qty, Tracking_Status, IsGift,GiftMessage, CardNumber, CardName, Address, OrderDate) VALUES('" + product.ProductID + "', '" + msg.CustomerID + "','" + result[0].Seller.SellerId + "','" + product.Price + "','" + product.Quantity + "','Accepted', '" + product.IsGift + "','" + product.GiftMessage + "','" + msg.CardNumber + "','" + msg.CardName + "','" + msg.Address + "','" + date + "') ";
+                    let query = "insert into `Order`(ProductID, CustomerID, SellerID, Price, Qty, Tracking_Status, IsGift,GiftMessage, CardNumber, CardName, Address, OrderDate, SellerName) VALUES('" + product.ProductID + "', '" + msg.CustomerID + "','" + result[0].Seller.SellerId + "','" + product.Price + "','" + product.Quantity + "','Accepted', '" + product.IsGift + "','" + product.GiftMessage + "','" + msg.CardNumber + "','" + msg.CardName + "','" + msg.Address + "','" + date + "','" + result[0].Seller.Name + "') ";
                     mysql.executeQuery(query, function (err, result) {
                         if (err) {
                             console.log("error ", err);
-                            // callback(err, null);
+                            callback(err, null);
                         } else {
-                            console.log("orders ", result)
-                            // callback(null, { orders: result });
+                            // console.log("orders ", result)
+                            if (i === customer.Cart.length - 1) cb();
+
                         }
                     })
                 })
             })
-            Customer.updateOne({ _id: msg.CustomerID }, { $set: { Cart: [] } }).exec().then(result => {
-                console.log("Inside deleting cart")
-                callback(null, { success: true })
-            })
+            function cb() {
+                Customer.updateOne({ _id: msg.CustomerID }, { $set: { Cart: [] } }).exec().then(result => {
+                    console.log("Inside deleting cart")
+                    callback(null, { success: true })
+                })
+            }
+
         }
     })
-    // mysql.executeQuery(query, function (err, result) {
-    //     if (err) {
-    //         console.log("error ", err);
-    //         callback(err, null);
-    //     } else {
-    //         console.log("orders ", result)
-    //         callback(null, { orders: result });
-    //     }
-    // })
+
 }
 
 function update_rating(msg, callback) {

@@ -37,7 +37,7 @@ export const setCart = (data) => ({
 
 export const placeOrder = (data) => dispatch => {
     console.log("Inside place Order")
-    axios.post(backendURL + '/orders/placeOrder' , data).then(res => {
+    axios.get(backendURL + '/orders/placeOrder' , {params : {...data}}).then(res => {
         dispatch(getCart({id : localStorage.getItem("id")}))
     })
 }
@@ -51,12 +51,10 @@ export const cancelOrder = data => dispatch => {
     })
 }
 export const getOrders = (data) => dispatch => {
-    console.log("Inside place Order")
+    console.log("Inside place Order :: " + data.CustomerID )
     axios.get(backendURL + "/orders/?CustomerID=" + data.CustomerID).then(res => {
         console.log("ORDERS : " + res.data)
         dispatch(setOrders(res.data))
-    }).catch((err) => {
-        console.log("ERROR ::::>" + err )
     })
 }
 
@@ -75,7 +73,7 @@ export const getProduct = data => dispatch =>{
 
 export const setOrders = (data) => ({
     type : GET_ORDERS,
-    payload : data
+    payload : {...data}
 })
 
 export const setProduct = (data) => ({
