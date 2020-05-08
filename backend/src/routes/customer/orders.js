@@ -52,8 +52,8 @@ router.get("/", function (req, res) {
     }
 });
 
-router.post("/placeOrder", checkCustomerAuth, (req, res) => {
-
+router.get("/placeOrder", (req, res) => {
+    req.connection.setTimeout(60*10*1000);
     kafka.make_request('product', { "path": "place_order", "body": req.query }, function (err, result) {
         console.log("got back from place order kafka");
         if (!result) {

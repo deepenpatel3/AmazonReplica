@@ -246,6 +246,7 @@ function place_order(msg, callback) {
                     console.log("Seller ", result);
 
                     let query = "insert into `Order`(ProductID, CustomerID, SellerID, Price, Qty, Tracking_Status, IsGift,GiftMessage, CardNumber, CardName, Address, OrderDate, SellerName, ProductName) VALUES('" + product.ProductID + "', '" + msg.CustomerID + "','" + result[0].Seller.SellerId + "','" + product.Price + "','" + product.Quantity + "','Accepted', '" + product.IsGift + "','" + product.GiftMessage + "','" + msg.CardNumber + "','" + msg.CardName + "','" + msg.Address + "','" + date + "','" + result[0].Seller.Name + "','" + result[0].Name + "') ";
+                    
                     mysql.executeQuery(query, function (err, result) {
                         if (err) {
                             console.log("error ", err);
