@@ -8,6 +8,7 @@ router.post("/addCategory", (req, res) => {
         console.log("got back from add_category kafka");
         if (!result) {
             console.log("err ", err);
+            res.status(400)
             res.end();
         } else {
             console.log("result ", result);
@@ -24,6 +25,7 @@ router.post("/removeCategory", (req, res) => {
         console.log("got back from add_category kafka");
         if (!result) {
             console.log("err ", err);
+            res.status(400)
             res.end();
         } else {
             console.log("result ", result);
