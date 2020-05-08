@@ -19,7 +19,7 @@ exports.serve = function serve(msg, callback) {
             paymentcard_func(msg.body, callback);
             break;
         case "addCard":
-            console.log("Called by Backend")
+
             addCard(msg.body, callback)
             break;
     }
@@ -118,8 +118,8 @@ function paymentcard_func(msg, callback) {
 
 function addCard(msg, callback) {
     console.log("@@@@" + msg)
-    var res = {};
-    Customer.findOneAndUpdate({ _id: msg.id },
+    // var res = {};
+    Customer.findByIdAndUpdate({ _id: msg.id },
         {
             $push: {
                 cartSchema: {
@@ -128,19 +128,19 @@ function addCard(msg, callback) {
                     ExpDate: new Date(+new Date() + 180 * 24 * 60 * 60 * 1000)
                 }
             }
-        },
+        }, { new: true },
         function (err, user) {
             if (err) {
-                res.code = "400";
-                res.value =
-                    "The user is not valid";
-                console.log(res.value);
-                callback(null, res);
+                // res.code = "400";
+                // res.value =
+                //     "The user is not valid";
+                console.log(err);
+                callback(err, null);
                 //res.sendStatus(400).end();
             } else {
                 res.code = "200";
                 console.log("Card Added Successful");
-                callback(null, res);
+                callback(null, { success: user });
                 //res.sendStatus(200).end();
             }
         }

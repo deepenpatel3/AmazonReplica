@@ -33,15 +33,27 @@ export const deleteCustomerAddress = () => dispatch => {
 
 }
 
-export const updatePaymentOptions = (card, id, ) => dispatch => {
+export const updatePaymentOptions = (card, id) => dispatch => {
+
     console.log("updatePaymentOptions called", id);
-    dispatch({
-        type: UPDATE_CUSTOMER_PAYMENT,
-        payload: {
-            card: card,
-            index: id
+    card.id = id;
+    axios.post(backendURL + "/customer/profile/addCard", card)
+        .then(response => {
+
+            if (response.status == 200) {
+                dispatch({
+                    type: UPDATE_CUSTOMER_PAYMENT,
+                    payload: {
+                        card: card,
+                        index: id
+                    },
+                })
+            }
         },
-    });
+            error => {
+                console.log(" updateProduct error:", JSON.stringify(error));
+            })
+
 }
 
 export const fetchCustomerProfile = (customerId) => dispatch => {
@@ -51,7 +63,7 @@ export const fetchCustomerProfile = (customerId) => dispatch => {
             Authorization: token,
         }
     }
-    axios.get(`${ROOT_URL}/fetchprofile?customerId=${customerId}`,config)
+    axios.get(`${ROOT_URL}/fetchprofile?customerId=${customerId}`, config)
         .then(response => {
 
             if (response.status == 200) {
@@ -174,7 +186,7 @@ export const updateNamePic = (customerId, name, profileImage) => dispatch => {
     formData.append('CustomerID', customerId);
     formData.append('Name', name);
     formData.append('Image', profileImage);
-    
+
     const token = localStorage.getItem("token");
     const config = {
         headers: {

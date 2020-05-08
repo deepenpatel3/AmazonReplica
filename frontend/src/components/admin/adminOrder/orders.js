@@ -15,6 +15,7 @@ class AdminOrders extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
+        this.handleChangeStatus = this.handleChangeStatus.bind(this);
     }
 
     componentDidMount() {
@@ -25,6 +26,15 @@ class AdminOrders extends Component {
         this.setState({
             status: e.target.value
         })
+    }
+    handleChangeStatus = (e, id) => {
+        // e.preventDefault();
+        Axios.post(backendURL + "/admin/orders/changeStatus", { status: e.target.value, Order_id: id })
+            .then(response => {
+                if (response.status === 200) {
+                    this.getAllOrders();
+                }
+            })
     }
     handleFilter = (e) => {
         e.preventDefault();
@@ -127,8 +137,19 @@ class AdminOrders extends Component {
                                 <td>{order.Order_id}</td>
                                 <td>{order.Price}</td>
                                 <td>{order.Tracking_Status}</td>
+
+                                Change Status:
+                                <Select onChange={(e) => { this.handleChangeStatus(e, order.Order_id) }}>
+                                    <option value="Accepted">Accepted</option>
+                                    <option value="Dispatched">Dispatched</option>
+                                    <option value="Out for Delivery">Out for Delivery</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Cancel">Cancelled</option>
+                                </Select>
+
                             </tr>
                         ))}
+
                     </table>
 
 

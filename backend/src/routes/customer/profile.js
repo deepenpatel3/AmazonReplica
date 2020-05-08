@@ -197,7 +197,8 @@ router.post("/addCard", function (req, res) {
             } else if (results.code === "200") {
                 res.code = "200";
                 console.log(" Payment is Added");
-                res.sendStatus(200).end("Payment of the profile is Added");
+                res.json(results);
+                res.end();
             }
         }
     });
