@@ -85,8 +85,18 @@ function add_category(msg, callback) {
                 })
                 newCategory.save(() => { callback(null, true) });
             } else {
-                category.Categories.push(msg.Category);
-                category.save(() => { callback(null, true) });
+                let flag = true;
+                category.Categories.forEach((row, i) => {
+                    if (row === msg.Category) {
+                        console.log("cant add");
+                        flag = false;
+                        callback(err, null);
+                    } else if (i === category.Categories.length - 1 && flag === true) {
+                        console.log("adding category")
+                        category.Categories.push(msg.Category);
+                        category.save(() => { callback(null, true) });
+                    }
+                })
             }
         }
     })
