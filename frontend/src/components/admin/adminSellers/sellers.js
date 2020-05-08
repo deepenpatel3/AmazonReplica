@@ -25,7 +25,7 @@ class AdminSellers extends Component {
         this.handlePageClick = this.handlePageClick.bind(this);
         this.retrieveSellers = this.retrieveSellers.bind(this);
         this.refreshList = this.refreshList.bind(this);
-        //this.onChangeSearchSeller= this. onChangeSearch.bind(this);
+        this.onChangeSearchSeller = this.onChangeSearchSeller.bind(this);
         this.setActiveSeller = this.setActiveSeller.bind(this);
         this.searchSeller = this.searchSeller.bind(this);
     }
@@ -39,16 +39,9 @@ class AdminSellers extends Component {
         })
     }
     onChangeSearchSeller(e) {
-        const searchSeller = e.target.value;
-        this.setState(function (prevState) {
-            return {
-                currentSeller: {
-                    ...prevState.currentSeller,
-
-                }
-            }
-            //searchSeller: searchSeller
-        });
+        this.setState({
+            searchSeller: e.target.value
+        })
     }
 
     retrieveSellers() {
@@ -81,8 +74,9 @@ class AdminSellers extends Component {
     }
 
     searchSeller(e) {
+        e.preventDefault();
         Axios
-            .post('', this.state.searchSeller)
+            .post(backendURL + '/admin/seller', { name: this.state.searchSeller })
             .then(response => {
                 this.setState({
                     sellers: response.data
@@ -186,7 +180,7 @@ class AdminSellers extends Component {
         const { searchSeller, sellers, currentSeller, currentIndex } = this.state;
         return (
             <div>
-                <form class="form-inline my-2 my-lg-1" style={{ marginLeft: "35%" }} onSubmit={this.searchSeller}>
+                <form class="form-inline my-2 my-lg-1" style={{ marginLeft: "35%" }} onClick={this.searchSeller}>
                     <div className="form-group">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search Sellers" aria-label="Search" onChange={this.onChangeSearchSeller} value={this.state.search} />
                         <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search Sellers</button>
@@ -199,7 +193,7 @@ class AdminSellers extends Component {
                         {this.state.sellers.map(seller => (
                             <tr>
                                 <td>
-                                    <p onClick={this.getSellerMonthlyData} id={seller._id}>{seller.Name}</p>
+                                    <a href="#" onClick={this.getSellerMonthlyData} id={seller._id}>{seller.Name}</a>
                                 </td>
                             </tr>
                         ))}

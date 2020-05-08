@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import Axios from "axios";
 import { DropzoneArea, DropzoneDialog } from 'material-ui-dropzone';
-import {updateNamePic} from '../../../Redux/actions/customer/customerProfileActions';
+import { updateNamePic } from '../../../Redux/actions/customer/customerProfileActions';
 
 
 
@@ -57,12 +57,12 @@ class NamePic extends Component {
             profileImage: files[0],
             open: false
         })
-        this.props.updateNamePic(localStorage.getItem("id"),this.state.name,files[0])
+        this.props.updateNamePic(localStorage.getItem("id"), this.state.name, files[0])
     };
 
     SubmitChange(e) {
         e.preventDefault();
-       this.props.updateNamePic(localStorage.getItem("id"),this.state.name,this.state.profileImage)
+        this.props.updateNamePic(localStorage.getItem("id"), this.state.name, this.state.profileImage)
     };
     componentDidMount() {
         if (this.props.NamePicData) {
@@ -158,6 +158,6 @@ const mapStateToProps = state => ({
     NamePicData: state.customerProfile
 });
 
-export default connect(mapStateToProps, {updateNamePic})(NamePic);
+export default connect(mapStateToProps, { updateNamePic })(NamePic);
 
 //014348503 matthew esteban

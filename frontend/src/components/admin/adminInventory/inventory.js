@@ -6,7 +6,7 @@ import Select from '@material-ui/core/Select';
 import Axios from 'axios';
 import { backendURL } from '../../../config';
 import { Redirect } from 'react-router-dom';
-import { backendURL } from "../../../config";
+
 class AdminInventory extends Component {
     constructor(props) {
         super(props);

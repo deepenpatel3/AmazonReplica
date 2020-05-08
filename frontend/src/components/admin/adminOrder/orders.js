@@ -9,15 +9,37 @@ class AdminOrders extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            status: "",
             currentSellerName: "",
             orders: []
         }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleFilter = this.handleFilter.bind(this);
     }
 
     componentDidMount() {
         this.getAllOrders()
     }
-
+    handleChange = (e) => {
+        e.preventDefault();
+        this.setState({
+            status: e.target.value
+        })
+    }
+    handleFilter = (e) => {
+        e.preventDefault();
+        console.log("status in ", this.state.status);
+        Axios.post(backendURL + "/admin/orders/listOfOrders", { status: this.state.status })
+            .then(response => {
+                if (response.status === 200) {
+                    this.setState({
+                        orders: response.data
+                    }, () => {
+                        console.log(('response', this.state.orders));
+                    })
+                }
+            })
+    }
     getAllOrders() {
         Axios.post(backendURL + "/admin/orders/listOfOrders")
             .then(response => {
@@ -77,9 +99,9 @@ class AdminOrders extends Component {
                                 </form>
                                 <div className="br"></div>
 
-                                <form onSubmit={this.handleFilter}>
+                                <form onClick={this.handleFilter}>
                                     <div className="form-group">
-                                        <Select className="ui search dropdown" style={{ width: "13pc" }} value={this.state.value} onChange={this.handleChange}>
+                                        <Select id='status' className="ui search dropdown" style={{ width: "13pc" }} value={this.state.value} onChange={this.handleChange}>
                                             <option value="Accepted">Accepted</option>
                                             <option value="Dispatched">Dispatched</option>
                                             <option value="Out for Delivery">Out for Delivery</option>

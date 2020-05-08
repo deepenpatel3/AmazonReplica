@@ -64,13 +64,8 @@ class CustomerProfile extends Component {
                         <tbody>
                             <div className="spacing"></div>
                             <tr>
-                                <td>
-                                    <div className="votecount" >
-                                        <Votecount />
-                                    </div>
-                                    <div className="spacing"></div>
-                                </td>
-                                <div className="spacing1"></div>
+
+
                                 <td>
                                     <div className="comments" >
                                         <Comments />
