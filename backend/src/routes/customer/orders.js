@@ -72,7 +72,7 @@ router.post("/placeOrder", (req, res) => {
     });
 })
 
-router.post("/updateOrder", checkAllAuth, (req, res) => {
+router.post("/updateOrder", (req, res) => {
 
     kafka.make_request('product', { "path": "update_order", "body": req.body }, function (err, result) {
         console.log("got back from update order kafka");

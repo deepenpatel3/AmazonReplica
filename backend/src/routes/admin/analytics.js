@@ -17,7 +17,7 @@ redisClient.on("error", (err) => {
 });
 
 
-router.get("/", checkAdminAuth, (req, res) => {
+router.get("/", (req, res) => {
 
     let most_sold_products = [], top_10_sellers = [], top_5_customers = [], top_10_products = [], orders_per_day = [], top_10_viewed = []
 
@@ -126,7 +126,7 @@ router.get("/", checkAdminAuth, (req, res) => {
     })
 })
 
-router.post("/productCount", checkAdminAuth, function (req, res) {
+router.post("/productCount", function (req, res) {
     // let Count
     // console.log("Ayushhhhhhhh ",req.body)
     let redisKey = req.body.productId
