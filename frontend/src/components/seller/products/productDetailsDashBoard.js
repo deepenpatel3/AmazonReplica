@@ -23,6 +23,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import { updateSellerProduct, deleteProduct} from '../../../Redux/actions/seller/productAction';
+import {fetchAllCategories} from './../../../Redux/actions/admin/categoriesActions';
+
 
 
 import { getReviewsForProduct } from '../../../Redux/actions/customer/reviewActions';
@@ -139,7 +141,7 @@ class ProductDetailsDashBoard extends Component {
             modalShow: false,
             offerModalShow: false,
             NewOffer: "",
-            cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
+            cetagoriesSet: ["",],
             SelectedCetagories: [],
             Offerset: [],
         }
@@ -151,6 +153,7 @@ class ProductDetailsDashBoard extends Component {
     }
 
     componentDidMount() {
+        this.props.fetchAllCategories();
         this.props.getReviewsForProduct(this.props.Product._id);
         if (this.state.SelectedCetagories.length < 1 && this.props.Product.Categories) {
             var arr = [];
@@ -176,6 +179,12 @@ class ProductDetailsDashBoard extends Component {
         this.setState({
             Reviews: nextProps.reviewData.reviews,
         })
+        if (nextProps.categoriesData){
+            console.log("categoriesData:",JSON.stringify(nextProps.categoriesData))
+            this.setState({
+                cetagoriesSet: nextProps.categoriesData
+            })
+        }
     };
 
     onFileUploadChangeHandler = event => {
@@ -571,8 +580,9 @@ class ProductDetailsDashBoard extends Component {
 const mapStateToProps = state => {
     return {
         reviewData: state.customerReviewData,
+        categoriesData: state.categories.Categories,
     };
 };
 
 
-export default connect(mapStateToProps, { getReviewsForProduct, updateSellerProduct, deleteProduct })(ProductDetailsDashBoard);
+export default connect(mapStateToProps, { getReviewsForProduct, updateSellerProduct, deleteProduct, fetchAllCategories })(ProductDetailsDashBoard);

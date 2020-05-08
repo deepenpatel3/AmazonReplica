@@ -19,6 +19,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from 'axios';
 import { getFilterCategories, getFilterName, getFilterSort } from '../../../Redux/selectors/customer/selector';
 import Typography from '@material-ui/core/Typography';
+import {fetchAllCategories} from './../../../Redux/actions/admin/categoriesActions';
 
 
 const Styles = styled.div`
@@ -88,7 +89,7 @@ class ProductDashBoard extends Component {
             modalShow: false,
             imageModalShow: false,
             ProductImages: [],
-            cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
+            cetagoriesSet: ["",],
             SelectedCetagories: [],
             filterCategoires: [],
 
@@ -240,6 +241,7 @@ class ProductDashBoard extends Component {
             this.props.filterName, this.state.filterCategoires, e.target.value);
     }
     componentDidMount() {
+        this.props.fetchAllCategories();
         var sellerId = localStorage.getItem("id");
         this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit, this.props.filterName, this.props.filterCategoires);
         if (!this.props.productData) {
@@ -276,6 +278,12 @@ class ProductDashBoard extends Component {
             this.setState({
                 filterCategoires: nextProps.filterCategoires,
             });
+        }
+        if (nextProps.categoriesData){
+            console.log("categoriesData:",JSON.stringify(nextProps.categoriesData))
+            this.setState({
+                cetagoriesSet: nextProps.categoriesData
+            })
         }
     };
 
@@ -448,8 +456,9 @@ const mapStateToProps = state => {
         filterCategoires: getFilterCategories(state.sellerProductData),
         filterName: getFilterName(state.sellerProductData),
         filterSort: getFilterSort(state.sellerProductData),
+        categoriesData: state.categories.Categories,
     };
 };
 
 
-export default connect(mapStateToProps, { getProducts, addProduct })(ProductDashBoard);
+export default connect(mapStateToProps, { getProducts, addProduct,fetchAllCategories })(ProductDashBoard);

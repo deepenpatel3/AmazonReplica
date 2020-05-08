@@ -53,47 +53,43 @@ router.get("/fetchprofile",(req,res)=>{
     });
 })
 
-router.post("/updatenamepic", upload.array('photos', 1), function(req, res) {
-    console.log("Inside Update Profile Post Request ");
-    let UpdatedImages = []
-    for (let i = 0; i < req.file.Images.length; i++) {
-         UpdatedImages[i] = req.protocol + "://" + req.hostname + ':3001/' + req.file[i].path;
-    }
-    
-    req.body.Image = UpdatedImages[0]
-    console.log("Images Path",req.body.Images)
-    const data = {
-        id: req.body.id,
-        ProfileUrl: UpdatedImages[0],
-        Name: req.body.Name,
-    }
+router.post("/updatenamepic", function (req, res) {
+  console.log("Inside Update Profile Post Request ");
+  let UpdatedImages = "";
+  // for (let i = 0; i < req.file.Images.length; i++) {
+  //     UpdatedImages[i] = req.protocol + "://" + req.hostname + ':3001/' + req.file[i].path;
+  // }
+  upload(req, res, function (error) {
+      if (error instanceof multer.MulterError)
+          return res.json({ status: "402", error: error })
+      else if (error)
+          return res.json({ status: "401", error: error.message })
+      else {
+          console.log("req.files- ", req.file.location);
+          req.body.ProfileURL = req.file.location;
 
-    console.log("request body is", req.body);
-    kafka.make_request("profile",{ "path": "namepic_func", "body": data }, req.body, function(err, results) {
-      console.log("Inside name pic update Profile ");
-      console.log(typeof results);
-  
-      if (err) {
-        console.log("Inside err");
-        res.json({
-          status: "error",
-          msg: err
-        });
-      } else {
-        console.log("inside else1-namepic");
-        if (results.code === "400") {
-          // console.log(results.value);
-          console.log("inside 400");
-          res.sendStatus(400).end();
-        } else if (results.code === "200") {
-          res.code = "200";
-          console.log(" namepic is updated");
-          res.sendStatus(200).end("namepic of the profile is updated");
-        }
+          console.log("request body is", req.body);
+          kafka.make_request("profile", { "path": "namepic_func", "body": req.body }, function (err, results) {
+              console.log("Inside name pic update Profile ");
+              console.log(typeof results);
+
+              if (err) {
+                  console.log("Inside err");
+                  res.json({
+                      status: "error",
+                      msg: err
+                  });
+              } else {
+                  console.log("inside else1-namepic");
+                  res.json(results);
+                  res.end();
+              }
+          });
       }
-    });
-  });
-  
+  })
+});
+
+
 router.post("/updateaddress", function(req, res) {
     console.log("Inside Update Profile Post Request ");
     console.log("request body is", req.body);
@@ -122,6 +118,7 @@ router.post("/updateaddress", function(req, res) {
     });
   });
 
+  
   router.post("/updatecard", function(req, res) {
     console.log("Inside Update Card Profile Post Request");
     console.log("request body is", req.body);
