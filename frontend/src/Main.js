@@ -31,7 +31,7 @@ class Main extends Component {
 
             <BrowserRouter>
                 <div>
-                    <Route path="/login"> <CustomerLogin /> </Route>
+
 
                     <Route path="/admin"><AdminNavBar></AdminNavBar></Route>
                     <Route path="/admin/dashboard"><AnalyticsDashboard /></Route>

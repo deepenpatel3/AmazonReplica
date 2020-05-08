@@ -1,5 +1,5 @@
 const config = {
-    frontendURL: "http://localhost:3000",
+    frontendURL: "http://54.174.226.158:3000",
     secret: "amazon"
 }
 

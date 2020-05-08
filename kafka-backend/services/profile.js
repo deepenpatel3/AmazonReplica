@@ -119,16 +119,7 @@ function paymentcard_func(msg, callback) {
 function addCard(msg, callback) {
     console.log("@@@@" + msg)
     // var res = {};
-    Customer.findByIdAndUpdate({ _id: msg.id },
-        {
-            $push: {
-                cartSchema: {
-                    Number: msg.Number,
-                    NameOnCard: msg.NameOnCard,
-                    ExpDate: new Date(+new Date() + 180 * 24 * 60 * 60 * 1000)
-                }
-            }
-        }, { new: true },
+    Customer.findById({ _id: msg.id },
         function (err, user) {
             if (err) {
                 // res.code = "400";
@@ -138,9 +129,17 @@ function addCard(msg, callback) {
                 callback(err, null);
                 //res.sendStatus(400).end();
             } else {
-                res.code = "200";
-                console.log("Card Added Successful");
-                callback(null, { success: user });
+                let card = {
+                    Number: msg.Number,
+                    NameOnCard: msg.NameOnCard,
+                    ExpDate: new Date(+new Date() + 180 * 24 * 60 * 60 * 1000)
+                }
+                user.Payments.push(card);
+                user.save(() => {
+                    console.log("Card Added Successful");
+                    callback(null, { success: user });
+                })
+
                 //res.sendStatus(200).end();
             }
         }

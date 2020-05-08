@@ -22,20 +22,19 @@ exports.serve = function serve(msg, callback) {
 }
 
 function fetchprofile_seller(msg, callback) {
-    var res = {};
 
-    Seller.findOne({ "user.email": msg.email },
+
+    Seller.findOne({ _id: msg.sellerId },
         function (err, docs) {
             if (err) {
                 console.log("Inside if : error", err);
-                res.code = "400";
-                res.value = "No user found";
+
                 //res.sendStatus(400).end("No user found");
-                callback(null, res.value);
+                callback(err, null);
             }
             else {
                 console.log("Inside else : ");
-                res.code = "200";
+                // res.code = "200";
 
                 console.log("User is found", docs);
                 //res.end(JSON.stringify(docs));

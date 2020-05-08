@@ -25,9 +25,9 @@ class CustomerSignUp extends Component {
     render() {
         let alertElement = null, redirectVar = null;
         let role = localStorage.getItem("type");
-        if (role === "customer") redirectVar = <Redirect to="/customer/home" />
+        if (role === "customer") redirectVar = <Redirect to="/customer/product" />
         else if (role === 'seller') redirectVar = <Redirect to="/seller/product" />
-        else if (role === 'admin') { }
+        else if (role === 'admin') redirectVar = <Redirect to="/admin/dashboard" />
 
         if (this.props.signInSuccess === false)
             alertElement = <p className="alert alert-danger" role="alert">{this.props.message}</p>
