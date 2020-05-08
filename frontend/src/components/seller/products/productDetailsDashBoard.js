@@ -148,8 +148,6 @@ class ProductDetailsDashBoard extends Component {
         })
     };
 
-
-
     render() {
         var reviews = []
         if (this.state.Reviews) {
@@ -159,7 +157,6 @@ class ProductDetailsDashBoard extends Component {
                 )
             });
         };
-
 
         return (
             <Styles>

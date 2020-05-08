@@ -52,21 +52,24 @@ app.use(function (req, res, next) {
 });
 
 const customerAccount = require("./src/routes/customer/account");
-const sellerAccount = require("./src/routes/seller/account");
-const adminAccount = require("./src/routes/admin/account");
+//const sellerAccount = require("./src/routes/seller/account");
+//const adminAccount = require("./src/routes/admin/account");
 const customerProfile= require("./src/routes/customer/profile");
 const customerPayment = require("./src/routes/customer/payment")
 const customerProduct = require("./src/routes/customer/product");
 const customerReview = require("./src/routes/customer/review");
 const sellerProduct = require("./src/routes/seller/sellerProduct");
+const adminAnalytics = require("./src/routes/admin/analytics")
 
 
 app.use("/customer", customerAccount);
-app.use("/seller", sellerAccount);
-app.use("/admin", adminAccount);
+//app.use("/seller", sellerAccount);
+//app.use("/admin", adminAccount);
 app.use("/customer/product", customerProduct);
 app.use("/customer/review", customerReview);
 app.use("/seller/product",sellerProduct)
+
+app.use('/admin/analytics', adminAnalytics)
 
 //customer profile
 app.use("/customer/profile",customerProfile)

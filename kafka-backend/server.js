@@ -6,6 +6,7 @@ const account = require("./services/account");
 const product = require("./services/product");
 const review = require("./services/review");
 const profile = require("./services/profile");
+const analytics = require("./services/analytics")
 
 var options = {
     useNewUrlParser: true,
@@ -61,6 +62,11 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
+            case "analytics":
+                analytics.serve(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
         }
     });
 }
@@ -90,4 +96,5 @@ handleTopicRequest("account",account);
 handleTopicRequest("profile",profile);
 handleTopicRequest("product",product);
 handleTopicRequest("review", review);
+handleTopicRequest("analytics", analytics);
 

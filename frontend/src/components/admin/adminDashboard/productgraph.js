@@ -6,34 +6,26 @@ class ProductGraph extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rows: [{}],
+            row: [{}],
             products:[],
-            soldproducts:[]
-        }
+            soldproducts:[],
+            most_sold_products:[],
+            value:[]
+        }        
     }
 
     componentDidMount(){
-        var data={
-            id:localStorage.getItem("id")
+        let data = {
+            _id: localStorage.getItem("_id")
         }
         Axios.defaults.withCredentials = true;
         Axios
-        .post("http://localhost:3001/",data)
+        .get("http://localhost:3001/admin/analytics/most_sold_products",data)
         .then(response=>{
-            console.log("Status code:",response.status);
             if(response.status === 200){
-                console.log(response.data);
-            this.setState({
-                rows:response.data,
-            })
-            console.log(this.state.rows)
-            var products=[], soldproducts=[];
-            this.state.rows.map(member=>products.push(member._id))
-            this.state.rows.map(member=>soldproducts.push(member.soldproducts_count))
-            console.log(soldproducts);
-            this.setState({
-                products:products,
-                soldproducts:soldproducts
+                this.setState({
+                    row:response.data,
+                    soldproducts:response.data
             })
           }
         })
@@ -41,8 +33,11 @@ class ProductGraph extends Component {
     }
     
     render() {
+        let names = this.state.soldproducts.map(d => d.Name)
+        let orders = this.state.soldproducts.map(d => d.Orders)
+        
         const data = {
-            labels: this.state.products,
+            labels:names,
             datasets: [
               {
                 label: 'Top 5 most sold products',
@@ -63,14 +58,36 @@ class ProductGraph extends Component {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: this.state.soldproducts
+                data: orders
               }
             ]
           }
-        console.log(this.state.soldproducts)
+         const options = {
+            scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Number Counts'
+                },
+                beginAtZero:true,
+                ticks: {
+                    max: 20,
+                    min: 0,
+                    stepSize: 1
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Product Name'
+                }
+              }]
+            }     
+          }
+        
         return (
             <div style={{ background: "#fafafa" }}>
-                   <Line ref="chart" data={data} />
+                   <Bar ref="chart" data={data} options={options}/>
             </div>
         )
     }

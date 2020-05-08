@@ -8,12 +8,16 @@ class AdminInventory extends Component{
     constructor(props){
         super(props);
         this.state={
-            value:''
+            
         };
         this.handleChange= this.handleChange.bind(this);
         this.handleRemove= this.handleRemove.bind(this);
         this.handleAdd= this.handleAdd.bind(this);
     }
+
+    // componentDidMount(){
+    //   
+    // }
 
     handleChange(e){
         this.setState(
@@ -23,15 +27,15 @@ class AdminInventory extends Component{
         );
     }
 
-    handleRemove(e){
-        alert('You are going to remove '+this.state.value);
-        e.preventDefault();
+     handleRemove(e){
+     alert('You are going to remove '+this.state.value);
+     e.preventDefault();
     }
-
-    handleAdd(e){
+   
+     handleAdd(e){
        
         e.preventDefault();
-    }
+     }
 
     render(){
 
@@ -46,7 +50,7 @@ class AdminInventory extends Component{
                 <form onSubmit={this.handleAdd}>
                 <div className="form-group">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add Category</button>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onSubmit={this.handleAdd}>Add Category</button>
                 </div>
                 </form>
                <div className="br"></div>
@@ -59,7 +63,7 @@ class AdminInventory extends Component{
                         <option value="category3">Category 3</option>
                     </Select>
                     <div className="spacing_inv"></div>
-                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Remove Category</button>
+                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" onSubmit={this.handleRemove}>Remove Category</button>
                         </div>
                       
                 </form>

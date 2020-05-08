@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import Axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 
 class CustomerPurchaseGraph extends Component {
@@ -8,22 +8,36 @@ class CustomerPurchaseGraph extends Component {
         this.state = {
             rows: [{}],
             amount:[],
-            customers:[]
+            customers:[],
+            top_5_customers:[],
+            value:[]
         }
     }
     
     componentDidMount(){
-    /*
-    var data={
-        id:localStorage.getItem("id")
-    }*/
-        axios.defaults.withCredentials = true;
-       
+      let data = {
+        _id: localStorage.getItem("_id")
+    }
+    Axios.defaults.withCredentials = true;
+    Axios
+    .get("http://localhost:3001/admin/analytics/top_5_customers",data)
+    .then(response=>{
+        if(response.status === 200){
+            this.setState({
+                rows:response.data,
+                customers:response.data
+        })
+      }
+    })
+    .catch()       
     }
 
     render() {
+      let customernames = this.state.customers.map(d => d.Name)
+      let amount = this.state.customers.map(d => d.Orders)
+      
         const data = {
-            labels: this.state.amount,
+            labels: customernames,
             datasets: [
               {
                 label: 'Top 5 customers based on total purchase amount',
@@ -44,14 +58,37 @@ class CustomerPurchaseGraph extends Component {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: this.state.customers
+                data: amount
               }
             ]
           }
+          const options = {
+            scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Purchase amount(In USD)'
+                },
+                beginAtZero:true,
+                ticks: {
+                    max: 10,
+                    min: 0,
+                    stepSize: 1
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Customer Name'
+                }
+              }]
+            }     
+          }
+        
 console.log(this.state.customers)
         return (
             <div style={{ background: "#fafafa" }}>
-                   <Bar ref="chart" data={data} />
+                   <Bar ref="chart" data={data} options={options}/>
             </div>
         )
     }

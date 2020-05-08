@@ -1,29 +1,43 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { Bar } from 'react-chartjs-2';
+import Axios from 'axios';
+import { Bar,Pie } from 'react-chartjs-2';
 
 class OrderGraph extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //rows: [{}],
+            rows: [{}],
             days:[],
-            orders:[]
+            number:[],
+            orders:[],
+            value:[]
         }
     }
 
     componentDidMount(){
-        /*
-        var data={
-            id:localStorage.getItem("id")
-        }*/
-            axios.defaults.withCredentials = true;
-           
-        }
+      let data = {
+        Order_id: localStorage.getItem("Order_id")
+    }
+    Axios.defaults.withCredentials = true;
+    Axios
+    .get("http://localhost:3001/admin/analytics/orders_per_day",data)
+    .then(response=>{
+        if(response.status === 200){
+          console.log("response data is: ",response.data)
+            this.setState({
+                rows:response.data,
+                number:response.data['orders_per_day']
+        })
+      }
+    })
+    .catch()    
+  }
     
     render() {
+      let order = this.state.number.map(d => d.Count)
+      let num = this.state.number.map(d => d.Date)
         const data = {
-            labels: this.state.days,
+            labels: num,
             datasets: [
               {
                 label: 'Number of orders per day',
@@ -44,14 +58,36 @@ class OrderGraph extends Component {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: this.state.orders
+                data: order
               }
             ]
+          }
+          const options = {
+            scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Order count'
+                },
+                beginAtZero:true,
+                ticks: {
+                    max: 40,
+                    min: 0,
+                    stepSize: 1
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Day'
+                }
+              }]
+            }     
           }
 console.log(this.state.orders)
         return (
             <div style={{ background: "#fafafa" }}>
-                   <Bar ref="chart" data={data} />
+                   <Bar ref="chart" data={data} options={options}/>
             </div>
         )
     }

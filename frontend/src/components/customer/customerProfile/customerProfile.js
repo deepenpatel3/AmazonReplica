@@ -64,7 +64,7 @@ class CustomerProfile extends Component {
                             <div className="spacing1"></div>
                             <td>
                             <div className="comments" >
-                                <Comments/>
+                                    <Comments/>
                                 </div>
                                     <div className="spacing"></div>
                             </td>

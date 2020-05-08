@@ -1,6 +1,6 @@
-const {ACCOUNT, PROFILE, SELLER_PROFILE, PRODUCT, REVIEW , RESPONSE_TOPIC } =  require('./topic_names');
+const {ACCOUNT, PROFILE, SELLER_PROFILE, PRODUCT, REVIEW , ANALYTICS, RESPONSE_TOPIC } =  require('./topic_names');
 
-    let topicsToCreate = [ACCOUNT, PROFILE, SELLER_PROFILE, PRODUCT, REVIEW, RESPONSE_TOPIC];
+    let topicsToCreate = [ACCOUNT, PROFILE, SELLER_PROFILE, PRODUCT, REVIEW, ANALYTICS, RESPONSE_TOPIC];
 
 //     const topicsToCreate = [
 //     {
