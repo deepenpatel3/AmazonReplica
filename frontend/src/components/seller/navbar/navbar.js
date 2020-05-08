@@ -5,12 +5,13 @@ import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {Redirect} from 'react-router';
-import { Navbar as BNavbar, Form, FormControl, Button, Nav } from 'react-bootstrap';
+import { Navbar as BNavbar, Form, FormControl, Button, Nav, NavDropdown } from 'react-bootstrap';
 import { getFilterCategories, getFilterName } from '../../../Redux/selectors/customer/selector';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { logout } from "../../../Redux/actions/customer/loginAction";
 import SearchIcon from '@material-ui/icons/Search';
 import { getProducts } from '../../../Redux/actions/seller/productAction';
+import Typography from '@material-ui/core/Typography';
 
 
 class Navbar extends Component {
@@ -65,17 +66,31 @@ class Navbar extends Component {
         return (
             <div>
                 <BNavbar style={{ backgroundColor: "#252f3d", padding: "0" }}>
-                    <BNavbar.Brand style={{ marginLeft: "1%" }} href="/customer/product"><img src="/navbar_logo.jpeg" width="150" height="55" alt="amazon" /></BNavbar.Brand>
+                    <BNavbar.Brand style={{ marginLeft: "1%" }} href="/seller/product"><img src="/navbar_logo.jpeg" width="150" height="55" alt="amazon" /></BNavbar.Brand>
                     <Form inline>
-                        <FormControl type="text" placeholder="Search" style={{ width: "900px" , borderRadius : "0px" }} className="mr-sm-7" onChange = { this.ChangeHandler } onKeyPress={this.handleKeyPress} value = {this.state.name}  />
+                        <FormControl type="text" placeholder="Search" style={{ width: "800px" , borderRadius : "0px" }} className="mr-sm-7" onChange = { this.ChangeHandler } onKeyPress={this.handleKeyPress} value = {this.state.name}  />
                         <Button variant="warning" onClick = {this.clickHandler} type="button"  style={{marginTop : "1.5%" , height : "2.4em"}} ><SearchIcon style={{paddingTop : "5%" }}/></Button>
                     </Form>
                     <Nav className="mr-auto"></Nav>
-                    <Nav>
-                        <Nav.Link>
-                            <PowerSettingsNewIcon style={{ color: "white" }} onClick ={this.logout}/>
-                        </Nav.Link>
+                    <Nav style={{ color: "white" }}>
+                        <NavDropdown
+                            title={
+                                <div style={{width:"150px", height:"40px", padding:"5px", margin:"5px"}}>
+                                    <Typography style={{ color: "white", fontSize:"12px", width:"100%", height:"100%" }} variant="body2" gutterBottom>
+                                        Hello, {localStorage.getItem("name")}
+                                        <br/>
+                                        <b>Account & List</b>
+                                    </Typography>
+                                </div>
+                            }
+                            id="nav-dropdown">
+                            <NavDropdown.Item eventKey="4.1" href="/seller/orders">Your Orders</NavDropdown.Item>
+                            <NavDropdown.Item eventKey="4.2" href="/seller/profile">Account</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item eventKey="4.4" onClick={this.logout}>Signout</NavDropdown.Item>
+                        </NavDropdown>
                     </Nav>
+
                 </BNavbar>
             </div>
         )

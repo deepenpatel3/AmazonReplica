@@ -21,6 +21,7 @@ const setLoginCredentials = (token) => {
         localStorage.setItem("id", decoded.id);
         localStorage.setItem("name", decoded.name);
         localStorage.setItem("type", decoded.role);
+        localStorage.setItem("profileUrl",decoded.profileUrl)
     }
     return {
         type: CUSTOMER_LOGIN,

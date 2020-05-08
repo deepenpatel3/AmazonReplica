@@ -16,3 +16,9 @@ export const getFilterCategories = (productData) => {
         return productData.categories;
     }
 }
+
+export const getFilterSort = (productData) => {
+    if(productData){
+        return productData.sort;
+    }
+}

@@ -8,6 +8,7 @@ const review = require("./services/review");
 const profile = require("./services/profile");
 const analytics = require("./services/analytics")
 const seller_profile = require("./services/seller_profile")
+const customerProfile = require("./services/profile");
 
 var options = {
     useNewUrlParser: true,
@@ -73,6 +74,14 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
+            case "profile":
+                console.log(" customerProfile called bahar");
+                customerProfile.serve(data.data, function (err, res) {
+                    console.log(" customerProfile called")
+                    response(data, res, producer);
+                    return;
+                })
+
         }
     });
 }
@@ -99,8 +108,8 @@ function response(data, res, producer) {
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest("account", account);
-handleTopicRequest("profile", profile);
+handleTopicRequest("profile", customerProfile);
 handleTopicRequest("product", product);
 handleTopicRequest("review", review);
-handleTopicRequest("analytics",analytics)
-handleTopicRequest("seller_profile",seller_profile)
+handleTopicRequest("analytics", analytics);
+handleTopicRequest("seller_profile", seller_profile);

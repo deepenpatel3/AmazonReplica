@@ -3,23 +3,26 @@ import { connect } from "react-redux";
 import Cards from 'react-credit-cards';
 import '../customerProfile/customerProfile.css';
 import 'react-credit-cards/es/styles-compiled.css';
-import { Card, Form, Button, InputGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Card, Form, Button, InputGroup, FormControl, ControlLabel, Row, Col, Alert } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 import { CardBody } from "react-bootstrap/Card";
 import Axios from "axios";
+import SaveIcon from '@material-ui/icons/Save';
+import CreditCard from './creditCard';
+import { fetchCustomerProfile, deletPaymentOption } from '../../../Redux/actions/customer/customerProfileActions';
+import DatePicker from "react-datepicker";
 
 class PaymentCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            card: [],
+            cards: [],
             testcard: [],
-            cvc: '',
-            expiry: '',
+            Number: "",
+            NameOnCard: "",
+            ExpDate: "",
             focus: '',
-            name: '',
-            number: '',
-            validThru: "",
+            CVC: "",
             validUser: {
                 status: true,
                 message: ""
@@ -32,223 +35,98 @@ class PaymentCard extends Component {
             showaddcard: false,
         }
         this.handleInputFocus = this.handleInputFocus.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleInputChangeDate = this.handleInputChangeDate.bind(this);
     }
-
-
     handleInputFocus = (e) => {
         this.setState({ focus: e.target.name });
     }
 
-    handleInputChange = (e) => {
+    changeCardFields = (e) => {
         const { name, value } = e.target;
+
         this.setState({ [name]: value });
     }
-
+    // handleChange = date => {
+    //     this.setState({
+    //       startDate: date
+    //     });
+    //   };
+    
     handleInputChangeDate = (e) => {
         this.setState({
-            validThru:
-                e.target.value.substring(0, 2) +
-                "/" +
-                e.target.value.substring(2, 4),
+            ExpDate: e.target.value.substring(0, 2) +  "/" + e.target.value.substring(2, 4),
             valid: { status: true, message: "" }
         });
     }
 
-    fetchprofiledbcall = () => {
-        console.log("component did mount");
-        if (this.props.loginStateStore.result !== null &&
-            this.props.loginStateStore.result !== undefined) {
-            var email = this.props.loginStateStore.result.email;
-            console.log(email);
-            const data = {
-                email: email
-            };
-            Axios
-                .post("http://localhost:3001/fetchProfile", data)
-                .then(response => {
-                    console.log(response.data);
-                    console.log("Did mount response", response);
-                    var output = response.data;
-                    console.log("output", output.docs);
 
-                    var card = [...output.docs.user.card];
-                    this.setState({
-                        card: card,
-                        cardid: 0
-                    });
-
-                })
-        }
-    };
 
     componentDidMount() {
-        this.fetchprofiledbcall();
+        if (this.props.PaymentData) {
+            this.setState({
+                cards: this.props.PaymentData,
+            })
+        }
     }
 
-    editcard = card_id => {
-        this.setState({
-            cardid: card_id,
-            showeditcard: true
-        });
-    };
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.PaymentData) {
+            this.setState({
+                cards: nextProps.PaymentData,
+            })
+        }
+    }
 
-    deletecard = card_id => {
-        var card = [...this.state.card];
+
+    deleteCard = (card_id) => () => {
+        console.log("CardId:", card_id);
+        var newCards = this.state.cards;
         var index1 = card_id;
         if (index1 > -1) {
-            card.splice(index1, 1);
+            newCards.splice(card_id, 1);
         }
-        console.log(card);
-        var email = this.props.loginStateStore.result.email;
-        console.log("Emaild id is:", email);
-
+        console.log(newCards);
         var data = {
-            email: email,
-            card: card
+            customerId: localStorage.getItem("id"),
+            cards: newCards,
         };
-        Axios
-            .post("http://localhost:3001/updatecard", data)
-            .then(response => {
-                console.log("Response", response);
-                if (response.status === 200) {
-                    console.log("Inside delete card");
-                    this.setState({ isCardUpdated: true });
-                    this.fetchprofiledbcall();
-                }
-            });
+        this.props.deletPaymentOption(data, card_id);
     };
 
+    cardValidate = () => {
+        if (this.state.Number.length != 16) {
+            return false;
+        }
 
-    addcard = () => {
+        if (!this.state.NameOnCard || !this.state.ExpDate) {
+            return false;
+        }
+        return true;
+    }
+
+    addCard = () => {
         console.log("inside add card");
+        if (!this.cardValidate()) {
+            return (<Alert>Invalid card details</Alert>);
+        }
+        const card = {
+            Number: this.state.Number,
+            NameOnCard: this.state.NameOnCard,
+            ExpDate: this.state.ExpDate,
+        }
+        var arr = this.state.cards;
+        arr.push(card);
         this.setState({
-            showaddcard: true
+            cards: arr
         });
     };
 
-    addtocardarray = e => {
-        e.preventDefault();
-        const cvc = this.state.cvc;
-        const name = this.state.name;
-        const number = this.state.number;
-        const validThru = this.state.validThru;
-        const obj = {
-            obj_cvc: cvc,
-            obj_name: name,
-            obj_number: number,
-            obj_validThru: validThru,
-        };
-        const testcard = this.state.testcard.slice();
-        testcard.push(obj);
-        console.log("test the testcard", testcard);
 
-        var email = this.props.loginStateStore.result.email;
-        console.log("Emaild id is:", email);
-
-        var data = {
-            email: email,
-            card: testcard
-        };
-        console.log("data is", data);
-        //console.log("address is", this.state.address);
-        Axios
-            .post("http://localhost:3001/updatecard", data)
-            .then(response => {
-                console.log(response);
-                console.log("card value", this.state.testcard);
-                console.log("CHECKPOINT-CARD");
-                this.fetchprofiledbcall();
-            });
+    handleChange = e => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
     };
-
-    changecardfields = e => {
-        console.log(
-            "card 0",
-            this.state.card[this.state.card].obj_cvc
-        );
-        console.log(e.target.id);
-        console.log(e.target.value);
-        const idvar = e.target.id;
-        const val = e.target.value;
-
-        if (e.target.id === "obj_cvc") {
-            var card = [...this.state.card];
-            const cardid = this.state.cardid;
-            card[cardid].obj_cvc = e.target.value;
-            console.log("card", card);
-            this.setState({
-                card: card
-            });
-            console.log(this.state.card);
-        }
-
-        if (e.target.id === "obj_name") {
-            var card1 = [...this.state.card];
-            const cardid = this.state.cardid;
-            card1[cardid].obj_name = e.target.value;
-            console.log("card", card1);
-            this.setState({
-                card: card1
-            });
-            console.log(this.state.card);
-        }
-
-        if (e.target.id === "obj_number") {
-            var card2 = [...this.state.address];
-            const cardid = this.state.addressid;
-            card2[cardid].obj_number = e.target.value;
-            console.log("card", card2);
-            this.setState({
-                card: card2
-            });
-            console.log(this.state.card);
-        }
-
-        if (e.target.id === "obj_validThru") {
-            var card3 = [...this.state.card];
-            const cardid = this.state.cardid;
-            card3[cardid].obj_validThru = e.target.value;
-            console.log("card", card3);
-            this.setState({
-                card: card3
-            });
-            console.log(this.state.card);
-        }
-    }
-
-        canceleditcardchanges = e => {
-            e.preventDefault();
-            this.fetchprofiledbcall();
-        };
-
-        saveeditcardchanges = e => {
-            e.preventDefault();
-            console.log("edit card of the ", this.state.card);
-            //var email = sessionStorage.getItem('key');
-            var email = this.props.loginStateStore.result.email;
-            console.log("Emaild id is:", email);
-
-            var data = {
-                email: email,
-                card: this.state.card
-            };
-            console.log("card data is edited ", data);
-            Axios
-                .post("http://localhost:3001/updatecard", data)
-                .then(response => {
-                    console.log(response);
-                    console.log("card val", this.state.card);
-                    this.fetchprofiledbcall();
-                });
-        }
-
-        handleChange = e => {
-            this.setState({
-                [e.target.name]: e.target.value
-            });
-        };
 
     render() {
         const { validUser } = this.state;
@@ -256,175 +134,103 @@ class PaymentCard extends Component {
         var savebutton = (
             <button
                 type="submit"
-                onSubmit={this.addcard}
+                onClick={this.addCard}
                 className="btn btn-warning text-light"
                 data-target="#addcardid"
-                style={{ width: "30%" }}>
+                style={{ width: "100%", marginLeft: "30%" }}>
                 Add Payment
             </button>
         );
         if (this.state.showaddcard === true) {
-            var addcardvar = (
-                <div aria-labelledby="addcardid">
-                    <div className="address1" id="cardid">
-                        <Card.Title>
-                            Add new Payment Card
-                </Card.Title>
-                        <form>
-
-                            <input type="tel"
-                                name="number"
-                                placeholder="Card Number"
-                                onChange={this.handleChange}
-                                onFocus={this.handleInputFocus} />
-
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Name"
-                                onChange={this.handleChange}
-                                onFocus={this.handleInputFocus} />
-                            {!validUser.status ? (
-                                <span style={{ color: "#ff0000" }}>{validUser.message}</span>
-                            ) : null}
-
-                            <input
-                                type="DD MM"
-                                name="date"
-                                placeholder="Valid thru"
-                                onChange={this.handleInputChangeDate}
-                                onFocus={this.handleInputFocus} />
-                            {!validDate.status ? (
-                                <span style={{ color: "#ff0000" }}>{validDate.message}</span>
-                            ) : null}
-
-                            <input
-                                type="number"
-                                name="cvc"
-                                placeholder="CVC"
-                                onChange={this.handleChange}
-                                onFocus={this.handleInputFocus} />
-
-                            <center>
-                                <button type="submit"
-                                    onSubmit={this.addtocardarray}
-                                    className="btn btn-warning text-light"
-                                    style={{ width: "30%" }}>
-                                    Save Payment
-                    </button>
-                                <button type="submit" className="btn btn-dark text-light" style={{ width: "30%" }}>Cancel</button>
-                            </center>
-                        </form>
-                    </div>
-                </div>
-            );
+            var addcardvar = {};
         }
 
         var it1 = -1;
         const test2 = this.state.testcard;
         console.log("test2 is", test2);
-        const card_var = test2.map((cardvalues, index) => {
+        const card_var = this.state.cards.map((card, index) => {
             it1 = it1 + 1;
             var id1 = 0;
             return (
-                <div classname="savedadd">
-                    <Card.Header style={{ width: "100%" }}>
-                        Your saved payment
-                            </Card.Header>
-                    <Form.Text className="text-muted">
-                        <i>Update or delete your payment card(s).</i>
 
-                        <center>
-
-                            {cardvalues.obj_number}
-                            {cardvalues.obj_name}
-                            {cardvalues.obj_validThru}
-                            {cardvalues.obj_cvc}
-
-                            <button type="submit" value={it1} data-target="#basiccard" onSubmit={this.editcard(index)} className="btn btn-warning text-light" style={{ width: "30%" }}>Update Card</button>
-                            <div className="spacing2" />
-                            <button type="submit" onClick={this.handleSetdefault} className="btn btn-dark text-light" style={{ width: "30%" }}>Set default</button>
-                            <div className="spacing2" />
-                            <button type="submit" value={it1} onSubmit={this.deletecard(index)} className="btn btn-dark text-light" style={{ width: "30%" }}>Delete Card</button>
-
-                        </center>
-
-                    </Form.Text>
-                </div>
+                <Form.Text className="text-muted">
+                    <i>Update or delete your payment card(s).</i>
+                    <CreditCard Card={card} index={index} deleteCard={this.deleteCard} />
+                </Form.Text>
             );
         });
 
-        if (this.state.showeditcard === true && this.state.testcard.length > 0) {
-            console.log("tesstcard is value", this.state.testcard);
-            console.log("id for card val", this.state.cardid);
-            console.log("card array", this.state.card);
-            var cardedit = (
-                <Card.Body>
-                    <div aria-labelledby="cardid">
-                        <div className="address1" id="basiccard">
-                            <Card.Title>
-                                <div id="addcardid">
-                                    Add new card
-                    </div>
-                            </Card.Title>
-                            <form>
+        // if (this.state.showeditcard === true && this.state.testcard.length > 0) {
+        //     console.log("tesstcard is value", this.state.testcard);
+        //     console.log("id for card val", this.state.cardid);
+        //     console.log("card array", this.state.card);
+        //     var cardedit = (
+        //         <Card.Body>
+        //             <div aria-labelledby="cardid">
+        //                 <div className="address1" id="basiccard">
+        //                     <Card.Title>
+        //                         <div id="addcardid">
+        //                             Add new card
+        //             </div>
+        //                     </Card.Title>
+        //                     <form>
 
-                                <input type="tel"
-                                    name="number"
-                                    placeholder="Card Number"
-                                    value={
-                                        this.state.card[this.state.cardid].obj_number
-                                    }
-                                    aria-describedby="basic-addon1"
-                                    onChange={this.changecardfields}
-                                    onFocus={this.handleInputFocus} />
+        //                         <input type="tel"
+        //                             name="number"
+        //                             placeholder="Card Number"
+        //                             value={
+        //                                 this.state.card[this.state.cardid].obj_number
+        //                             }
+        //                             aria-describedby="basic-addon1"
+        //                             onChange={this.changeCardFields}
+        //                             onFocus={this.handleInputFocus} />
 
-                                <input type="text"
-                                    name="number"
-                                    placeholder="Card Name"
-                                    value={
-                                        this.state.card[this.state.cardid].obj_name
-                                    }
-                                    aria-describedby="basic-addon1"
-                                    onChange={this.changecardfields}
-                                    onFocus={this.handleInputFocus} />
+        //                         <input type="text"
+        //                             name="number"
+        //                             placeholder="Card Name"
+        //                             value={
+        //                                 this.state.card[this.state.cardid].obj_name
+        //                             }
+        //                             aria-describedby="basic-addon1"
+        //                             onChange={this.changeCardFields}
+        //                             onFocus={this.handleInputFocus} />
 
-                                <input type="DD MM"
-                                    name="number"
-                                    placeholder="Valid Thru"
-                                    value={
-                                        this.state.card[this.state.cardid].obj_validThru
-                                    }
-                                    aria-describedby="basic-addon1"
-                                    onChange={this.changecardfields}
-                                    onFocus={this.handleInputFocus} />
+        //                         <input type="DD MM"
+        //                             name="number"
+        //                             placeholder="Valid Thru"
+        //                             value={
+        //                                 this.state.card[this.state.cardid].obj_validThru
+        //                             }
+        //                             aria-describedby="basic-addon1"
+        //                             onChange={this.changeCardFields}
+        //                             onFocus={this.handleInputFocus} />
 
-                                <input type="number"
-                                    name="number"
-                                    placeholder="CVC"
-                                    value={
-                                        this.state.card[this.state.cardid].obj_cvc
-                                    }
-                                    aria-describedby="basic-addon1"
-                                    onChange={this.changecardfields}
-                                    onFocus={this.handleInputFocus} />
+        //                         <input type="number"
+        //                             name="number"
+        //                             placeholder="CVC"
+        //                             value={
+        //                                 this.state.card[this.state.cardid].obj_cvc
+        //                             }
+        //                             aria-describedby="basic-addon1"
+        //                             onChange={this.changeCardFields}
+        //                             onFocus={this.handleInputFocus} />
 
 
-                                <center>
-                                    <button type="submit"
-                                        onSubmit={this.saveeditcardchanges}
-                                        className="btn btn-warning text-light"
-                                        style={{ width: "30%" }}>
-                                        Save card
-                    </button>
-                                    <button type="submit" className="btn btn-dark text-light" style={{ width: "30%" }} onSubmit={this.canceleditcardchanges}>Cancel</button>
-                                </center>
-                            </form>
-                        </div>
-                    </div>
-                </Card.Body>
-            )
-        }
+        //                         <center>
+        //                             <button type="submit"
+        //                                 onSubmit={this.saveEditCardChanges}
+        //                                 className="btn btn-warning text-light"
+        //                                 style={{ width: "30%" }}>
+        //                                 Save card
+        //             </button>
+        //                             <button type="submit" className="btn btn-dark text-light" style={{ width: "30%" }} onSubmit={this.cancelEditCardChanges}>Cancel</button>
+        //                         </center>
+        //                     </form>
+        //                 </div>
+        //             </div>
+        //         </Card.Body>
+        //     )
+        // }
 
         return (
             <div>
@@ -437,26 +243,67 @@ class PaymentCard extends Component {
                         <i>Amazon never stores your Payment information.</i>
                     </Form.Text>
 
-                    <Card.Body>
-                        <Card.Title>
-                            Add a payment method
-                        </Card.Title>
-                        <div id="PaymentForm">
-                            <Cards
-                                cvc={this.state.cvc}
-                                expiry={this.state.expiry}
-                                focused={this.state.focus}
-                                name={this.state.name}
-                                number={this.state.number}
-                            />
-                            <br />
+                    <div>
+                        <Row style={{ padding: "10px" }}>
+                            <Col sm={8} md={8}>
+                                <Row>
+                                    <Col sm={4} md={4}></Col>
+                                    <Col sm={5} md={5}>
+                                        <Cards
+                                            CVC={this.state.CVC}
+                                            expiry={this.state.ExpDate}
+                                            focused={this.state.ExpDate}
+                                            name={this.state.NameOnCard}
+                                            number={this.state.Number}
+                                        />
+                                    </Col>
+                                    <Col sm={3} md={3}>
+                                        <Form>
+                                            <Form.Row>
+                                                <input type="tel"
+                                                    name="Number"
+                                                    placeholder="Card Number"
+                                                    value={this.state.Number}
+                                                    style={{ width: "80%" }}
+                                                    aria-describedby="basic-addon1"
+                                                    onChange={this.changeCardFields}
+                                                    onFocus={this.handleInputFocus} />
+                                            </Form.Row>
+                                            <Form.Row>
+                                                <input type="text"
+                                                    name="NameOnCard"
+                                                    style={{ width: "80%" }}
+                                                    placeholder="Card Name"
+                                                    value={this.state.NameOnCard}
+                                                    aria-describedby="basic-addon1"
+                                                    onChange={this.changeCardFields}
+                                                    onFocus={this.handleInputFocus} />
+                                            </Form.Row>
+                                        </Form>
+                                    </Col>
+                                </Row>
 
-                        </div>
-                    </Card.Body>
-                    <div>{addcardvar}</div>
-                    <div>{card_var}</div>
-                    <div>{cardedit}</div>
-                    <div>{savebutton}</div>
+
+                            </Col>
+                            {/* <Col sm={2} md={2}>
+                                <Row style={{ width: "100%" }}>
+                                    <SaveIcon style={{ float: "right" }} onClick={this.onUpdateCardListner}></SaveIcon>
+                                </Row>
+                            </Col> */}
+                        </Row>
+                        <Row>
+                            <div>{savebutton}</div>
+                        </Row>
+                    </div>
+                    {/* <div>{addcardvar}</div> */}
+                    <div classname="savedadd">
+                        <Card.Header style={{ width: "100%" }}>
+                            Your saved payment
+                            </Card.Header>
+                        <div>{card_var}</div>
+                    </div>
+                    {/* <div>{cardedit}</div> */}
+
                 </Card>
             </div>
         )
@@ -464,7 +311,7 @@ class PaymentCard extends Component {
 }
 
 const mapStateToProps = state => ({
-    loginStateStore: state.card
+    PaymentData: state.customerProfile.Payments
 });
 
-export default connect(mapStateToProps, {})(PaymentCard);
+export default connect(mapStateToProps, { fetchCustomerProfile, deletPaymentOption })(PaymentCard);

@@ -1,8 +1,8 @@
-import {CUSTOMER_GET_REVIEWS_FOR_PRODUCT} from "../../constants/action-types";
+import { CUSTOMER_GET_REVIEWS_FOR_PRODUCT, CUSTOMER_ADD_REVIEW } from "../../constants/action-types";
 import axios from "axios";
 const { backendURL } = require("../../../config");
 
-const ROOT_URL = backendURL +"/customer/review";
+const ROOT_URL = backendURL + "/customer/review";
 
 
 export const getReviewsForProduct = (productId) => dispatch => {
@@ -14,20 +14,47 @@ export const getReviewsForProduct = (productId) => dispatch => {
             Authorization: "Bearer " + token
         }
     }
-    axios.get(`${ROOT_URL}/reviews?product_id=${productId}`,config)
+    axios.get(`${ROOT_URL}/reviews?product_id=${productId}`, config)
         .then(response => {
-            // console.log("All Student", JSON.stringify(response));
+            // console.log("All Student", JSON.stringify(response.data));
             if (response.status == 200) {
                 dispatch({
                     type: CUSTOMER_GET_REVIEWS_FOR_PRODUCT,
-                    payload: {
-                        reviews: response.data,
-                        productId: productId
-                    },
+                    payload:  {
+                        reviewsData: response.data,
+                        productId: productId,
+                    }
                 })
             }
         },
             error => {
                 console.log(" studentDetails error:", JSON.stringify(error));
+            })
+}
+export const addReview = (review) => dispatch => {
+    axios.defaults.withCredentials = true;
+    // console.log(" Inside addReviewsForProduct :");
+    const token = localStorage.getItem("token");
+    // dispatch({
+    //     type: CUSTOMER_ADD_REVIEW ,
+    //     payload: review,
+    // })
+    const config = {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    }
+    axios.post(`${ROOT_URL}/addReview`, review)
+        .then(response => {
+            // console.log("All Student", JSON.stringify(response));
+            if (response.status == 200) {
+                dispatch({
+                    type: CUSTOMER_ADD_REVIEW ,
+                    payload: review,
+                })
+            }
+        },
+            error => {
+                console.log(" addReview error:", JSON.stringify(error));
             })
 }

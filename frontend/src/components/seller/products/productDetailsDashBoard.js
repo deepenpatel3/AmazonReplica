@@ -22,7 +22,7 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
-import { updateSellerProduct } from '../../../Redux/actions/seller/productAction';
+import { updateSellerProduct, deleteProduct} from '../../../Redux/actions/seller/productAction';
 
 
 import { getReviewsForProduct } from '../../../Redux/actions/customer/reviewActions';
@@ -147,6 +147,7 @@ class ProductDetailsDashBoard extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleOfferShow = this.handleOfferShow.bind(this);
         this.handleOfferClose = this.handleOfferClose.bind(this);
+        this.deleteButtonClickListner = this.deleteButtonClickListner.bind(this);
     }
 
     componentDidMount() {
@@ -171,7 +172,7 @@ class ProductDetailsDashBoard extends Component {
         }
     }
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps.products: ", JSON.stringify(nextProps.reviewData));
+        // console.log("nextProps.products: ", JSON.stringify(nextProps.reviewData));
         this.setState({
             Reviews: nextProps.reviewData.reviews,
         })
@@ -209,6 +210,12 @@ class ProductDetailsDashBoard extends Component {
             });
         }
 
+    }
+    
+    deleteButtonClickListner = (e) => {
+        this.props.onBackClickListner();
+        this.props.deleteProduct(this.props.Product._id, this.props.id);
+        
     }
 
     handleSelectListener = (e) => {
@@ -446,8 +453,8 @@ class ProductDetailsDashBoard extends Component {
                         </Tooltip>
                     </Col>
                     <Col>
-                        <Tooltip title="Delete Product" style={{ float: "right", marginRight: "15px" }}>
-                            <DeleteIcon></DeleteIcon>
+                        <Tooltip title="Delete Product"  style={{ float: "right", marginRight: "15px" }}>
+                            <DeleteIcon onClick={this.deleteButtonClickListner}></DeleteIcon>
                         </Tooltip>
 
                     </Col>
@@ -568,4 +575,4 @@ const mapStateToProps = state => {
 };
 
 
-export default connect(mapStateToProps, { getReviewsForProduct, updateSellerProduct })(ProductDetailsDashBoard);
+export default connect(mapStateToProps, { getReviewsForProduct, updateSellerProduct, deleteProduct })(ProductDetailsDashBoard);
