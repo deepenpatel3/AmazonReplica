@@ -1,6 +1,6 @@
 const Seller = require('../models/sellerModel');
+const Product = require('../models/productModel');
 var mysql = require("../models/mysql");
-
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);
@@ -18,7 +18,7 @@ exports.serve = function serve(msg, callback) {
         case "all_sellers":
             all_sellers(msg.body, callback);
             break;
-    }
+    }   
 }
 
 function fetchprofile_seller(msg, callback) {

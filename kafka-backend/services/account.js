@@ -183,7 +183,7 @@ function login(msg, callback) {
                         console.log('wrong email')
                         callback(null, { signInSuccess: false, message: "Wrong email" })
                     }
-                })
+                }) 
                 .catch(error => {
                     console.log('admin login error', error)
                     callback(null, { signInSuccess: false, message: "Please try again" })

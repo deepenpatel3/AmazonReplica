@@ -86,7 +86,7 @@ router.post("/addProduct", function (req, res) {
                     res.end();
                     return;
                 }
-            });
+            }); 
         }
     })
 

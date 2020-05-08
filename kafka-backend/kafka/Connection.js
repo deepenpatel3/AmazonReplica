@@ -15,13 +15,13 @@ function ConnectionProvider() {
         this.client.on('ready', function () { })
 
         return this.kafkaConsumerConnection;
-    };
-
+    }; 
+ 
     //Code will be executed when we start Producer
     this.getProducer = function () {
 
         if (!this.kafkaProducerConnection) {
-            this.client = new kafka.KafkaClient("localhost:9092");
+            this.client = new kafka.KafkaClient("localhost:9092"); 
             var HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
             // this.kafkaConnection = new kafka.Producer(this.client);
