@@ -73,6 +73,11 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
+            case "profile":
+                profile.serve(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
         }
     });
 }
@@ -102,5 +107,5 @@ handleTopicRequest("account", account);
 handleTopicRequest("profile", profile);
 handleTopicRequest("product", product);
 handleTopicRequest("review", review);
-handleTopicRequest("analytics",analytics)
-handleTopicRequest("seller_profile",seller_profile)
+handleTopicRequest("analytics", analytics)
+handleTopicRequest("seller_profile", seller_profile)

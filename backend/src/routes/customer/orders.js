@@ -5,7 +5,7 @@ const { auth } = require("../../utils/passport");
 const { checkAllAuth, checkCustomerAuth } = require("../../Utils/passport");
 auth();
 
-router.get("/", checkAllAuth, function (req, res) {
+router.get("/", function (req, res) {
 
     if (req.query.CustomerID) {
         let data = {
