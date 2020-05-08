@@ -27,7 +27,7 @@ exports.serve = function serve(msg, callback) {
 
 function fetchprofile(msg, callback) {
   var res = {};
-  console.log("fetchprofile inside fetchprofile");
+  console.log("fetchprofile inside fetchprofile"); 
   Customer.findOne({ "_id": msg._id},
     function (err, docs) {
       if (err) {
@@ -72,7 +72,7 @@ function namepic_func(msg, callback) {
 
 function address_func(msg, callback) {
   var res = {};
-  Customer.findOneAndUpdate({ "user.email": msg.email }, { "$set": { 'user.address': msg.address } },
+  Customer.findOneAndUpdate({ "_id": msg.id }, { "$set": { 'Address': msg.address } },
     function (err, user) {
       if (err) {
         res.code = "400";

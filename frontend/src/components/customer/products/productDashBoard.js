@@ -13,6 +13,7 @@ import ProductDetailsDashBoard from './productDetailsDashBoard';
 import Typography from '@material-ui/core/Typography';
 import { getFilterCategories, getFilterName, getFilterSort } from '../../../Redux/selectors/customer/selector';
 import { getProducts } from '../../../Redux/actions/customer/productActions';
+import {fetchAllCategories} from './../../../Redux/actions/admin/categoriesActions';
 
 const Styles = styled.div`
     .product-filter-bar{
@@ -51,7 +52,7 @@ class ProductDashBoard extends Component {
             totalDocs: null,
             ProductDetailsView: false,
             SelectedProduct: null,
-            cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
+            cetagoriesSet: ["",],
             SelectedCetagories: [],
             filterCategoires: [],
         }
@@ -143,8 +144,9 @@ class ProductDashBoard extends Component {
             this.props.filterName, this.state.filterCategoires, e.target.value);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         // this.props.getProducts(this.props.productData, 1, this.state.limit);
+        this.props.fetchAllCategories();
         this.props.getProducts(this.props.productData, 1, this.state.limit, 
             this.props.filterName, this.props.filterCategoires, this.props.filterSort);
         if (!this.props.productData) {
@@ -174,6 +176,12 @@ class ProductDashBoard extends Component {
                 prevPage: nextProps.productData.prevPage,
                 activePage: nextProps.productData.page,
                 products: nextProps.productData.products,
+            })
+        }
+        if (nextProps.categoriesData){
+            console.log("categoriesData:",JSON.stringify(nextProps.categoriesData))
+            this.setState({
+                cetagoriesSet: nextProps.categoriesData
             })
         }
     };
@@ -254,8 +262,9 @@ const mapStateToProps = state => {
         filterCategoires: getFilterCategories(state.customerProductData),
         filterName: getFilterName(state.customerProductData),
         filterSort: getFilterSort(state.customerProductData),
+        categoriesData: state.categories.Categories,
     };
 };
 
 
-export default connect(mapStateToProps, { getProducts })(ProductDashBoard);
+export default connect(mapStateToProps, { getProducts, fetchAllCategories })(ProductDashBoard);

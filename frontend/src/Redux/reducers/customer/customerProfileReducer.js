@@ -15,7 +15,7 @@ function customerProfileReducer(state = initialState, action) {
         case SAVE_ADDRESS_DETAILS_TO_STORE:
             return {
                 ...state,
-
+                Address: [action.payload, ...state.Address]
             }
         case SAVE_NAMEPIC_DETAILS_TO_STORE:
             return {
@@ -28,9 +28,11 @@ function customerProfileReducer(state = initialState, action) {
 
             }
         case EDIT_ADDRESS_DETAILS_TO_STORE:
-            return {
+            return  {
                 ...state,
+                Address: action.payload,
             }
+
         case UPDATE_CUSTOMER_PAYMENT:
             return update(state, {
                 Payments: {

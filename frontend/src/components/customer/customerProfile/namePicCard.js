@@ -10,6 +10,10 @@ import '../customerProfile/customerProfile.css';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import Axios from "axios";
+import { DropzoneArea, DropzoneDialog } from 'material-ui-dropzone';
+import {updateNamePic} from '../../../Redux/actions/customer/customerProfileActions';
+
+
 
 class NamePic extends Component {
     constructor(props) {
@@ -18,11 +22,14 @@ class NamePic extends Component {
         this.state = {
             name: "",
             profileURL: "",
-            profileImage: ""
+            profileImage: "",
+            open: false,
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.SubmitChange = this.SubmitChange.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
     }
 
     handleChange(e) {
@@ -30,66 +37,31 @@ class NamePic extends Component {
             [e.target.name]: e.target.value
         });
     };
+    handleClose() {
+        this.setState({
+            open: false
+        });
+    }
 
-    handleChangePic(e) {
-        const target = e.target;
-        console.log(target.files);
-        var profilePhoto = target.files[0];
-        var data = new FormData();
-        data.append("photos", profilePhoto);
-        Axios.defaults.withCredentials = true;
-        Axios
-            .post("http://localhost:3001/upload_file", data)
-            .then(response => {
-                if (response.status === 200) {
-                    console.log("Profile photo name:", profilePhoto.name);
-                    this.setState({
-                        profileURL: profilePhoto.name
-                    });
-                }
-            })
-            .catch(err => {
-                if (err) {
-                    this.setState({
-                        errorRedirect: true
-                    });
-                }
-            });
+    handleOpen() {
+        this.setState({
+            open: true,
+        });
+    }
+
+
+
+    handleChangePic = (files) => {
+        console.log(files[0]);
+        this.setState({
+            profileImage: files[0],
+            open: false
+        })
     };
 
     SubmitChange(e) {
         e.preventDefault();
-        console.log("Inside submit changes");
-        var email = this.props.loginStateStore.result.email;
-        console.log("Email ID", email);
-        //let Token=localStorage.jwtToken;
-        const user = {
-            email: email,
-            Name: this.state.name,
-            profileURL: this.state.profileURL
-        };
-        console.log("user", user);
-        Axios
-            .post("http://localhost:3001/updatenamepic", user)
-            //,{
-            //  headers: {
-            //    Authorization: Token
-            // }
-            // }
-
-            .then(response => {
-                if (response.status === 200) {
-                    console.log("inside response status 200!")
-                    var isupdated = this.state.isupdated + 1;
-                    this.setState({
-                        isupdated: isupdated
-                    });
-                    this.fetchprofiledbcall();
-                } else {
-                    console.log("error updating");
-                }
-                console.log("state", this.state.isupdated);
-            })
+       this.props.updateNamePic(this.state.name,this.state.profileImage)
     };
     componentDidMount() {
         if (this.props.NamePicData) {
@@ -100,7 +72,7 @@ class NamePic extends Component {
         }
     }
 
-    componentWillReceiveProps = (nextProps ) => {
+    componentWillReceiveProps = (nextProps) => {
         if (nextProps.NamePicData) {
             this.setState({
                 name: nextProps.NamePicData.Name,
@@ -135,10 +107,19 @@ class NamePic extends Component {
                                         </td>
                                         <td>
                                             <div className="cameraicon">
+
                                                 <CardActions>
                                                     <IconButton style={{ width: 50 }}>
-                                                        <CameraAltIcon label="profileURL" group type="file" onChange={this.handleChangePic} />
+                                                        <CameraAltIcon label="profileURL" onClick={this.handleOpen} />
                                                     </IconButton>
+                                                    <DropzoneDialog
+                                                        open={this.state.open}
+                                                        onSave={this.handleChangePic}
+                                                        acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                                                        showPreviews={true}
+                                                        maxFileSize={5000000}
+                                                        onClose={this.handleClose}
+                                                    />
                                                 </CardActions>
                                             </div>
                                         </td>
@@ -147,7 +128,7 @@ class NamePic extends Component {
                                                 <div className="customername">
                                                     <Card.Title>
                                                         <input type="text" value={this.state.name} onChange={this.SubmitChange} />
-                            
+
                                                         <IconButton style={{ width: 50 }}>
                                                             <CreateIcon onClick={this.handleChange}></CreateIcon>
                                                         </IconButton>

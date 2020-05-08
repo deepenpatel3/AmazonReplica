@@ -39,7 +39,7 @@ router.get("/fetchprofile",(req,res)=>{
                 msg:err
             }); 
         }else{
-            if(typeof results === "string"){  
+            if(typeof results === "string"){    
                 res.sendStatus(400).end();                
             }else{
                 res.code="200";
@@ -53,17 +53,19 @@ router.get("/fetchprofile",(req,res)=>{
     });
 })
 
-router.post("/updatenamepic", upload.array('photos', 5), function(req, res) {
+router.post("/updatenamepic", upload.array('photos', 1), function(req, res) {
     console.log("Inside Update Profile Post Request ");
     let UpdatedImages = []
     for (let i = 0; i < req.file.Images.length; i++) {
          UpdatedImages[i] = req.protocol + "://" + req.hostname + ':3001/' + req.file[i].path;
     }
     
-    req.body.Images = UpdatedImages
+    req.body.Image = UpdatedImages[0]
     console.log("Images Path",req.body.Images)
     const data = {
-        req : req,
+        id: req.body.id,
+        ProfileUrl: UpdatedImages[0],
+        Name: req.body.Name,
     }
 
     console.log("request body is", req.body);
@@ -95,7 +97,7 @@ router.post("/updatenamepic", upload.array('photos', 5), function(req, res) {
 router.post("/updateaddress", function(req, res) {
     console.log("Inside Update Profile Post Request ");
     console.log("request body is", req.body);
-    kafka.make_request("profile",{ "path": "address_func", "body": data }, req.body, function(err, results) {
+    kafka.make_request("profile",{ "path": "address_func", "body": req.body }, function(err, results) {
       console.log("Inside Address Update Profile ");
       console.log(typeof results);
   

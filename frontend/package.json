@@ -13,6 +13,7 @@
     "axios": "^0.19.2",
     "express": "^4.17.1",
     "jwt-decode": "^2.2.0",
+    "material-ui-dropzone": "^3.0.0",
     "material-ui-image": "^3.2.3",
     "mdbreact": "^4.26.0",
     "ng-zorro-antd": "^9.0.2",
