@@ -167,43 +167,32 @@ function get_seller_orders(msg, callback) {
 }
 
 function update_order(msg, callback) {
-    if (msg.status) {
-        let query = "update `Order` set Tracking_Status=" + msg.status + " where Order_id='" + msg.OrderID + "'";
-        mysql.executeQuery(query, function (err, result) {
-            if (err) {
-                console.log("error ", err);
-                callback(err, null);
-            } else {
-                callback(null, { success: true });
+    let query = "select Tracking_Status from `Order` where Order_id=" + msg.OrderID + "";
+    mysql.executeQuery(query, function (err, result) {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("res", result[0].Tracking_Status)
+            if (result[0].Tracking_Status === "Delivered") {
+                callback(null, { message: "Order Cannot Be Cancelled As Already Delivered" });
             }
-        })
-    } else {
-        let query = "select Tracking_Status from `Order` where Order_id=" + msg.OrderID + "";
-        mysql.executeQuery(query, function (err, result) {
-            if (err) {
-                console.log("error ", err);
-                callback(err, null);
-            } else {
-                console.log("res",result[0].Tracking_Status)
-                if(result[0].Tracking_Status === "Delivered"){
-                    callback(null, { message: "Order Cannot Be Canceled As Already Delivered" });                    
-                }
-                else{
-                    let query = "delete from `Order` where Order_id=" + msg.OrderID + "";
-                    mysql.executeQuery(query, function (err, result) {
-                        if (err) {
-                            console.log("error ", err);
-                            callback(err, null);
-                        } else {
-                            callback(null, { success: true });
-                        }
-                    })
-                }
-            }
-        })    
-    }
+            else {
+                let query = "update `Order` set Tracking_Status = '" + msg.status + "' where Order_id = '" + msg.OrderID + "'";
+                mysql.executeQuery(query, function (err, result) {
+                    if (err) {
+                        console.log("error ", err);
+                        callback(err, null);
+                    } else {
+                        callback(null, { value: "Updated Successfully" });
+                    }
+                })
 
+            }
+        }
+    })
 }
+
 function place_order(msg, callback) {
     // console.log(msg);
     Customer.findById({ _id: msg.CustomerID }, (err, customer) => {

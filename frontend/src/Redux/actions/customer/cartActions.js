@@ -42,6 +42,14 @@ export const placeOrder = (data) => dispatch => {
     })
 }
 
+export const cancelOrder = data => dispatch => {
+    
+    data.status = "Cancel"
+    axios.post(backendURL + "/orders/updateOrder" , data).then(res => {
+        console.log(res.data);
+        dispatch(getOrders({CustomerID : localStorage.getItem('id')}))
+    })
+}
 export const getOrders = (data) => dispatch => {
     console.log("Inside place Order")
     axios.get(backendURL + "/orders/?CustomerID=" + data.CustomerID).then(res => {
