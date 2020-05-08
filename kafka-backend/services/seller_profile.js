@@ -24,7 +24,7 @@ exports.serve = function serve(msg, callback) {
 function fetchprofile_seller(msg, callback) {
   var res = {};
 
-  Seller.findOne({ "user.email": msg.email },
+  Seller.findOne({ "_id": msg.sellerId },
     function (err, docs) {
       if (err) {
         console.log("Inside if : error", err);
@@ -47,7 +47,7 @@ function fetchprofile_seller(msg, callback) {
 
 function namepic_func_seller(msg, callback) {
   var res = {};
-  Seller.findOneAndUpdate({ "user.email": msg.email }, { "$set": { "user.name": msg.name, "user.profileimage": msg.profileimage } },
+  Seller.findOneAndUpdate({ "_id": msg.sellerId }, { "$set": { "user.name": msg.name, "user.profileimage": msg.profileimage } },
     function (err, user) {
       if (err) {
         res.code = "400";
@@ -69,7 +69,7 @@ function namepic_func_seller(msg, callback) {
 
 function address_func_seller(msg, callback) {
   var res = {};
-  Seller.findOneAndUpdate({ "user.email": msg.email }, { "$set": { 'user.address': msg.address } },
+  Seller.findOneAndUpdate({ "_id": msg.sellerId }, { "$set": { 'Address': msg.address } },
     function (err, user) {
       if (err) {
         res.code = "400";
