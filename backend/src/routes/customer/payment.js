@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { secret } = require("../../utils/config");
-const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
+const { auth } = require("../../utils/passport");
+const { checkCustomerAuth } = require("../../utils/passport");
+auth();
 
-router.post("/payment", (req, res) => {
+router.post("/payment", checkCustomerAuth, (req, res) => {
     console.log("inside customer payment api", req.body);
 
     let body = {
-        id : req.body.id
+        id: req.body.id
     }
     kafka.make_request('account', { "path": "customer_payment", "body": body }, function (err, result) {
         console.log('got back from kafka customer_payment');
@@ -21,7 +22,7 @@ router.post("/payment", (req, res) => {
             console.log("customer payment result- ", result);
             if (result) {
                 var payload = {
-                    result : result
+                    result: result
                 }
             }
             res.status(200)

@@ -174,21 +174,21 @@ function get_customer_orders(msg, callback) {
 
 function get_seller_orders(msg, callback) {
     console.log("msg", msg)
-    let query = "select * from `Order` where Tracking_status !='Delivered' and Tracking_Status!='Cancel' and SellerID = '" + msg.SellerID + "'";
+    let query = "select * from `Order` where Tracking_status !='Delivered' and Tracking_Status!='Cancel' and SellerID = '" + msg.SellerID + "' Order by OrderDate DESC";
     mysql.executeQuery(query, function (err, result) {
         if (err) {
             console.log("error ", err);
             callback(err, null);
         } else {
             console.log("orders ", result)
-            let query = "select * from `Order` where Tracking_status='Delivered' and SellerID = '" + msg.SellerID + "'";
+            let query = "select * from `Order` where Tracking_status='Delivered' and SellerID = '" + msg.SellerID + "' Order by OrderDate DESC";
             mysql.executeQuery(query, function (err, result1) {
                 if (err) {
                     console.log("error ", err);
                     callback(err, null);
                 } else {
                     console.log("orders ", result)
-                    let query = "select * from `Order` where Tracking_Status='Cancel' and SellerID = '" + msg.SellerID + "'";
+                    let query = "select * from `Order` where Tracking_Status='Cancel' and SellerID = '" + msg.SellerID + "' Order by OrderDate DESC";
                     mysql.executeQuery(query, function (err, result2) {
                         if (err) {
                             console.log("error ", err);
@@ -245,7 +245,7 @@ function place_order(msg, callback) {
                 await Product.find({ _id: product.ProductID }, { Seller: 1 }, (err, result) => {
                     console.log("Seller ", result);
 
-                    let query = "insert into `Order`(ProductID, CustomerID, SellerID, Price, Qty, Tracking_Status, IsGift,GiftMessage, CardNumber, CardName, Address, OrderDate, SellerName) VALUES('" + product.ProductID + "', '" + msg.CustomerID + "','" + result[0].Seller.SellerId + "','" + product.Price + "','" + product.Quantity + "','Accepted', '" + product.IsGift + "','" + product.GiftMessage + "','" + msg.CardNumber + "','" + msg.CardName + "','" + msg.Address + "','" + date + "','" + result[0].Seller.Name + "') ";
+                    let query = "insert into `Order`(ProductID, CustomerID, SellerID, Price, Qty, Tracking_Status, IsGift,GiftMessage, CardNumber, CardName, Address, OrderDate, SellerName, ProductName) VALUES('" + product.ProductID + "', '" + msg.CustomerID + "','" + result[0].Seller.SellerId + "','" + product.Price + "','" + product.Quantity + "','Accepted', '" + product.IsGift + "','" + product.GiftMessage + "','" + msg.CardNumber + "','" + msg.CardName + "','" + msg.Address + "','" + date + "','" + result[0].Seller.Name + "','" + result[0].Name + "') ";
                     mysql.executeQuery(query, function (err, result) {
                         if (err) {
                             console.log("error ", err);
@@ -253,7 +253,6 @@ function place_order(msg, callback) {
                         } else {
                             // console.log("orders ", result)
                             if (i === customer.Cart.length - 1) cb();
-
                         }
                     })
                 })
@@ -269,7 +268,6 @@ function place_order(msg, callback) {
     })
 
 }
-
 function update_rating(msg, callback) {
 
     Product.findById({ _id: msg.id }, (err, product) => {
@@ -277,28 +275,23 @@ function update_rating(msg, callback) {
             console.log("rating update error", err);
             callback(err, null);
         } else {
-            product.Count = product.Count + 1
-            console.log('Count', product.Count)
-            product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
-            console.log(" Rating ", product.Rating)
-            product.save(() => { callback(null, { rating: product.Rating }) })
-        }
-    })
-}
+            if (product.Count === undefined) {
+                product.Count = 0
+                product.save(() => { console.log("Updated") })
+                product.Count = product.Count + 1
+                console.log('Count', product.Count)
+                product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
+                console.log(" Rating ", product.Rating)
+                product.save(() => { callback(null, { rating: product.Rating }) })
+            }
+            else {
+                product.Count = product.Count + 1
+                console.log('Count', product.Count)
+                product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
+                console.log(" Rating ", product.Rating)
+                product.save(() => { callback(null, { rating: product.Rating }) })
+            }
 
-
-function update_rating(msg, callback) {
-
-    Product.findById({ _id: msg.id }, (err, product) => {
-        if (err) {
-            console.log("rating update error", err);
-            callback(err, null);
-        } else {
-            product.Count = product.Count + 1
-            console.log('Count', product.Count)
-            product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
-            console.log(" Rating ", product.Rating)
-            product.save(() => { callback(null, { rating: product.Rating }) })
         }
     })
 }

@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { secret } = require("../../utils/config");
-const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
+const { auth } = require("../../utils/passport");
+const { checkCustomerAuth, checkAllAuth } = require("../../utils/passport");
+auth();
 
-router.get("/reviews", function (req, res) {
-    if(req.query.product_id){
+router.get("/reviews", checkAllAuth, function (req, res) {
+    if (req.query.product_id) {
         const data = {
             ProductID: req.query.product_id,
         }
@@ -29,7 +30,7 @@ router.get("/reviews", function (req, res) {
             }
         });
     }
-    else if(req.query.customer_id){
+    else if (req.query.customer_id) {
         const data = {
             CustomerID: req.query.customer_id,
         }
@@ -53,12 +54,12 @@ router.get("/reviews", function (req, res) {
             }
         });
     }
-    
+
 });
 
-router.post("/addReview", function (req, res) {
+router.post("/addReview", checkCustomerAuth, function (req, res) {
     const data = {
-        req : req.body
+        req: req.body
     }
     console.log("addReview: ",JSON.stringify(data));
     kafka.make_request('review', { "path": "add_review", "body": data }, function (err, result) {

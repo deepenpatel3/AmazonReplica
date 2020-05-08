@@ -1,24 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const { secret } = require("../../utils/config");
-const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
 // const Product = require('../../models/productModel');
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
+const { auth } = require("../../utils/passport");
+const { checkAllAuth, checkCustomerAuth } = require("../../utils/passport");
+auth();
 
 redisClient.on("error", (err) => {
     console.log(err)
 });
 
-router.post("/products", function (req, res) {
+router.post("/products", checkAllAuth, function (req, res) {
     const data = {
         page: req.body.page,
         limit: req.body.limit,
         name: req.body.name,
         Categories: req.body.Categories,
         SellerId: req.body.SellerId,
-        sort: req.body.sort, 
+        sort: req.body.sort,
     }
 
     // console.log("Data: ", JSON.stringify(data));
@@ -81,12 +82,12 @@ router.post("/products", function (req, res) {
     // }
 })
 
-router.post("/updateRating", function (req, res) {
+router.post("/updateRating", checkCustomerAuth, function (req, res) {
     const data = {
         id: req.body.id,
         Rating: req.body.Rating
     }
-    console.log("updateRating: ",JSON.stringify(data));
+    console.log("updateRating: ", JSON.stringify(data));
     kafka.make_request('product', { "path": "update_rating", "body": data }, function (err, result) {
         if (!result) {
             console.log("Inside err");
@@ -101,13 +102,13 @@ router.post("/updateRating", function (req, res) {
             // console.log("Data:", JSON.stringify(results));
             res.status(200);
             res.json(result)
-            res.end(); 
+            res.end();
             return;
         }
     });
 });
 
-router.post("/particularProduct", function (req, res) {
+router.post("/particularProduct", checkAllAuth, function (req, res) {
     const data = {
         id: req.body.id
     }
