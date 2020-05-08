@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import { Bar } from 'react-chartjs-2';
+import { backendURL } from "../../../config";
 
 class SellerSalesGraph extends Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class SellerSalesGraph extends Component {
     }
     Axios.defaults.withCredentials = true;
     Axios
-      .get("http://localhost:3001/admin/analytics/top_5_sellers", data)
+      .get(backendURL + "/admin/analytics/top_5_sellers", data)
       .then(response => {
         if (response.status === 200) {
           console.log("Top 10 sellers as an array: ", response.data['top_10_sellers'])

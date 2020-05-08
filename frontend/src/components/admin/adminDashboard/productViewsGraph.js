@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import { Bar } from 'react-chartjs-2';
+import { backendURL } from "../../../config";
 
 class ProductViewsGraph extends Component {
     constructor(props) {
@@ -22,7 +23,7 @@ class ProductViewsGraph extends Component {
         console.log("Body of the product views request: ", data)
         Axios.defaults.withCredentials = true;
         Axios
-            .get("http://localhost:3001/admin/analytics/top_10_viewed_products", data)
+            .get(backendURL + "/admin/analytics/top_10_viewed_products", data)
             .then(response => {
                 if (response.status === 200) {
                     console.log("Products views: ", response.data)

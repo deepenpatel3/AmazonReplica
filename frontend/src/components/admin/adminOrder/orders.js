@@ -3,6 +3,8 @@ import Navbar from '../navbar/navbar';
 import Select from '@material-ui/core/Select';
 import Axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
+import { backendURL } from "../../../config";
+
 class AdminOrders extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +19,7 @@ class AdminOrders extends Component {
     }
 
     getAllOrders() {
-        Axios.post("http://localhost:3001/admin/orders/listOfOrders")
+        Axios.post(backendURL + "/admin/orders/listOfOrders")
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
@@ -41,7 +43,7 @@ class AdminOrders extends Component {
         const data = {
             name: this.state.currentSellerName
         }
-        Axios.post("http://localhost:3001/admin/orders/listOfOrders", data)
+        Axios.post(backendURL + "/admin/orders/listOfOrders", data)
             .then(response => {
                 if (response.status === 200) {
                     this.setState({

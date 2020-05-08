@@ -3,6 +3,7 @@ import Navbar from '../navbar/navbar';
 import ReactPaginate from 'react-paginate';
 import Axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
+import { backendURL } from "../../../config";
 
 class AdminSellers extends Component {
     constructor(props) {
@@ -52,7 +53,7 @@ class AdminSellers extends Component {
 
     retrieveSellers() {
         Axios
-            .post('http://localhost:3001/admin/seller')
+            .post(backendURL + '/admin/seller')
             .then(response => {
                 this.setState({
                     sellers: response.data
@@ -101,7 +102,7 @@ class AdminSellers extends Component {
             "message": "sales",
             "ID": event.target.id
         }
-        Axios.post("http://localhost:3001/admin/seller/", data)
+        Axios.post(backendURL + "/admin/seller/", data)
             .then(response => {
                 if (response.status === 200 && response.data[0]) {
                     alert(`This seller has monthly sales of: ${response.data[0].Sales}`)
@@ -115,7 +116,7 @@ class AdminSellers extends Component {
         const data = {
             sellerID: event.target.id
         }
-        Axios.post("http://localhost:3001/admin/seller", data)
+        Axios.post(backendURL + "/admin/seller", data)
             .then(response => {
                 console.log("After getting particular seller: ", response.data)
                 if (response.status === 200) {
@@ -131,7 +132,7 @@ class AdminSellers extends Component {
 
     async componentDidMount() {
 
-        Axios.post("http://localhost:3001/admin/seller")
+        Axios.post(backendURL + "/admin/seller")
             .then(response => {
                 console.log(response.data)
                 if (response.status === 200) {

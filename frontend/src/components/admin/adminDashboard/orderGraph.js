@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import { Bar, Pie } from 'react-chartjs-2';
+import { backendURL } from "../../../config";
 
 class OrderGraph extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class OrderGraph extends Component {
     }
     Axios.defaults.withCredentials = true;
     Axios
-      .get("http://localhost:3001/admin/analytics/orders_per_day", data)
+      .get(backendURL + "/admin/analytics/orders_per_day", data)
       .then(response => {
         if (response.status === 200) {
           console.log("response data is: ", response.data)

@@ -6,6 +6,7 @@ import Select from '@material-ui/core/Select';
 import Axios from 'axios';
 import { backendURL } from '../../../config';
 import { Redirect } from 'react-router-dom';
+import { backendURL } from "../../../config";
 class AdminInventory extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +30,7 @@ class AdminInventory extends Component {
 
     componentDidMount() {
         console.log("Component did mount called. axios call should go")
-        Axios.get("http://localhost:3001/admin/category/getCategory")
+        Axios.get(backendURL + "/admin/category/getCategory")
             .then(response => {
                 console.log(" Getting categories: ", response.data)
                 if (response.status === 200) {
@@ -42,7 +43,7 @@ class AdminInventory extends Component {
             .catch(err => {
                 console.log("Error while getting categories is: ", err)
             })
-        Axios.post("http://localhost:3001/admin/category/getProducts")
+        Axios.post(backendURL + "/admin/category/getProducts")
             .then(response => {
                 console.log(response.data)
                 if (response.status === 200) {
@@ -77,7 +78,7 @@ class AdminInventory extends Component {
             Category: this.state.categoryName
         };
         Axios
-            .post("http://localhost:3001/admin/category/addCategory", data)
+            .post(backendURL + "/admin/category/addCategory", data)
             .then(response => {
                 if (response.status === 200) {
                     // this.setState({
@@ -85,7 +86,7 @@ class AdminInventory extends Component {
                     //     submitted: true
                     // });
                     // console.log(response.data);
-                    Axios.get("http://localhost:3001/admin/category/getCategory")
+                    Axios.get(backendURL + "/admin/category/getCategory")
                         .then(response => {
                             if (response.status === 200) {
                                 this.setState({
@@ -120,12 +121,12 @@ class AdminInventory extends Component {
         }
 
         Axios
-            .post("http://localhost:3001/admin/category/removeCategory", data)
+            .post(backendURL + "/admin/category/removeCategory", data)
             .then(response => {
                 console.log(response.data);
                 if (response.status === 200) {
                     //  alert("Category removed")
-                    Axios.get("http://localhost:3001/admin/category/getCategory")
+                    Axios.get(backendURL + "/admin/category/getCategory")
                         .then(response => {
                             if (response.status === 200) {
                                 this.setState({
