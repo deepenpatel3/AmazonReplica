@@ -8,6 +8,7 @@ import customerReviewReducer from "./customer/reviewReducer";
 import sellerProductReducer from "./seller/productReducer";
 import cartReducer from "./customer/cartReducer";
 import customerProfileReducer from "./customer/customerProfileReducer";
+import selleProfileReducer from './seller/sellerProfileReducer';
 import categoriesReducer from './admin/categoriesReducer';
 
 import storage from 'redux-persist/lib/storage';
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     cart : cartReducer,
     sellerProductData: sellerProductReducer,
     customerProfile: customerProfileReducer,
+    sellerProfile: selleProfileReducer,
     categories: categoriesReducer,
 })
 

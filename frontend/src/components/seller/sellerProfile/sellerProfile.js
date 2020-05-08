@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import '../sellerProfile/sellerProfile.css';
 import Navbar from "../../seller/navbar/navbar";
 import NamePic from "../sellerProfile/namePicCard";
+import { connect } from "react-redux";
 import Address from "../sellerProfile/addressCard";
+import {fetchSellerProfile} from '../../../Redux/actions/seller/sellerProfileActions';
 
 class SellerProfile extends Component {
     constructor(props) {
@@ -14,6 +16,10 @@ class SellerProfile extends Component {
     //  this.changePic= this.changePic.bind(this);
     // this.changeName= this.changeName.bind(this);
     }
+
+    componentWillMount = () => {
+        this.props.fetchSellerProfile(localStorage.getItem("id"));
+    }
   
     render() {
         let alertElement = null, redirectVar = null;
@@ -23,7 +29,6 @@ class SellerProfile extends Component {
             alertElement = <p className="alert alert-danger" role="alert">{this.props.message}</p>
         return (
             <div>
-            <Navbar/>
             <div className="container">
            
                 {redirectVar}
@@ -70,5 +75,8 @@ class SellerProfile extends Component {
         )
     }
 }
+const mapStateToProps = state => ({
+    sellerProfileData: state.sellerProfile
+});
 
-export default SellerProfile;
+export default connect(mapStateToProps, {fetchSellerProfile})(SellerProfile);
