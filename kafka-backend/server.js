@@ -5,7 +5,6 @@ var topicsToCreate = require('./topics/topic');
 const account = require("./services/account");
 const product = require("./services/product");
 const review = require("./services/review");
-const profile = require("./services/profile");
 const analytics = require("./services/analytics")
 const seller_profile = require("./services/seller_profile")
 const customerProfile = require("./services/profile");

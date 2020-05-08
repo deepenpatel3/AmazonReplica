@@ -10,6 +10,9 @@ var path = require('path');
 var app = express();
 const dotenv = require('dotenv');
 dotenv.config();
+const { auth } = require("../../utils/passport");
+const { checkSellrAuth, checkAllAuth } = require("../../Utils/passport");
+auth();
 
 const bucket = "ouramazonbucket1";
 
@@ -33,7 +36,10 @@ const upload = multer({
     }),
 }).array('Images', 5);
 
-router.post("/addProduct", function (req, res) {
+router.post("/addProduct", checkSellrAuth, function (req, res) {
+
+
+
     let UpdatedImages = []
     // console.log("req.body", req.data)
     // console.log("req.file", req.file);
@@ -50,7 +56,7 @@ router.post("/addProduct", function (req, res) {
             }
             console.log("updated imgages: ", UpdatedImages);
             // req.body.Images = UpdatedImages
-            
+
             var product = JSON.parse(req.body.Product);
             const data = {
                 Name: product.Name,
@@ -62,7 +68,7 @@ router.post("/addProduct", function (req, res) {
                 SellerId: product.SellerId,
                 SellerName: product.SellerName
             }
-            console.log("Data: ",JSON.stringify(data));
+            console.log("Data: ", JSON.stringify(data));
             kafka.make_request('product', { "path": "add_seller_product", "body": data }, function (err, result) {
                 if (!result) {
                     console.log("Inside err");
@@ -86,7 +92,7 @@ router.post("/addProduct", function (req, res) {
 
 });
 
-router.post("/updateProduct", function (req, res) {
+router.post("/updateProduct", checkSellrAuth, function (req, res) {
     const data = {
         req: req.body
     }
@@ -111,11 +117,11 @@ router.post("/updateProduct", function (req, res) {
     });
 });
 
-router.post("/deleteProduct", function (req, res) {
+router.post("/deleteProduct", checkAllAuth, function (req, res) {
     const data = {
         _id: req.body.product_id
     }
-    console.log("deleteProduct: ",JSON.stringify(data));
+    console.log("deleteProduct: ", JSON.stringify(data));
     kafka.make_request('product', { "path": "delete_seller_product", "body": data }, function (err, result) {
         if (!result) {
             console.log("Inside err");

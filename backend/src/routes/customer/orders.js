@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const kafka = require("../../../kafka/client");
+const { auth } = require("../../utils/passport");
+const { checkAllAuth, checkCustomerAuth } = require("../../Utils/passport");
+auth();
 
 router.get("/", function (req, res) {
 
@@ -49,7 +52,7 @@ router.get("/", function (req, res) {
     }
 });
 
-router.post("/placeOrder", (req, res) => {
+router.post("/placeOrder", checkCustomerAuth, (req, res) => {
 
     kafka.make_request('product', { "path": "place_order", "body": req.body }, function (err, result) {
         console.log("got back from place order kafka");
@@ -69,7 +72,7 @@ router.post("/placeOrder", (req, res) => {
     });
 })
 
-router.post("/updateOrder", (req, res) => {
+router.post("/updateOrder", checkAllAuth, (req, res) => {
 
     kafka.make_request('product', { "path": "update_order", "body": req.body }, function (err, result) {
         console.log("got back from update order kafka");
