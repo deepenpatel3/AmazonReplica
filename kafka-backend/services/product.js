@@ -56,11 +56,23 @@ exports.serve = function serve(msg, callback) {
         case "change_status":
             changeStatus(msg.body, callback);
             break;
-
+        case "get_category":
+            get_category(msg, callback);
+            break;
 
     }
 }
 
+function get_category(msg, callback) {
+    Category.find({}, (err, result) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            callback(null, result);
+        }
+    })
+}
 function get_category_products(msg, callback) {
     Product.find({ Categories: msg.Category }, { "Seller.Name": 1, Price: 1 }, (err, products) => {
         if (err) {
@@ -151,7 +163,7 @@ function get_customer_orders(msg, callback) {
                             callback(err, null);
                         } else {
                             console.log("orders ", result)
-                            callback(null, { OpenOrders: result, DeliveredOrders : result1, CancelledOrders : result2 });
+                            callback(null, { OpenOrders: result, DeliveredOrders: result1, CancelledOrders: result2 });
                         }
                     })
                 }
@@ -183,7 +195,7 @@ function get_seller_orders(msg, callback) {
                             callback(err, null);
                         } else {
                             console.log("orders ", result)
-                            callback(null, { OpenOrders: result, DeliveredOrders : result1, CancelledOrders : result2 });
+                            callback(null, { OpenOrders: result, DeliveredOrders: result1, CancelledOrders: result2 });
                         }
                     })
                 }
