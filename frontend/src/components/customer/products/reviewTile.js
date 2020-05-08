@@ -47,7 +47,7 @@ class ReviewTile extends Component {
 
 
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps.Review: ", JSON.stringify(nextProps.Review));
+        // console.log("nextProps.Review: ", JSON.stringify(nextProps.Review));
         if (nextProps.Review) {
             this.setState({
                 ProductID: nextProps.Review.ProductID,
@@ -59,7 +59,6 @@ class ReviewTile extends Component {
             })
         }
     };
-
 
     render() {
         return (

@@ -7,6 +7,8 @@ import customerProductReducer from "./customer/productReducer";
 import customerReviewReducer from "./customer/reviewReducer";
 import sellerProductReducer from "./seller/productReducer";
 import cartReducer from "./customer/cartReducer";
+import customerProfileReducer from "./customer/customerProfileReducer";
+import categoriesReducer from './admin/categoriesReducer';
 
 import storage from 'redux-persist/lib/storage';
 
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
     customerReviewData: customerReviewReducer,
     cart : cartReducer,
     sellerProductData: sellerProductReducer,
+    customerProfile: customerProfileReducer,
+    categories: categoriesReducer,
 })
 
 
@@ -33,5 +37,5 @@ const allReducers = (state, action) => {
     // }
     return rootReducer(state, action);
 };
-export default allReducers;
+export default rootReducer;
 // export default rootReducer;

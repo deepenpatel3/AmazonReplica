@@ -28,7 +28,8 @@ router.post("/signIn", (req, res) => {
                     id: result.id,
                     name: result.name,
                     message: result.message,
-                    role: result.role
+                    role: result.role,
+                    profileUrl: result.profileUrl,
                 }
             }
             else {

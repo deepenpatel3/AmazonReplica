@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import Navbar from '../navbar/navbar'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getCart , updateCart } from '../../../Redux/actions/customer/cartActions';
+import { getCart, updateCart } from '../../../Redux/actions/customer/cartActions';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Row, Form, Col } from "react-bootstrap";
 
 class Cart extends Component {
     constructor(props) {
@@ -209,15 +210,15 @@ class Cart extends Component {
                 return (
                     <div className="card" style={{ marginBottom: "2%" }} key={i}>
                         <div className="row" style={{ padding: "2%" }}>
-                            <div className="col-md-2">
-                                <img src={elem.ProductID.Images[0]} width="150px" height="150px" alt="Oops "></img>
+                            <div className="col-md-3">
+                                <img src={elem.ProductID.Images[0]} width="90%" height="90%" alt="Oops "></img>
                             </div>
-                            <div className="col-md-9">
+                            <div className="col-md-7">
                                 <Link to={"/customer/productDetails/" + elem.ProductID._id}>{elem.ProductID.Name} </Link><br />
                                 Shipped from : <Link to="/customer/home">{elem.ProductID.Seller.Name}</Link> <br />
                                 Gift Option :
                                 <form className="form-inline">
-                                    <div className="form-check-inline" style={{ marginLeft: "5%" }}>
+                                    <div className="form-check-inline" >
                                         <input className="form-check-input" onClick={(e) => this.updateGift(e, i)} type="checkbox" name="IsGift" id={"defaultCheck1" + i} defaultChecked={elem.IsGift} />
                                         <label style={{ display: "block" }} id="GiftMessage" className="form-check-label">
                                             Gift pack
@@ -252,12 +253,19 @@ class Cart extends Component {
                                     </div>
                                 </form>
 
-                                <button className="btn btn-light" onClick = {()=>{this.savetoLater(i)}}>Save for later</button>
-                                <button className="btn btn-light float-right" onClick = {()=>{this.deleteFromCart(i)}}><DeleteIcon color="secondary" /></button>
-                            </div> 
+                                <button className="btn btn-light" onClick={() => { this.savetoLater(i) }}>Save for later</button>
 
-                            <div className="col-md-1">
-                                <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
+                            </div>
+
+                            <div className="col-md-2">
+                                <div style={{ float: "right", paddingRight: "15%" }}>
+                                    <Row>
+                                        <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
+                                    </Row>
+                                    <Row>
+                                        <button className="btn btn-light float-right" onClick={() => { this.deleteFromCart(i) }}><DeleteIcon color="secondary" /></button>
+                                    </Row>
+                                </div>
                             </div>
                         </div>
                         <div className="row" style={{ marginRight: "2%" }}>
@@ -278,21 +286,48 @@ class Cart extends Component {
                         <div className="row" style={{ padding: "2%" }}>
 
 
-                            <div className="col-md-2">
-                                <img src={elem.ProductID.Images[0]} width="150px" height="150px" alt="Oops "></img>
+                            <div className="col-md-3">
+                                <img src={elem.ProductID.Images[0]} width="90%" height="90%" alt="Oops "></img>
                             </div>
-                            <div className="col-md-9">
+                            <div className="col-md-7">
                                 <Link to={"/customer/productDetails/" + elem.ProductID._id}>{elem.ProductID.Name} </Link><br />
                             Shipped from : <Link to="/customer/home">{elem.ProductID.Seller.Name}</Link> <br />
                             Gift Option :
                                 <form className="form-inline">
-                                    <div className="form-check-inline" style={{ marginLeft: "5%" }}>
+                                    <div className="form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="IsGift" id="defaultCheck1" defaultChecked={elem.IsGift} />
                                         <label className="form-check-label" >
                                             Gift pack
                                      </label>
                                     </div>
-                                    <div className="form-group mx-sm-3 mb-2">
+                                </form>
+                                {/* <Form.Row>
+                                    <Form.Group as={Col} controlId="employer">
+                                        <Form.Label className="signup-form-lable"> Gift Message</Form.Label>
+                                       <input
+                                            type="text"
+                                            className="form-control"
+                                            onChange={this.changeHandler}
+                                            name="ItemQuantity"
+                                            placeholder="Gift message"
+                                            defaultValue={elem.GiftMessage}
+                                        /> 
+                                    </Form.Group>
+                                </Form.Row>
+                                <Form.Row>
+                                    <Form.Group as={Col} controlId="employer">
+                                        <Form.Label className="signup-form-lable"> Quantity</Form.Label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            onChange={(e) => this.updateQtySave(e, i)}
+                                            name="ItemQuantity"
+                                            placeholder="Qty"
+                                            defaultValue={elem.Quantity}
+                                        />
+                                    </Form.Group>
+                                </Form.Row> */}
+                                {/* <div className="form-group mx-sm-3 mb-2">
                                         <label className="sr-only">Quantity</label>
                                         <input
                                             type="text"
@@ -302,8 +337,7 @@ class Cart extends Component {
                                             placeholder="Gift message"
                                             defaultValue={elem.GiftMessage}
                                         />
-                                    </div>
-                                </form>
+                                    </div> */}
 
                                 <form className="form-inline">
                                     <div className="form-group mx-sm-3 mb-2">
@@ -317,13 +351,19 @@ class Cart extends Component {
                                             defaultValue={elem.Quantity}
                                         />
                                     </div>
-                                </form>
+                                </form> 
                                 <button className="btn btn-warning" onClick={() => this.addToCart(i)}>Add to Cart</button>
 
-                                <button className="btn btn-light float-right" onClick = {()=>{this.deleteFromSave(i)}}><DeleteIcon color="secondary"/></button>
                             </div>
-                            <div className="col-md-1">
-                                <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
+                            <div className="col-md-2">
+                                <div style={{ float: "right", paddingRight: "15%" }}>
+                                    <Row>
+                                        <span className="text-danger">${Number.parseFloat(elem.Price).toFixed(2)}<br /></span>
+                                    </Row>
+                                    <Row>
+                                        <button className="btn btn-light float-right" onClick={() => { this.deleteFromSave(i) }}><DeleteIcon color="secondary" /></button>
+                                    </Row>
+                                </div>
                             </div>
                         </div>
                         <div className="row" style={{ marginRight: "2%" }}>
@@ -340,7 +380,6 @@ class Cart extends Component {
 
         return (
             <div>
-                {/* <Navbar /> */}
                 {/* CART : {JSON.stringify(this.state.cart)}<br />
                 SAVE FOR LATER : {JSON.stringify(this.state.saveForLater)}<br /> */}
                 <div className="card float-right" style={{ padding: "2%", marginTop: "6%", marginRight: "2%" }}>
@@ -359,16 +398,22 @@ class Cart extends Component {
                             {/* {JSON.stringify(this.state.cart)} */}
                         </div>
                     </div>
-                    <div className="row" style={{ marginTop: "1%", marginBottom: "1%" }}>
-                        <div className="col-md-12 text-center">
-                            <h5>FINAL PRICE : ${Number.parseFloat(this.state.finalPrice).toFixed(2)}</h5>
+
+                    {this.state.finalPrice != 0.00 &&
+                        <div>
+                            <div className="row" style={{ marginTop: "1%", marginBottom: "1%" }}>
+                                <div className="col-md-12 text-center">
+                                    <h5>FINAL PRICE : ${Number.parseFloat(this.state.finalPrice).toFixed(2)}</h5>
+                                </div>
+                            </div>
+                            <div className="row" style={{ marginBottom: "2%" }}>
+                                <div className="col-md-12 text-center">
+                                    <Link className="btn btn-warning" to="/customer/payment" >Proceed To Checkout</Link>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row" style={{ marginBottom: "2%" }}>
-                        <div className="col-md-12 text-center">
-                            <Link className="btn btn-warning" to="/customer/payment" >Proceed To Checkout</Link>
-                        </div>
-                    </div>
+                    }
+
                     <div className="row">
                         <div className="col-md-12" style={{ padding: "1%" }}>
                             <h5>Saved For Later({this.state.saveForLater.length})</h5>
@@ -382,7 +427,7 @@ class Cart extends Component {
                     </div>
 
                 </div>
-                </div>
+            </div>
         )
     }
 }

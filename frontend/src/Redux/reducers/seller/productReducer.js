@@ -1,9 +1,11 @@
-import { SELLER_GET_PRODUCTS, SELLER_ADD_PRODUCT, SELLER_UPDATE_PRODUCT , SELLER_GET_ORDERS} from '../../constants/action-types';
+import { SELLER_GET_PRODUCTS, SELLER_ADD_PRODUCT, SELLER_UPDATE_PRODUCT ,SELLER_DELETE_PRODUCT, SELLER_GET_ORDERS} from '../../constants/action-types';
+
 import update from 'react-addons-update';
 
 const initialState = {
     name : "",
-    categories : []
+    categories : [],
+    sort : ""
 };
 
 const sellerProductReducer = (state = initialState, action) => {
@@ -24,7 +26,8 @@ const sellerProductReducer = (state = initialState, action) => {
                 prevPage: action.payload.prevPage,
                 nextPage: action.payload.nextPage,
                 name : action.payload.name,
-                categories : action.payload.categories
+                categories : action.payload.categories,
+                sort : action.payload.sort,
             }
         case SELLER_ADD_PRODUCT:
 
@@ -45,6 +48,14 @@ const sellerProductReducer = (state = initialState, action) => {
                 CancelledOrders : action.payload.CancelledOrders,
                 DeliveredOrders : action.payload.Delivered
             }
+        case SELLER_DELETE_PRODUCT:
+            return {
+                ...state,
+                products: [
+                    ...state.products.slice(0, action.payload),
+                    ...state.products.slice(action.payload + 1)
+                ]
+            }            
         default:
             return state;
     }

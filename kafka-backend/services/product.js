@@ -15,13 +15,13 @@ exports.serve = function serve(msg, callback) {
             get_all_product(msg.body, callback)
             break;
         case "add_seller_product":
-            add_seller_product(msg, callback)
+            add_seller_product(msg, callback) 
             break;
         case "update_seller_product":
             update_seller_product(msg.body.req, callback)
             break;
         case "delete_seller_product":
-            delete_seller_product(msg.body.req, callback)
+            delete_seller_product(msg.body, callback)
             break;
         case "update_rating":
             update_rating(msg.body, callback)
@@ -56,11 +56,23 @@ exports.serve = function serve(msg, callback) {
         case "change_status":
             changeStatus(msg.body, callback);
             break;
-
+        case "get_category":
+            get_category(msg, callback);
+            break;
 
     }
 }
 
+function get_category(msg, callback) {
+    Category.find({}, (err, result) => {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            callback(null, result);
+        }
+    })
+}
 function get_category_products(msg, callback) {
     Product.find({ Categories: msg.Category }, { "Seller.Name": 1, Price: 1 }, (err, products) => {
         if (err) {
@@ -85,8 +97,18 @@ function add_category(msg, callback) {
                 })
                 newCategory.save(() => { callback(null, true) });
             } else {
-                category.Categories.push(msg.Category);
-                category.save(() => { callback(null, true) });
+                let flag = true;
+                category.Categories.forEach((row, i) => {
+                    if (row === msg.Category) {
+                        console.log("cant add");
+                        flag = false;
+                        callback(err, null);
+                    } else if (i === category.Categories.length - 1 && flag === true) {
+                        console.log("adding category")
+                        category.Categories.push(msg.Category);
+                        category.save(() => { callback(null, true) });
+                    }
+                })
             }
         }
     })
@@ -141,7 +163,7 @@ function get_customer_orders(msg, callback) {
                             callback(err, null);
                         } else {
                             console.log("orders ", result)
-                            callback(null, { OpenOrders: result, DeliveredOrders : result1, CancelledOrders : result2 });
+                            callback(null, { OpenOrders: result, DeliveredOrders: result1, CancelledOrders: result2 });
                         }
                     })
                 }
@@ -173,7 +195,7 @@ function get_seller_orders(msg, callback) {
                             callback(err, null);
                         } else {
                             console.log("orders ", result)
-                            callback(null, { OpenOrders: result, DeliveredOrders : result1, CancelledOrders : result2 });
+                            callback(null, { OpenOrders: result, DeliveredOrders: result1, CancelledOrders: result2 });
                         }
                     })
                 }
@@ -341,7 +363,7 @@ function delete_seller_product(msg, callback) {
         .then(result => {
             console.log("result", result)
             callback(null, { value: true })
-        })
+        })    
         .catch(err => {
             console.log("ERROR : " + err)
             callback(err, null)

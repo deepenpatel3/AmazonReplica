@@ -11,8 +11,9 @@ import Navbar from '../navbar/navbar';
 import ProductTile from './productTile';
 import ProductDetailsDashBoard from './productDetailsDashBoard';
 import Typography from '@material-ui/core/Typography';
-import { getFilterCategories, getFilterName } from '../../../Redux/selectors/customer/selector';
+import { getFilterCategories, getFilterName, getFilterSort } from '../../../Redux/selectors/customer/selector';
 import { getProducts } from '../../../Redux/actions/customer/productActions';
+import {fetchAllCategories} from './../../../Redux/actions/admin/categoriesActions';
 
 const Styles = styled.div`
     .product-filter-bar{
@@ -51,7 +52,7 @@ class ProductDashBoard extends Component {
             totalDocs: null,
             ProductDetailsView: false,
             SelectedProduct: null,
-            cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
+            cetagoriesSet: ["",],
             SelectedCetagories: [],
             filterCategoires: [],
         }
@@ -65,7 +66,8 @@ class ProductDashBoard extends Component {
 
     handlePageNext = (e) => {
         e.preventDefault();
-        this.props.getProducts(this.props.productData, this.state.nextPage, this.state.limit);
+        this.props.getProducts(this.props.productData, this.state.nextPage, this.state.limit,
+            this.props.filterName, this.props.filterCategoires, this.filterSort);
     }
 
     onProductCardListner = (id) => {
@@ -122,8 +124,9 @@ class ProductDashBoard extends Component {
             }
 
         }
-        this.props.getProducts(this.props.productData, 1, this.state.limit, this.props.filterName, this.state.filterCategoires);
-        console.log("filterCategoires: ",JSON.stringify(this.state.filterCategoires));
+        this.props.getProducts(this.props.productData, 1, this.state.limit,
+             this.props.filterName, this.state.filterCategoires, this.props.filterSort);
+        // console.log("filterCategoires: ",JSON.stringify(this.state.filterCategoires));
     }
 
     isCategoryInFilter = (category) => {
@@ -135,9 +138,17 @@ class ProductDashBoard extends Component {
         return false
     }
 
-    componentDidMount() {
+    onSortinOptionsChangeListner = (e) => {
+        // console.log("value: ",e.target.value);
+        this.props.getProducts(this.props.productData, 1, this.state.limit,
+            this.props.filterName, this.state.filterCategoires, e.target.value);
+    }
+
+    componentWillMount() {
         // this.props.getProducts(this.props.productData, 1, this.state.limit);
-        this.props.getProducts(this.props.productData, 1, this.state.limit, this.props.filterName, this.props.filterCategoires);
+        this.props.fetchAllCategories();
+        this.props.getProducts(this.props.productData, 1, this.state.limit, 
+            this.props.filterName, this.props.filterCategoires, this.props.filterSort);
         if (!this.props.productData) {
             this.setState({
                 products: this.props.productData.products
@@ -165,6 +176,12 @@ class ProductDashBoard extends Component {
                 prevPage: nextProps.productData.prevPage,
                 activePage: nextProps.productData.page,
                 products: nextProps.productData.products,
+            })
+        }
+        if (nextProps.categoriesData){
+            console.log("categoriesData:",JSON.stringify(nextProps.categoriesData))
+            this.setState({
+                cetagoriesSet: nextProps.categoriesData
             })
         }
     };
@@ -208,11 +225,11 @@ class ProductDashBoard extends Component {
                                         Sorted By
                                      </Typography>
                                 </Row>
-                                <Form.Control as="select">
-                                    <option>None</option>
-                                    <option>Price: Low to High</option>
-                                    <option>Price: High to Low</option>
-                                    <option>Rating</option>
+                                <Form.Control as="select" onChange={this.onSortinOptionsChangeListner}>
+                                    <option value={""}>None</option>
+                                    <option value={"Price"}>Price: Low to High</option>
+                                    <option value={"-Price"}>Price: High to Low</option>
+                                    <option value={"-Rating"}>Rating</option>
                                 </Form.Control>
                             </div>
                         </Col>
@@ -244,8 +261,10 @@ const mapStateToProps = state => {
         productData: state.customerProductData,
         filterCategoires: getFilterCategories(state.customerProductData),
         filterName: getFilterName(state.customerProductData),
+        filterSort: getFilterSort(state.customerProductData),
+        categoriesData: state.categories.Categories,
     };
 };
 
 
-export default connect(mapStateToProps, { getProducts })(ProductDashBoard);
+export default connect(mapStateToProps, { getProducts, fetchAllCategories })(ProductDashBoard);

@@ -52,4 +52,21 @@ router.get("/getProducts", (req, res) => {
         }
     });
 })
+
+router.get("/getCategory", (req, res) => {
+
+    kafka.make_request('product', { "path": "get_category", "body": req.query }, function (err, result) {
+        console.log("got back from get_category kafka");
+        if (!result) {
+            console.log("err ", err);
+            res.end();
+        } else {
+            // console.log("result ", result);
+            res.status(200);
+            res.json(result);
+            res.end();
+        }
+    });
+})
+
 module.exports = router;
