@@ -129,76 +129,96 @@ function remove_category(msg, callback) {
 }
 
 function get_customer_orders(msg, callback) {
-    let query = "select * from `Order` where CustomerID='" + msg.CustomerID + "'";
-    mysql.executeQuery(query, function (err, result) {
-        if (err) {
-            console.log("error ", err);
-            callback(err, null);
-        } else {
-            // console.log("orders ", result);
-            result.forEach((order, i) => {
-                Product.findOne({ _id: order.ProductID }, { Name: 1 }, (err, productName) => {
-                    if (err) {
-                        console.log("error ", err);
-                        callback(err, null);
-                    } else {
-                        order.productName = productName.Name;
-                        Seller.findOne({ _id: order.SellerID }, { Name: 1 }, (err, sellerName) => {
-                            if (err) {
-                                console.log("error ", err);
-                                callback(err, null);
-                            } else {
-                                order.sellerName = sellerName.Name;
-
-                                if (i === result.length - 1)
-                                    callback(null, result)
-                            }
-                        })
-                    }
-                })
-            })
-            // callback(null, { orders: result });
-        }
-    })
-}
-
-function get_seller_orders(msg, callback) {
-    let query = "select * from `Order` where SellerID=" + msg.SellerID + "";
+    console.log("msg", msg)
+    let query = "select * from `Order` where Tracking_status !='Delivered' and Tracking_Status!='Cancel' and CustomerID = '" + msg.CustomerID + "'";
     mysql.executeQuery(query, function (err, result) {
         if (err) {
             console.log("error ", err);
             callback(err, null);
         } else {
             console.log("orders ", result)
-            callback(null, { orders: result });
+            let query = "select * from `Order` where Tracking_status='Delivered' and CustomerID = '" + msg.CustomerID + "'";
+            mysql.executeQuery(query, function (err, result1) {
+                if (err) {
+                    console.log("error ", err);
+                    callback(err, null);
+                } else {
+                    console.log("orders ", result)
+                    let query = "select * from `Order` where Tracking_Status='Cancel' and CustomerID = '" + msg.CustomerID + "'";
+                    mysql.executeQuery(query, function (err, result2) {
+                        if (err) {
+                            console.log("error ", err);
+                            callback(err, null);
+                        } else {
+                            console.log("orders ", result)
+                            callback(null, { OpenOrders: result, DeliveredOrders : result1, CancelledOrders : result2 });
+                        }
+                    })
+                }
+            })
+        }
+    })
+}
+
+function get_seller_orders(msg, callback) {
+    console.log("msg", msg)
+    let query = "select * from `Order` where Tracking_status !='Delivered' and Tracking_Status!='Cancel' and SellerID = '" + msg.SellerID + "'";
+    mysql.executeQuery(query, function (err, result) {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("orders ", result)
+            let query = "select * from `Order` where Tracking_status='Delivered' and SellerID = '" + msg.SellerID + "'";
+            mysql.executeQuery(query, function (err, result1) {
+                if (err) {
+                    console.log("error ", err);
+                    callback(err, null);
+                } else {
+                    console.log("orders ", result)
+                    let query = "select * from `Order` where Tracking_Status='Cancel' and SellerID = '" + msg.SellerID + "'";
+                    mysql.executeQuery(query, function (err, result2) {
+                        if (err) {
+                            console.log("error ", err);
+                            callback(err, null);
+                        } else {
+                            console.log("orders ", result)
+                            callback(null, { OpenOrders: result, DeliveredOrders : result1, CancelledOrders : result2 });
+                        }
+                    })
+                }
+            })
         }
     })
 }
 
 function update_order(msg, callback) {
-    if (msg.status) {
-        let query = "update `Order` set Tracking_Status=" + msg.status + " where Order_id='" + msg.OrderID + "'";
-        mysql.executeQuery(query, function (err, result) {
-            if (err) {
-                console.log("error ", err);
-                callback(err, null);
-            } else {
-                callback(null, { success: true });
+    let query = "select Tracking_Status from `Order` where Order_id=" + msg.OrderID + "";
+    mysql.executeQuery(query, function (err, result) {
+        if (err) {
+            console.log("error ", err);
+            callback(err, null);
+        } else {
+            console.log("res", result[0].Tracking_Status)
+            if (result[0].Tracking_Status === "Delivered") {
+                callback(null, { message: "Order Cannot Be Cancelled As Already Delivered" });
             }
-        })
-    } else {
-        let query = "delete from `Order` where Order_id=" + msg.OrderID + "";
-        mysql.executeQuery(query, function (err, result) {
-            if (err) {
-                console.log("error ", err);
-                callback(err, null);
-            } else {
-                callback(null, { success: true });
-            }
-        })
-    }
+            else {
+                let query = "update `Order` set Tracking_Status = '" + msg.status + "' where Order_id = '" + msg.OrderID + "'";
+                mysql.executeQuery(query, function (err, result) {
+                    if (err) {
+                        console.log("error ", err);
+                        callback(err, null);
+                    } else {
+                        callback(null, { value: "Updated Successfully" });
+                    }
+                })
 
+            }
+        }
+    })
 }
+
 function place_order(msg, callback) {
     // console.log(msg);
     Customer.findById({ _id: msg.CustomerID }, (err, customer) => {
@@ -338,6 +358,7 @@ function delete_seller_product(msg, callback) {
         })
         .catch(err => {
             console.log("ERROR : " + err)
+            callback(err, null)
         })
 }
 
