@@ -55,9 +55,9 @@ app.post("/upload_file",upload.any(),(req,res)=>{
 */
 // app.use('../../uploads', express.static(path.join(__dirname, '/uploads')));
 
-router.post("/fetchprofile_seller", (req, res) => {
-    console.log("inside fetch profile", req.body);
-    kafka.make_request("seller_profile", { "path": "fetchprofile_seller", "body": data }, req.body, (err, results) => {
+router.get("/fetchprofile_seller", checkSellrAuth, (req, res) => {
+    console.log("inside fetch profile", req.query.sellerId);
+    kafka.make_request("seller_profile", { "path": "fetchprofile_seller", "body": {sellerId: req.query.sellerId} }, (err, results) => 
         console.log("fetching profile", typeof results);
         if (err) {
             console.log("inside error");
