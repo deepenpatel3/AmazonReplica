@@ -11,7 +11,7 @@ export const getReviewsForProduct = (productId) => dispatch => {
     const token = localStorage.getItem("token");
     const config = {
         headers: {
-            Authorization: "Bearer " + token
+            Authorization: token,
         }
     }
     axios.get(`${ROOT_URL}/reviews?product_id=${productId}`, config)
@@ -35,16 +35,12 @@ export const addReview = (review) => dispatch => {
     axios.defaults.withCredentials = true;
     // console.log(" Inside addReviewsForProduct :");
     const token = localStorage.getItem("token");
-    // dispatch({
-    //     type: CUSTOMER_ADD_REVIEW ,
-    //     payload: review,
-    // })
     const config = {
         headers: {
-            Authorization: "Bearer " + token
+            Authorization: token,
         }
     }
-    axios.post(`${ROOT_URL}/addReview`, review)
+    axios.post(`${ROOT_URL}/addReview`, review,config)
         .then(response => {
             // console.log("All Student", JSON.stringify(response));
             if (response.status == 200) {
