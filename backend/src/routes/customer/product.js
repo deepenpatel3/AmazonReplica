@@ -12,7 +12,7 @@ redisClient.on("error", (err) => {
     console.log(err)
 });
 
-router.post("/products", checkAllAuth, function (req, res) {
+router.post("/products", function (req, res) {
     const data = {
         page: req.body.page,
         limit: req.body.limit,
@@ -82,7 +82,7 @@ router.post("/products", checkAllAuth, function (req, res) {
     // }
 })
 
-router.post("/updateRating", checkCustomerAuth, function (req, res) {
+router.post("/updateRating", function (req, res) {
     const data = {
         id: req.body.id,
         Rating: req.body.Rating
@@ -108,7 +108,7 @@ router.post("/updateRating", checkCustomerAuth, function (req, res) {
     });
 });
 
-router.post("/particularProduct", checkAllAuth, function (req, res) {
+router.post("/particularProduct", function (req, res) {
     const data = {
         id: req.body.id
     }

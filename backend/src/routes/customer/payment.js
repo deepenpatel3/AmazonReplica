@@ -5,7 +5,7 @@ const { auth } = require("../../utils/passport");
 const { checkCustomerAuth } = require("../../utils/passport");
 auth();
 
-router.post("/payment", checkCustomerAuth, (req, res) => {
+router.post("/payment", (req, res) => {
     console.log("inside customer payment api", req.body);
 
     let body = {

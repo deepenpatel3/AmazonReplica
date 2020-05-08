@@ -5,7 +5,7 @@ const { auth } = require("../../utils/passport");
 const { checkAdminAuth, checkAllAuth } = require("../../utils/passport");
 auth();
 
-router.post("/", checkAdminAuth, (req, res) => {
+router.post("/", (req, res) => {
     console.log("Inside admin seller")
     kafka.make_request('seller_profile', { "path": "all_sellers", "body": req.body }, function (err, result) {
         console.log("got back from all sellers kafka");
