@@ -1,4 +1,4 @@
-import { SELLER_GET_PRODUCTS, SELLER_ADD_PRODUCT, SELLER_UPDATE_PRODUCT } from '../../constants/action-types';
+import { SELLER_GET_PRODUCTS, SELLER_ADD_PRODUCT, SELLER_UPDATE_PRODUCT , SELLER_GET_ORDERS} from '../../constants/action-types';
 import update from 'react-addons-update';
 
 const initialState = {
@@ -38,7 +38,11 @@ const sellerProductReducer = (state = initialState, action) => {
                         [action.payload.index]: { $set: action.payload.product}
                     }
             });
-
+        case SELLER_GET_ORDERS: 
+            return {
+                ...state,
+                orders : action.payload.orders
+            }
         default:
             return state;
     }

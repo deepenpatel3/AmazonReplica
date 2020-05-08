@@ -21,3 +21,4 @@ export const UPDATE_CART = "UPDATE_CART";
 export const GET_ORDERS = "GET_ORDERS";
 export const ADD_PAYMENT_DETAILS = "ADD_PAYMENT_DETAILS";
 export const GET_PRODUCT = "GET_PRODUCT";
+export const SELLER_GET_ORDERS = "SELLER_GET_ORDERS"

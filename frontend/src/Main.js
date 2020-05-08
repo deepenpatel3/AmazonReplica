@@ -16,7 +16,7 @@ import SaveForLater from './components/customer/saveForLater/saveForLater';
 import CustomerProfile from './components/customer/customerProfile/customerProfile';
 import SellerProfile from './components/seller/sellerProfile/sellerProfile';
 import Dashboard from './components/admin/adminDashboard/dashboard';
-
+import SellerOrder from './components/seller/orders/orders'
 
 class Main extends Component {
     render() {
@@ -42,6 +42,7 @@ class Main extends Component {
 
                     <Route path="/customer/Profile"><CustomerProfile /></Route>
                     <Route path="/seller/Profile"><SellerProfile /></Route>
+                    <Route path="/seller/orders"><SellerOrder /></Route>
                     <Route path="/admin/Dashboard"><Dashboard /></Route>
 
                 </div>

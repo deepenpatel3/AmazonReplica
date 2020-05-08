@@ -153,7 +153,8 @@ function get_customer_orders(msg, callback) {
 }
 
 function get_seller_orders(msg, callback) {
-    let query = "select * from `Order` where SellerID=" + msg.SellerID + "";
+    let query = "select * from `Order` where SellerID=\"" + msg.SellerID + "\"";
+    console.log("QUERY ::>" + query)
     mysql.executeQuery(query, function (err, result) {
         if (err) {
             console.log("error ", err);

@@ -40,13 +40,14 @@ class Orders extends Component {
             orders = this.state.orders.map((elem, i) => {
                 return <div key={i} className="card card-body">
                     <div>
-                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h5>{elem.productName}</h5></Link>
+                        <h5><u>Order# : {elem.Order_id}</u></h5> <div style={{float : "right" , color : "red"}}>${Number.parseFloat(elem.Price).toFixed(2)}</div>
+                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h6>{elem.productName}</h6></Link>
                         <h6>shipped from :: {elem.sellerName}</h6>
                         <button className="btn btn-secondary float-right" type="button" data-toggle="collapse" data-target={"#collapseExample" + i} aria-expanded="false" aria-controls={"collapseExample" + i}>
                             View Details
                         </button>
                         <h6>Status : {elem.Tracking_Status}</h6>
-                        <h6>Order Date : {elem.OrderDate}</h6>
+                        <h6>Order Date : {elem.OrderDate}</h6><hr/>
                         <Stepper steps={ [{title: 'Accepted'}, {title: 'Dispatched'}, {title: 'Out for Delivery'}, {title: 'Delivered'}] } activeStep={ this.getStatus(elem.Tracking_Status) } />
                     </div>
                     <div className="collapse" id={"collapseExample" + i} style={{marginTop : "5%"}}>
