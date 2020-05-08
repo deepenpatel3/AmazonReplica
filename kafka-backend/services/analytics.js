@@ -36,12 +36,13 @@ function most_sold_products(msg, callback) {
         } else {
             console.log(result);
             let value = [];
-            result.forEach((elem, i) => {
-                Product.findById({ _id: elem.ProductID }, (err, product) => {
+            result.forEach(async (elem, i) => {
+                await Product.findById({ _id: elem.ProductID }, (err, product) => {
                     if (product) {
                         value.push({ Name: product.Name, Orders: elem.Orders });
                     }
                     if (i === result.length - 1) {
+                        console.log(value)
                         callback(null, value);
                     }
                 })
@@ -111,7 +112,6 @@ function top_10_products(msg, callback) {
         }
     })
 }
-
 
 async function orders_per_day(msg, callback) {
     let Counts = []

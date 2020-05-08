@@ -1,46 +1,44 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Bar,Pie } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
-class OrderGraph extends Component {
+class SellerSalesGraph extends Component {
     constructor(props) {
         super(props);
         this.state = {
             rows: [{}],
-            days:[],
-            number:[],
-            orders:[],
+            sellers:[],
+            salesamount:[],
             value:[]
         }
     }
-
+    top_5_sellers
     componentDidMount(){
       let data = {
-        Order_id: localStorage.getItem("Order_id")
+        _id: localStorage.getItem("_id")
     }
     Axios.defaults.withCredentials = true;
     Axios
-    .get("http://localhost:3001/admin/analytics/orders_per_day",data)
+    .get("http://localhost:3001/admin/analytics/top_5_sellers",data)
     .then(response=>{
         if(response.status === 200){
-          console.log("response data is: ",response.data)
+         console.log("Top 10 sellers as an array: ",response.data['top_10_sellers'])
             this.setState({
                 rows:response.data,
-                number:response.data['orders_per_day']
+                sellers:response.data['top_5_sellers']
         })
       }
     })
-    .catch()    
+    .catch()
   }
-    
     render() {
-      let order = this.state.number.map(d => d.Count)
-      let num = this.state.number.map(d => d.Date)
+      let sellernames = this.state.sellers.map(d => d.Name)
+      let amount = this.state.sellers.map(d => d.Amount)
         const data = {
-            labels: num,
+            labels: sellernames,
             datasets: [
               {
-                label: 'Number of orders per day',
+                label: 'Top 5 sellers based on Sales amount',
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -58,7 +56,7 @@ class OrderGraph extends Component {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: order
+                data: amount
               }
             ]
           }
@@ -67,11 +65,11 @@ class OrderGraph extends Component {
               yAxes: [{
                 scaleLabel: {
                   display: true,
-                  labelString: 'Order count'
+                  labelString: 'Sales amount(In USD)'
                 },
                 beginAtZero:true,
                 ticks: {
-                    max: 40,
+                    max: 20,
                     min: 0,
                     stepSize: 1
                 }
@@ -79,12 +77,12 @@ class OrderGraph extends Component {
               xAxes: [{
                 scaleLabel: {
                   display: true,
-                  labelString: 'Day'
+                  labelString: 'Seller Name'
                 }
               }]
             }     
           }
-console.log(this.state.orders)
+console.log(this.state.sellers)
         return (
             <div style={{ background: "#fafafa" }}>
                    <Bar ref="chart" data={data} options={options}/>
@@ -93,4 +91,4 @@ console.log(this.state.orders)
     }
 }
 
-export default OrderGraph;
+export default SellerSalesGraph;

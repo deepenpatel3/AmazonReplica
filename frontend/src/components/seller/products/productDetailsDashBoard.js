@@ -22,8 +22,8 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
-import { updateSellerProduct, deleteProduct} from '../../../Redux/actions/seller/productAction';
-import {fetchAllCategories} from './../../../Redux/actions/admin/categoriesActions';
+import { updateSellerProduct, deleteProduct } from '../../../Redux/actions/seller/productAction';
+import { fetchAllCategories } from './../../../Redux/actions/admin/categoriesActions';
 
 
 
@@ -179,8 +179,8 @@ class ProductDetailsDashBoard extends Component {
         this.setState({
             Reviews: nextProps.reviewData.reviews,
         })
-        if (nextProps.categoriesData){
-            console.log("categoriesData:",JSON.stringify(nextProps.categoriesData))
+        if (nextProps.categoriesData) {
+            console.log("categoriesData:", JSON.stringify(nextProps.categoriesData))
             this.setState({
                 cetagoriesSet: nextProps.categoriesData
             })
@@ -220,11 +220,11 @@ class ProductDetailsDashBoard extends Component {
         }
 
     }
-    
+
     deleteButtonClickListner = (e) => {
         this.props.onBackClickListner();
         this.props.deleteProduct(this.props.Product._id, this.props.id);
-        
+
     }
 
     handleSelectListener = (e) => {
@@ -462,7 +462,7 @@ class ProductDetailsDashBoard extends Component {
                         </Tooltip>
                     </Col>
                     <Col>
-                        <Tooltip title="Delete Product"  style={{ float: "right", marginRight: "15px" }}>
+                        <Tooltip title="Delete Product" style={{ float: "right", marginRight: "15px" }}>
                             <DeleteIcon onClick={this.deleteButtonClickListner}></DeleteIcon>
                         </Tooltip>
 

@@ -14,9 +14,6 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import IconButton from '@material-ui/core/IconButton';
 
-
-
-
 const Styles = styled.div`
 .product-dashboard-review{
     min-height:20px;

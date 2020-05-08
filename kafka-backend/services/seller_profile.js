@@ -84,10 +84,8 @@ function address_func_seller(msg, callback) {
     );
 }
 
-
-
 function all_sellers(msg, callback) {
-    console.log("Inside kafka all seller ", msg)
+    console.log("Inside kafka all seller ", msg.sellerID)
     var res = {};
     if (msg.name) {
         let condition = { Name: { $regex: '.*' + msg.name + '.*' } }
@@ -103,6 +101,7 @@ function all_sellers(msg, callback) {
 
     }
     else if (msg.sellerID) {
+        console.log(" Should populate products")
         Seller.find({ _id: msg.sellerID }).populate("Products")
             .exec()
             .then(res => {
@@ -114,6 +113,7 @@ function all_sellers(msg, callback) {
             })
     }
     else if (msg.message) {
+        console.log("Inside getting seller's monthly data")
         let query = " SELECT SUM(Price) as Sales FROM `Order` where SellerID='" + msg.ID + "'GROUP BY MONTH(OrderDate)";
         mysql.executeQuery(query, function (err, result) {
             if (err) {

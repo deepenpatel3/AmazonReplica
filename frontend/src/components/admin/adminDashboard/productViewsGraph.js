@@ -1,46 +1,47 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Bar,Pie } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
-class OrderGraph extends Component {
+class ProductViewsGraph extends Component {
     constructor(props) {
         super(props);
         this.state = {
             rows: [{}],
-            days:[],
-            number:[],
-            orders:[],
-            value:[]
+            products:[],
+            views:[],
+            day:[],
+            top_10_products:[]
         }
     }
 
     componentDidMount(){
       let data = {
-        Order_id: localStorage.getItem("Order_id")
+        redisKey: localStorage.getItem("redisKey")
     }
+
+    console.log("Body of the product views request: ",data)
     Axios.defaults.withCredentials = true;
     Axios
-    .get("http://localhost:3001/admin/analytics/orders_per_day",data)
+    .post("http://localhost:3001/admin/analytics/top_10_viewed_products",data)
     .then(response=>{
         if(response.status === 200){
-          console.log("response data is: ",response.data)
+          console.log("Products views: ",response.data)
             this.setState({
-                rows:response.data,
-                number:response.data['orders_per_day']
+                views:response.data,
+                products:response.data
         })
       }
     })
-    .catch()    
   }
     
     render() {
-      let order = this.state.number.map(d => d.Count)
-      let num = this.state.number.map(d => d.Date)
+      let names = this.state.products.map(d => d.Name)
+      let view = this.state.products.map(d => d.View)
         const data = {
-            labels: num,
+            labels:view,
             datasets: [
               {
-                label: 'Number of orders per day',
+                label: 'Top 10 products viewed per day',
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -58,7 +59,7 @@ class OrderGraph extends Component {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: order
+                data:names
               }
             ]
           }
@@ -67,11 +68,11 @@ class OrderGraph extends Component {
               yAxes: [{
                 scaleLabel: {
                   display: true,
-                  labelString: 'Order count'
+                  labelString: 'Number of views'
                 },
                 beginAtZero:true,
                 ticks: {
-                    max: 40,
+                    max: 20,
                     min: 0,
                     stepSize: 1
                 }
@@ -79,12 +80,12 @@ class OrderGraph extends Component {
               xAxes: [{
                 scaleLabel: {
                   display: true,
-                  labelString: 'Day'
+                  labelString: 'Product Name'
                 }
               }]
             }     
           }
-console.log(this.state.orders)
+console.log(this.state.products)
         return (
             <div style={{ background: "#fafafa" }}>
                    <Bar ref="chart" data={data} options={options}/>
@@ -93,4 +94,4 @@ console.log(this.state.orders)
     }
 }
 
-export default OrderGraph;
+export default ProductViewsGraph;

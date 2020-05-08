@@ -1,71 +1,89 @@
 import React, { Component } from 'react';
 import './dashboard.css';
-import CustomerGraph from './customerGraph'
+import Navbar from '../navbar/navbar';
+import CustomerPurchaseGraph from './customerPurchaseGraph'
 import OrderGraph from './orderGraph'
-import ProductGraph from './productGraph'
+import ProductGraph from './productgraph';
 import ProductRatingGraph from './productRatingGraph';
-import ProductviewGraph from './productViewGraph';
-import SellerGraph from './sellerGraph';
+import ProductViewsGraph from './productViewsGraph';
+import SellerSalesGraph from './sellerSalesGraph';
+import { Link, Redirect } from 'react-router-dom';
+//import { Nav, Navbar } from 'react-bootstrap';
 
 class AnalyticsDashboard extends Component {
     constructor(props) {
         super(props);
 
     }
-    render(){
-        return(
+    render() {
+        let redirectVar = null;
+        if (localStorage.getItem("type") !== "admin") {
+            redirectVar = <Redirect to="/login" />
+        }
+
+        return (
             <div>
-            <h1 style={{fontWeight: "700", margin: "0.5em"}}>Analytics Dashboard</h1>
-            <div className='rowC' style={{ display: "flex", flexDirection: "row" }}>
-                
-                <div className="container">
-                    <div className="row mt-4">
-                        <div className="card card-custom mx-4 mb-5" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
+                {redirectVar}
+                <Navbar />
 
-                            <div className="card-body" >
-                                <CustomerGraph />
+                <div className >
+                    <div className="margin">
+                        <div className="text-center" >
+
+                            <h3 style={{ fontWeight: "700", margin: "0.5em" }}>Analytics Dashboard</h3>
+                            <div className='row' style={{ display: "flex", flexDirection: "row" }} >
+
+                                <div className="row mt-1">
+                                    <div className="card card-custom mx-1 mb-1" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
+
+                                        <div className="card-body" >
+                                            <CustomerPurchaseGraph />
+                                        </div>
+                                    </div>
+
+                                    <div className="card card-custom mx-1 mb-1" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
+
+                                        <div className="card-body" >
+                                            <OrderGraph />
+                                        </div>
+                                    </div>
+
+                                    <div className="card card-custom mx-1 mb-1" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
+
+                                        <div className="card-body" >
+                                            <ProductGraph />
+                                        </div>
+                                    </div>
+
+                                    <div className="card card-custom mx-1 mb-1" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
+
+                                        <div className="card-body" >
+                                            <ProductRatingGraph />
+                                        </div>
+                                    </div>
+
+                                    <div className="card card-custom mx-1 mb-1" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
+
+                                        <div className="card-body" >
+                                            <ProductViewsGraph />
+                                        </div>
+                                    </div>
+
+                                    <div className="card card-custom mx-1 mb-1" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
+
+                                        <div className="card-body" >
+                                            <SellerSalesGraph />
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-
-                        <div className="card card-custom mx-4 mb-5" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
-
-                            <div className="card-body" >
-                                <OrderGraph />
-                            </div>
-                        </div>
-
-                        <div className="card card-custom mx-4 mb-5" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
-
-                            <div className="card-body" >
-                                <ProductGraph />
-                            </div>
-                        </div>
-
-                        <div className="card card-custom mx-4 mb-5" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
-
-                            <div className="card-body" >
-                                <ProductRatingGraph />
-                            </div>
-                        </div>
-
-                        <div className="card card-custom mx-4 mb-5" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
-
-                            <div className="card-body" >
-                                <ProductviewGraph />
-                            </div>
-                        </div>
-
-                        <div className="card card-custom mx-4 mb-5" style={{ boxShadow: "2px 2px 2px #888888", "height": "18em", "width": "30em" }}>
-
-                            <div className="card-body" >
-                                <SellerGraph />
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
-            </div>
+
+
         )
     }
 }

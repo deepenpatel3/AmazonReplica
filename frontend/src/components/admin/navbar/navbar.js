@@ -12,26 +12,27 @@ class Navbar extends Component {
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                         <Link class="navbar-brand" to="/">amazon</Link>
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                            <li class="nav-item active">
-                                <Link class="nav-link" to="/home">Home <span class="sr-only">(current)</span></Link>
+                            <li class="nav-item">
+                                <Link class="nav-link" to="/admin/inventory">Inventory </Link>
                             </li>
                             <li class="nav-item">
-                                <Link class="nav-link" to="#">Link</Link>
+                                <Link class="nav-link" to="/admin/sellers">Sellers</Link>
                             </li>
                             <li class="nav-item">
-                                <Link class="nav-link disabled" to="#">Disabled</Link>
+                                <Link class="nav-link" to="/admin/orders">Orders</Link>
+                            </li>
+                            <li class="nav-item">
+                                <Link class="nav-link" to="/admin/dashboard">Dashboard<span class="sr-only">(current)</span></Link>
                             </li>
                         </ul>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
-                        </form>
+                      
                     </div>
                 </nav>
             </div>
         )
     }
 }
+
 export default Navbar;
 
 
