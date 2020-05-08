@@ -45,7 +45,13 @@ export const updatePaymentOptions = (card, id, ) => dispatch => {
 }
 
 export const fetchCustomerProfile = (customerId) => dispatch => {
-    axios.get(`${ROOT_URL}/fetchprofile?customerId=${customerId}`)
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.get(`${ROOT_URL}/fetchprofile?customerId=${customerId}`,config)
         .then(response => {
 
             if (response.status == 200) {
@@ -87,7 +93,13 @@ export function saveCustomerNamepic(data) {
             type: SAVE_NAMEPIC_DETAILS_TO_STORE,
             payload: data
         });
-        axios.post(`${ROOT_URL}/updateaddress`, data)
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: {
+                Authorization: token,
+            }
+        }
+        axios.post(`${ROOT_URL}/updateaddress`, data, config)
             .then(response => {
                 console.log(response);
                 console.log("address val", this.state.address);
@@ -108,8 +120,13 @@ export function saveCustomerPayment(data) {
         //     type: SAVE_PAYMENT_DETAILS_TO_STORE,
         //     payload: data
         // });
-
-        axios.post(`${ROOT_URL}/updateaddress`, data)
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: {
+                Authorization: token,
+            }
+        }
+        axios.post(`${ROOT_URL}/updateaddress`, data, config)
             .then(response => {
                 console.log(response);
                 console.log("address val", this.state.address);
@@ -130,7 +147,13 @@ export const editCustomerAddress = (data) => dispatch => {
         type: EDIT_ADDRESS_DETAILS_TO_STORE,
         payload: data.address
     });
-    axios.post(`${ROOT_URL}/updateaddress`, data)
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(`${ROOT_URL}/updateaddress`, data, config)
         .then(response => {
             console.log(response);
             // console.log("address val", this.state.address);
@@ -143,11 +166,31 @@ export const editCustomerAddress = (data) => dispatch => {
         });
 }
 
-export const updateNamePic = (name, profileImage) => dispatch => {
+export const updateNamePic = (customerId, name, profileImage) => dispatch => {
     console.log("Images: ", JSON.stringify(profileImage));
 
     const formData = new FormData();
-    // formData.append('Product', JSON.stringify(product));
-    // formData.append('Name', name);
-    // formData.append('SellerName', product.SellerName);
+
+    formData.append('CustomerID', customerId);
+    formData.append('Name', name);
+    formData.append('Image', profileImage);
+    
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+            'Content-Type': 'multipart/form-data'
+        }
+    }
+    axios.post(`${ROOT_URL}/updatenamepic`, formData, config)
+        .then(response => {
+            console.log(response);
+            // console.log("address val", this.state.address);
+            // dispatch({
+            //     type: EDIT_ADDRESS_DETAILS_TO_STORE,
+            //     payload: data
+            // });
+        }, (err) => {
+            console.log(err);
+        });
 } 

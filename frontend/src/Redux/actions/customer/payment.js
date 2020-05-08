@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { GET_PAYMENT_DETAILS , ADD_PAYMENT_DETAILS} from "../../../Redux/constants/action-types";
 const { backendURL } = require("../../../config");
@@ -6,7 +5,13 @@ const { backendURL } = require("../../../config");
 export function getPaymentDetails(data){
     console.log("inside customer paymnent action");
     axios.defaults.withCredentials = true;
-    const request = axios.post(backendURL + '/customer/payment/payment', data)       
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    const request = axios.post(backendURL + '/customer/payment/payment', data,config)       
         return (dispatch) => {
             request.then((res)=>{
                 dispatch({
@@ -21,7 +26,13 @@ export const addCard = card =>dispatch=> {
 
     card.id = localStorage.getItem("id")
     console.log("@@@@" , card )
-    axios.post(backendURL + "/customer/addCard" , card).then(res => {
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(backendURL + "/customer/addCard" , card, config).then(res => {
         console.log(res.data)
         dispatch({
             type : ADD_PAYMENT_DETAILS,

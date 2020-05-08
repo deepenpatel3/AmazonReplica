@@ -56,7 +56,7 @@ router.get("/getProducts", checkAllAuth, (req, res) => {
     });
 })
 
-router.get("/getCategory", checkAllAuth, (req, res) => {
+router.get("/getCategory", (req, res) => {
 
     kafka.make_request('product', { "path": "get_category", "body": req.query }, function (err, result) {
         console.log("got back from get_category kafka");
