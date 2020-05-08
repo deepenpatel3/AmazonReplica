@@ -70,17 +70,18 @@ export const updateSellerNamePic = (sellerId, name, profileImage) => dispatch =>
             'Content-Type': 'multipart/form-data'
         }
     }
-    axios.post(`${ROOT_URL}/updatenamepic`, formData, config)
+
+    axios.post(`${ROOT_URL}/updatenamepic_seller`, formData, config)
         .then(response => {
             console.log(response);
-            console.log("address val", this.state.address);
-            // dispatch({
-            //     type: UPDAT_SELLER_NAMPIC,
-            //     payload: {
-            //         Name: name,
-            //         ProfileURL: response.data
-            //     }
-            // });
+            console.log("response updatenamepic_seller", response);
+            dispatch({
+                type: UPDAT_SELLER_NAMPIC,
+                payload: {
+                    Name: name,
+                    ProfileURL: response.data.ProfileURL
+                }
+            });
         }, (err) => {
             console.log(err);
         });

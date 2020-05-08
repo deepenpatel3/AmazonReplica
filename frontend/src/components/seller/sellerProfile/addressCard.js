@@ -243,13 +243,9 @@ class Address extends Component {
                             </div>
                     </Card.Body>
                     {addressedit}
-                    <Card.Header style={{ width: "100%" }}>
-                        Your current delivery address
-                        </Card.Header>
                     <Form.Text className="text-muted">
                         <i>This is your default delivery address.</i>
                     </Form.Text>
-
                     </Card.Body>
                 </Card>
             </div >

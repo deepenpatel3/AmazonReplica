@@ -185,11 +185,13 @@ export const updateNamePic = (customerId, name, profileImage) => dispatch => {
     axios.post(`${ROOT_URL}/updatenamepic`, formData, config)
         .then(response => {
             console.log(response);
-            // console.log("address val", this.state.address);
-            // dispatch({
-            //     type: EDIT_ADDRESS_DETAILS_TO_STORE,
-            //     payload: data
-            // });
+            dispatch({
+                type: SAVE_NAMEPIC_DETAILS_TO_STORE,
+                payload: {
+                    Name: name,
+                    ProfileURL: response.data.ProfileURL
+                }
+            });
         }, (err) => {
             console.log(err);
         });

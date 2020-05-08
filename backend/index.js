@@ -78,7 +78,7 @@ app.use("/seller/profile", sellerProfile);
 app.use("/admin/analytics", adminAnalytics);
 app.use("/admin/seller", adminSideSeller);
 app.use("/admin/orders", adminSideOrder);
-//Customer Payment
+app.use("/seller/profile", sellerProfile);
 app.use("/admin/category", category);
 app.use("/customer/payment", customerPayment)
 

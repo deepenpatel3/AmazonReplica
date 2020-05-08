@@ -14,7 +14,8 @@ function customerProfileReducer(state = initialState, action) {
         case UPDAT_SELLER_NAMPIC:
             return {
                 ...state,
-
+                Name: action.payload.Name,
+                ProfileURL: action.payload.ProfileURL
             }
         case UPDATE_SELLER_ADDRESS:
             return  {
