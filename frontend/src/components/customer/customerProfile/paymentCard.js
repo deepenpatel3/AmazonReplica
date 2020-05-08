@@ -9,7 +9,7 @@ import { CardBody } from "react-bootstrap/Card";
 import Axios from "axios";
 import SaveIcon from '@material-ui/icons/Save';
 import CreditCard from './creditCard';
-import { fetchCustomerProfile, deletPaymentOption } from '../../../Redux/actions/customer/customerProfileActions';
+import { fetchCustomerProfile, deletPaymentOption, updatePaymentOptions } from '../../../Redux/actions/customer/customerProfileActions';
 import DatePicker from "react-datepicker";
 
 class PaymentCard extends Component {
@@ -51,10 +51,10 @@ class PaymentCard extends Component {
     //       startDate: date
     //     });
     //   };
-    
+
     handleInputChangeDate = (e) => {
         this.setState({
-            ExpDate: e.target.value.substring(0, 2) +  "/" + e.target.value.substring(2, 4),
+            ExpDate: e.target.value.substring(0, 2) + "/" + e.target.value.substring(2, 4),
             valid: { status: true, message: "" }
         });
     }
@@ -98,7 +98,7 @@ class PaymentCard extends Component {
             return false;
         }
 
-        if (!this.state.NameOnCard || !this.state.ExpDate) {
+        if (!this.state.NameOnCard) {
             return false;
         }
         return true;
@@ -109,16 +109,19 @@ class PaymentCard extends Component {
         if (!this.cardValidate()) {
             return (<Alert>Invalid card details</Alert>);
         }
+
         const card = {
             Number: this.state.Number,
-            NameOnCard: this.state.NameOnCard,
-            ExpDate: this.state.ExpDate,
+            NameOnCard: this.state.NameOnCard
+
         }
+        console.log("card", card);
         var arr = this.state.cards;
         arr.push(card);
         this.setState({
             cards: arr
         });
+        this.props.updatePaymentOptions(card, localStorage.getItem("id"));
     };
 
 
@@ -133,7 +136,7 @@ class PaymentCard extends Component {
         const { validDate } = this.state;
         var savebutton = (
             <button
-                type="submit"
+
                 onClick={this.addCard}
                 className="btn btn-warning text-light"
                 data-target="#addcardid"
@@ -314,4 +317,4 @@ const mapStateToProps = state => ({
     PaymentData: state.customerProfile.Payments
 });
 
-export default connect(mapStateToProps, { fetchCustomerProfile, deletPaymentOption })(PaymentCard);
+export default connect(mapStateToProps, { fetchCustomerProfile, deletPaymentOption, updatePaymentOptions })(PaymentCard);
