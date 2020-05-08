@@ -83,7 +83,6 @@ router.get("/fetchprofile", (req, res) => {
 
 router.post("/updatenamepic", function (req, res) {
     console.log("Inside Update Profile Post Request ");
-    let UpdatedImages = "";
     // for (let i = 0; i < req.file.Images.length; i++) {
     //     UpdatedImages[i] = req.protocol + "://" + req.hostname + ':3001/' + req.file[i].path;
     // }
