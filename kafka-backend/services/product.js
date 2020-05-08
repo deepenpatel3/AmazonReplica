@@ -431,7 +431,6 @@ function get_all_product(msg, callback) {
 
 }
 
-
 function particular_product(msg, callback) {
     Product.find({ _id: msg.id }).exec()
         .then(result => {
@@ -478,7 +477,6 @@ function list_of_orders(msg, callback) {
             }
         })
     }
-
 }
 
 function changeStatus(msg, callback) {

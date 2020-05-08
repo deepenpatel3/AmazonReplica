@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import Navbar from '../navbar/navbar';
 import Select from '@material-ui/core/Select';
-import Axios from 'axios'
+import Axios from 'axios';
+import {backendURL} from '../../../config';
 class AdminOrders extends Component{
     constructor(props){
         super(props);
         this.state={
             currentSellerName:"",
-            orders:[]
+            currentStatus:"",
+            orders:[],
+            orderid:""
         }
     }
 
@@ -50,6 +53,21 @@ class AdminOrders extends Component{
         })
     }
 
+    handleChangeStatus=(event)=>{
+        const data={
+            status:this.state.currentStatus,
+            Order_id: this.state.orderid
+        }
+        Axios
+        .post("http://localhost:3001/admin/orders/changeStatus",data)
+        .then(response=>{
+            if(response.status === 200){
+                this.setState({
+
+                })
+            }
+        })
+    }
 
     render(){
         return(
@@ -101,9 +119,6 @@ class AdminOrders extends Component{
                                 </tr>
                             ))}
                         </table>
-                        
-
-
                 </div>
             </div>
         )

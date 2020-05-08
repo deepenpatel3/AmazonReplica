@@ -23,6 +23,7 @@ class AdminInventory extends Component{
         this.handleAdd= this.handleAdd.bind(this);
         this.handleNewCategory= this.handleNewCategory.bind(this);
         this.setActiveCategory= this.setActiveCategory.bind(this);
+        this.handlegetProducts=this.handlegetProducts.bind(this);
     }
 
     componentDidMount(){
@@ -38,10 +39,18 @@ class AdminInventory extends Component{
                 }
             })
             .catch(err => {
-                console.log("Error while getting categoreis is: ", err)
+                console.log("Error while getting categories is: ", err)
+            })
+            Axios.post("http://localhost:3001/admin/category/getProducts")
+            .then( response => {
+                console.log(response.data)
+                if(response.status === 200){
+                    this.setState({
+                        sellers : response.data
+                    })
+                }
             })
     }
-
 
     setActiveCategory(category, index){
         this.setState({
@@ -88,7 +97,7 @@ class AdminInventory extends Component{
         .catch(e=>{
             console.log(e);
         })
-        alert('You have added new category successfully!! '+this.state.categoryName);
+        alert('You have added category '+ this.state.categoryName +' successfully!! ');
      }
 
      handleNewCategory(e){
@@ -103,7 +112,7 @@ class AdminInventory extends Component{
      }
 
      handleRemove(e){
-     alert('You are going to remove '+this.state.value);
+     alert('You are going to remove '+ this.state.currentCategory);
      e.preventDefault();
      const data = {
          Category: this.state.currentCategory
@@ -114,7 +123,7 @@ class AdminInventory extends Component{
      .then(response=>{
          console.log(response.data);
          if(response.status === 200){
-             alert("Category removed")
+           //  alert("Category removed")
              Axios.get("http://localhost:3001/admin/category/getCategory")
              .then(response => {
                  if(response.status === 200){
@@ -139,20 +148,49 @@ class AdminInventory extends Component{
             <div>
                 <Navbar/>
                 <div class="container">
-                <div className="row">
-                <div className="col-md-12"  >
-                <div className="form-inline my-2 my-lg-1" style={{ marginLeft: "17%"}}>
+                    <div className="row">
+                        <div className="col-md-12"  >
+                            <div className="form-inline my-2 my-lg-1" style={{ marginLeft: "17%"}}>
                 
-                <form onSubmit={this.handleAdd}>
-                <div className="form-group">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search" onChange={this.handleChange} value={this.state.categoryName} />
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add Category</button>
-                </div>
-                </form>
-               <div className="br"></div>
+                            <form onSubmit={this.handleAdd}>
+                                <div className="form-group">
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Search" onChange={this.handleChange} value={this.state.categoryName} />
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add Category</button>
+                                </div>
+                            </form>
+                        <div className="br"></div>
 
-                <form onSubmit={this.handleRemove}>
-              {/*   <div className="form-group">
+                            <form onSubmit={this.handleRemove}>
+
+                                <div className="form-group">
+                                <Select className="ui search dropdown"  style={{ width: "13pc" }}>
+                                        
+                                        <value>
+                                                { this.state.categorySet && this.state.categorySet.map((category,index)=>
+                                            (<li className={"list-group-item" + (index === this.state.currentIndex ? "active": "")} 
+                                            onClick={()=>this.setActiveCategory(category, index)} key={index}>
+                                                {category}
+                                            </li>))}
+                                        </value>
+                                    </Select>
+
+                                    <div className="spacing_inv"></div>
+                                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Remove Category</button>
+                                </div>
+                            </form>
+                                    <hr/>
+                                
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        )
+    }
+}
+export default AdminInventory;
+
+                {/*   <div className="form-group">
                     <Select className="ui search dropdown" style={{ width: "13pc" }} value={this.state.value} onChange={this.handleChange}>
                         <option value="category1">Category 1</option>
                         <option value="category2">Category 2</option>
@@ -162,7 +200,7 @@ class AdminInventory extends Component{
                         <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Remove Category</button>
                         </div>
                       */}
-                      <ul className="col-md-6">
+                    {/**   <ul className="col-md-6">
                       
                         { this.state.categorySet && this.state.categorySet.map((category,index)=>
                         (
@@ -175,14 +213,6 @@ class AdminInventory extends Component{
 
                       </ul>
                       <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Remove Category</button>
-                      
-                </form>
-                </div>
-                </div>
-                </div>
-                </div>
-            </div>
-        )
-    }
-}
-export default AdminInventory;
+                     
+                </form>*/}
+               

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import { Bar, Line } from 'react-chartjs-2';
-
+import {backendURL} from '../../../config';
 class ProductGraph extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +20,7 @@ class ProductGraph extends Component {
         }
         Axios.defaults.withCredentials = true;
         Axios
-        .get("http://localhost:3001/admin/analytics/most_sold_products",data)
+        .get(`${backendURL}/admin/analytics/most_sold_products`,data)
         .then(response=>{
             if(response.status === 200){
                 this.setState({

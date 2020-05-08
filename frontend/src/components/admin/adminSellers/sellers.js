@@ -130,6 +130,9 @@ class AdminSellers extends Component{
     }
 
     async componentDidMount(){
+    // const data={
+    //     product._id
+    // }
 
         Axios.post("http://localhost:3001/admin/seller")
             .then( response => {
@@ -200,7 +203,8 @@ class AdminSellers extends Component{
                             </td>
                         </tr>
                     ))}
-               
+               <tb>
+               <tr>
                 <div className="row">
                     <ReactPaginate
                         previousLabel={'Previous'}
@@ -216,6 +220,8 @@ class AdminSellers extends Component{
                             activeClassName={'active'}
                     />
                 </div>
+                </tr>
+                </tb>
                 </table>
                 </div>
             </div>
