@@ -12,12 +12,6 @@ export const getProducts = (productData, page, limit, Name, Categories, sort) =>
     if(!Name){
         Name = ""
     }
-    const token = localStorage.getItem("token");
-    const config = {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    }
     if (!page) {
         page = 1;
     }
@@ -37,6 +31,12 @@ export const getProducts = (productData, page, limit, Name, Categories, sort) =>
         sort: sort,
     }
     console.log("data", JSON.stringify(data));
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
     // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
     axios.post(`${ROOT_URL}/products`, data, config)
         .then(response => {
@@ -66,7 +66,13 @@ export const giveRatingToProduct = (product_id, rating) => dispatch => {
         Rating: rating,
     }
     console.log("Inside giveRatingToProduct",data);
-    axios.post(`${ROOT_URL}/updateRating`, data)
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(`${ROOT_URL}/updateRating`, data, config)
         .then(response => {
             // console.log("resonse", response.data)
         })

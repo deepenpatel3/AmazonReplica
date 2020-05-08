@@ -7,7 +7,13 @@ const { backendURL } = require("../../../config");
 export const getCart = (data) => dispatch => {
     console.log("inside get cart action");
     axios.defaults.withCredentials = true;
-    axios.post(backendURL + '/customer/getCart', data)
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(backendURL + '/customer/getCart', data,config)
         .then(response => {
             console.log("resonse", response.data)
             return dispatch(setCart(response.data))
@@ -16,7 +22,13 @@ export const getCart = (data) => dispatch => {
 export const updateCart = (data) => dispatch => {
     console.log("inside get cart action");
     axios.defaults.withCredentials = true;
-    axios.post(backendURL + '/customer/updateCart', data)
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(backendURL + '/customer/updateCart', data, config)
         .then(response => {
             console.log("DATA  :: " + response.data)
             if(response.data === true){
@@ -37,7 +49,14 @@ export const setCart = (data) => ({
 
 export const placeOrder = (data) => dispatch => {
     console.log("Inside place Order")
-    axios.get(backendURL + '/orders/placeOrder' , {params : {...data}}).then(res => {
+    
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.get(backendURL + '/orders/placeOrder' ,{params : {...data}}, config).then(res => {
         dispatch(getCart({id : localStorage.getItem("id")}))
     })
 }
@@ -51,8 +70,14 @@ export const cancelOrder = data => dispatch => {
     })
 }
 export const getOrders = (data) => dispatch => {
-    console.log("Inside place Order :: " + data.CustomerID )
-    axios.get(backendURL + "/orders/?CustomerID=" + data.CustomerID).then(res => {
+    console.log("Inside place Order")
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.get(backendURL + "/orders/?CustomerID=" + data.CustomerID,config).then(res => {
         console.log("ORDERS : " + res.data)
         dispatch(setOrders(res.data))
     })
@@ -60,7 +85,13 @@ export const getOrders = (data) => dispatch => {
 
 export const getProduct = data => dispatch =>{
     console.log("Inside get product")
-    axios.post(backendURL + "/customer/product/particularProduct",{id : data}).then(res => {
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(backendURL + "/customer/product/particularProduct",{id : data}, config).then(res => {
         console.log(res.data)
         dispatch ({
             type : GET_PRODUCT,

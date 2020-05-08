@@ -57,11 +57,12 @@ class NamePic extends Component {
             profileImage: files[0],
             open: false
         })
+        this.props.updateNamePic(localStorage.getItem("id"),this.state.name,files[0])
     };
 
     SubmitChange(e) {
         e.preventDefault();
-       this.props.updateNamePic(this.state.name,this.state.profileImage)
+       this.props.updateNamePic(localStorage.getItem("id"),this.state.name,this.state.profileImage)
     };
     componentDidMount() {
         if (this.props.NamePicData) {
@@ -157,6 +158,6 @@ const mapStateToProps = state => ({
     NamePicData: state.customerProfile
 });
 
-export default connect(mapStateToProps, {})(NamePic);
+export default connect(mapStateToProps, {updateNamePic})(NamePic);
 
 //014348503 matthew esteban
