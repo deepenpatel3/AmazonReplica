@@ -3,6 +3,9 @@ const router = express.Router();
 const { secret } = require("../../utils/config");
 const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
+const { auth } = require("../../utils/passport");
+const { checkCustomerAuth } = require("../../Utils/passport");
+auth();
 
 router.post("/signIn", (req, res) => {
     console.log("inside customer signin api", req.body);
@@ -75,7 +78,7 @@ router.post("/signUp", function (req, res) {
     });
 })
 
-router.post("/getCart", function (req, res) {
+router.post("/getCart", checkCustomerAuth, function (req, res) {
     console.log('inside get cart', req.body);
 
     kafka.make_request('account', { "path": "get_cart", "body": req.body }, function (err, result) {
@@ -87,7 +90,7 @@ router.post("/getCart", function (req, res) {
     });
 })
 
-router.post("/updateCart", function (req, res) {
+router.post("/updateCart", checkCustomerAuth, function (req, res) {
     console.log('inside get cart', req.body);
 
     kafka.make_request('account', { "path": "update_cart", "body": req.body }, function (err, result) {
@@ -99,7 +102,7 @@ router.post("/updateCart", function (req, res) {
     });
 })
 
-router.post("/addCard", function (req, res) {
+router.post("/addCard", checkCustomerAuth, function (req, res) {
     console.log('inside get cart', req.body);
 
     kafka.make_request('account', { "path": "addCard", "body": req.body }, function (err, result) {

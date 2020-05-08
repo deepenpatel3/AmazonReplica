@@ -1,23 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const { secret } = require("../../utils/config");
-const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
 // const Product = require('../../models/productModel');
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
+const { auth } = require("../../utils/passport");
+const { checkAllAuth, checkCustomerAuth } = require("../../Utils/passport");
+auth();
 
 redisClient.on("error", (err) => {
     console.log(err)
 });
 
-router.post("/products", function (req, res) {
+router.post("/products", checkAllAuth, function (req, res) {
     const data = {
         page: req.body.page,
         limit: req.body.limit,
         name: req.body.name,
         Categories: req.body.Categories,
-        SellerId: req.body.SellerId 
+        SellerId: req.body.SellerId
     }
 
     // console.log("Data: ", JSON.stringify(data));
@@ -80,7 +81,7 @@ router.post("/products", function (req, res) {
     // }
 })
 
-router.post("/updateRating", function (req, res) {
+router.post("/updateRating", checkCustomerAuth, function (req, res) {
     const data = {
         id: req.body.id,
         Rating: req.body.Rating
@@ -106,7 +107,7 @@ router.post("/updateRating", function (req, res) {
     });
 });
 
-router.post("/particularProduct", function (req, res) {
+router.post("/particularProduct", checkAllAuth, function (req, res) {
     const data = {
         id: req.body.id
     }
