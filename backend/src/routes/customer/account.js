@@ -79,7 +79,7 @@ router.post("/signUp", function (req, res) {
     });
 })
 
-router.post("/getCart", checkCustomerAuth, function (req, res) {
+router.post("/getCart", function (req, res) {
     console.log('inside get cart', req.body);
 
     kafka.make_request('account', { "path": "get_cart", "body": req.body }, function (err, result) {
@@ -91,7 +91,7 @@ router.post("/getCart", checkCustomerAuth, function (req, res) {
     });
 })
 
-router.post("/updateCart", checkCustomerAuth, function (req, res) {
+router.post("/updateCart", function (req, res) {
     console.log('inside get cart', req.body);
 
     kafka.make_request('account', { "path": "update_cart", "body": req.body }, function (err, result) {
@@ -103,7 +103,7 @@ router.post("/updateCart", checkCustomerAuth, function (req, res) {
     });
 })
 
-router.post("/addCard", checkCustomerAuth, function (req, res) {
+router.post("/addCard", function (req, res) {
     console.log('inside get cart', req.body);
 
     kafka.make_request('account', { "path": "addCard", "body": req.body }, function (err, result) {

@@ -5,7 +5,7 @@ const { auth } = require("../../utils/passport");
 const { checkCustomerAuth, checkAllAuth } = require("../../utils/passport");
 auth();
 
-router.get("/reviews", checkAllAuth, function (req, res) {
+router.get("/reviews", function (req, res) {
     if (req.query.product_id) {
         const data = {
             ProductID: req.query.product_id,
@@ -57,7 +57,7 @@ router.get("/reviews", checkAllAuth, function (req, res) {
 
 });
 
-router.post("/addReview", checkCustomerAuth, function (req, res) {
+router.post("/addReview", function (req, res) {
     const data = {
         req: req.body
     }

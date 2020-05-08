@@ -57,7 +57,7 @@ app.post("/upload_file",upload.any(),(req,res)=>{
 
 router.get("/fetchprofile_seller", checkSellrAuth, (req, res) => {
     console.log("inside fetch profile", req.query.sellerId);
-    kafka.make_request("seller_profile", { "path": "fetchprofile_seller", "body": {sellerId: req.query.sellerId} }, (err, results) => {
+    kafka.make_request("seller_profile", { "path": "fetchprofile_seller", "body": {sellerId: req.query.sellerId} }, (err, results) => 
         console.log("fetching profile", typeof results);
         if (err) {
             console.log("inside error");
@@ -122,7 +122,7 @@ router.post("/updatenamepic_seller", function (req, res) {
     })
 });
 
-router.post("/updateaddress_seller", checkSellrAuth, function (req, res) {
+router.post("/updateaddress_seller", function (req, res) {
     console.log("Inside Update Profile Post Request ");
     console.log("request body is", req.body);
     kafka.make_request("seller_profile", { "path": "address_func_seller", "body": data }, req.body, function (err, results) {

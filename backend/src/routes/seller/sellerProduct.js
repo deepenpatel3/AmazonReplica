@@ -36,7 +36,7 @@ const upload = multer({
     }),
 }).array('Images', 5);
 
-router.post("/addProduct", checkSellrAuth, function (req, res) {
+router.post("/addProduct", function (req, res) {
 
 
 
@@ -92,7 +92,7 @@ router.post("/addProduct", checkSellrAuth, function (req, res) {
 
 });
 
-router.post("/updateProduct", checkSellrAuth, function (req, res) {
+router.post("/updateProduct", function (req, res) {
     const data = {
         req: req.body
     }
@@ -117,7 +117,7 @@ router.post("/updateProduct", checkSellrAuth, function (req, res) {
     });
 });
 
-router.post("/deleteProduct", checkAllAuth, function (req, res) {
+router.post("/deleteProduct", function (req, res) {
     const data = {
         _id: req.body.product_id
     }
