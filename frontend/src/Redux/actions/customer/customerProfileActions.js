@@ -143,11 +143,29 @@ export const editCustomerAddress = (data) => dispatch => {
         });
 }
 
-export const updateNamePic = (name, profileImage) => dispatch => {
+export const updateNamePic = (customerId, name, profileImage) => dispatch => {
     console.log("Images: ", JSON.stringify(profileImage));
 
     const formData = new FormData();
-    // formData.append('Product', JSON.stringify(product));
-    // formData.append('Name', name);
-    // formData.append('SellerName', product.SellerName);
+
+    formData.append('CustomerID', customerId);
+    formData.append('Name', name);
+    formData.append('Image', profileImage);
+    const config = {
+        headers: {
+            // Authorization: "Bearer " + token,
+            'Content-Type': 'multipart/form-data'
+        }
+    }
+    axios.post(`${ROOT_URL}/updatenamepic`, formData, config)
+        .then(response => {
+            console.log(response);
+            // console.log("address val", this.state.address);
+            // dispatch({
+            //     type: EDIT_ADDRESS_DETAILS_TO_STORE,
+            //     payload: data
+            // });
+        }, (err) => {
+            console.log(err);
+        });
 } 
