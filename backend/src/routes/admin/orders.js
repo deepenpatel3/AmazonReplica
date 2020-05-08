@@ -17,7 +17,6 @@ router.post("/listOfOrders", function (req, res) {
             res.status(200);
             res.json(result)
             res.end();
-
         }
     });
 });

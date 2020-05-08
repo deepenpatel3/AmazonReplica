@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Navbar from '../navbar/navbar';
 import ReactPaginate from 'react-paginate';
 import Axios from 'axios';
-
+import { Link } from 'react-router-dom';
 
 class AdminSellers extends Component{
     constructor(props){
@@ -15,10 +15,18 @@ class AdminSellers extends Component{
             results_per_page:3,
             page_num:0,
             sellers : [],
-            particularSellerProducts:[]
-        }
+            particularSellerProducts:[],
+            searchSeller:"",
+            seller:"",
+            currentSeller: null
+        };
 
         this.handlePageClick= this.handlePageClick.bind(this);
+        this.retrieveSellers= this.retrieveSellers.bind(this);
+        this.refreshList= this.refreshList.bind(this);
+        //this.onChangeSearchSeller= this. onChangeSearch.bind(this);
+        this.setActiveSeller= this.setActiveSeller.bind(this);
+        this.searchSeller=this.searchSeller.bind(this);
     }
 
     handlePageClick(data){
@@ -29,7 +37,77 @@ class AdminSellers extends Component{
             paginated_profiles: this.state.profiles.slice(offset, offset+this.state.results_per_page)
         })
     }
+    onChangeSearchSeller(e){
+        const searchSeller= e. target.value;
+        this.setState(function(prevState){
+            return{
+                currentSeller:{
+                    ...prevState.currentSeller,
+                    
+                }
+            }
+            //searchSeller: searchSeller
+        });
+    }
 
+    retrieveSellers(){
+        Axios
+        .post('http://localhost:3001/admin/seller')
+        .then(response=>{
+            this.setState({
+                sellers :response.data
+            });
+            console.log(response.data);
+        })
+        .catch(e=>{
+            console.log(e);
+        })
+    }
+
+    refreshList(){
+        this.retrieveSellers();
+        this.setState({
+            currentSeller:null,
+            currentIndex: -1
+        })
+    }
+
+    setActiveSeller(sellers, index){
+        this.setState({
+            currentSeller: sellers,
+            currentIndex: index
+        })
+    }
+
+    searchSeller(e){
+        Axios
+        .post('',this.state.searchSeller)
+        .then(response=>{
+            this.setState({
+                sellers: response.data
+            });
+            console.log(response.data);
+        })
+        .catch(e=>{
+            console.log(e);
+        });
+    }
+
+
+
+    getSellerMonthlyData = (event) => {
+        console.log("Event and its id: ",event.target.id )
+        const data = {
+            "message" : "sales",
+            "ID" : event.target.id
+        }
+        Axios.post("http://localhost:3001/admin/seller/",data)
+        .then(response => {
+            if(response.status === 200 && response.data[0]){
+                alert(`This seller has monthly sales of: ${response.data[0].Sales}`)
+            }
+        })
+    }
 
     selectSeller = (event) => {
         console.log("Seller id is: ",event.target.id)
@@ -99,13 +177,15 @@ class AdminSellers extends Component{
         //     allProfiles = this.state.paginated_profiles.map(profile => {      
         //         console.log(profile);
         //     }
-        // }
+        // }               {/*{searchSeller}*/}
+
+        const {searchSeller, sellers, currentSeller, currentIndex}= this.state;
             return(
             <div>
                 <Navbar/>
-                <form class="form-inline my-2 my-lg-1" style={{ marginLeft: "35%"}}>
+                <form class="form-inline my-2 my-lg-1" style={{ marginLeft: "35%"}} onSubmit={this.searchSeller}>
                 <div className="form-group">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search Sellers" aria-label="Search" onChange={this.onChangeSearchSeller} value={this.state.search}  />
                         <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search Sellers</button>
                 </div>
                 </form>
@@ -116,7 +196,7 @@ class AdminSellers extends Component{
                     {this.state.sellers.map(seller => (
                         <tr>
                             <td>
-                                <a href="#" id={seller._id} onClick={this.selectSeller}>{seller.Name}</a>
+                                <p onClick={this.getSellerMonthlyData} id={seller._id}>{seller.Name}</p>
                             </td>
                         </tr>
                     ))}
@@ -138,7 +218,6 @@ class AdminSellers extends Component{
                 </div>
                 </table>
                 </div>
-
             </div>
         )
     }

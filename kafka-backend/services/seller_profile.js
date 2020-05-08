@@ -1,5 +1,6 @@
 const Seller = require('../models/sellerModel');
 const Product = require('../models/productModel');
+var mysql = require("../models/mysql");
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);
@@ -104,7 +105,7 @@ function all_sellers(msg, callback) {
 
   }
   else if (msg.sellerID) {
-    console.log(" SHould populate products")
+    console.log(" Should populate products")
     Seller.find({ _id: msg.sellerID }).populate("Products")
       .exec()
       .then(res => {
@@ -116,6 +117,7 @@ function all_sellers(msg, callback) {
       })
   }
   else if (msg.message) {
+    console.log("Inside getting seller's monthly data")
     let query = " SELECT SUM(Price) as Sales FROM `Order` where SellerID='"+msg.ID+"'GROUP BY MONTH(OrderDate)";
     mysql.executeQuery(query, function (err, result) {
       if (err) {
