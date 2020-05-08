@@ -273,7 +273,6 @@ function place_order(msg, callback) {
     //     }
     // })
 }
-
 function update_rating(msg, callback) {
 
     Product.findById({ _id: msg.id }, (err, product) => {
@@ -281,28 +280,23 @@ function update_rating(msg, callback) {
             console.log("rating update error", err);
             callback(err, null);
         } else {
-            product.Count = product.Count + 1
-            console.log('Count', product.Count)
-            product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
-            console.log(" Rating ", product.Rating)
-            product.save(() => { callback(null, { rating: product.Rating }) })
-        }
-    })
-}
+            if (product.Count === undefined) {
+                product.Count = 0
+                product.save(() => { console.log("Updated") })
+                product.Count = product.Count + 1
+                console.log('Count', product.Count)
+                product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
+                console.log(" Rating ", product.Rating)
+                product.save(() => { callback(null, { rating: product.Rating }) })
+            }
+            else {
+                product.Count = product.Count + 1
+                console.log('Count', product.Count)
+                product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
+                console.log(" Rating ", product.Rating)
+                product.save(() => { callback(null, { rating: product.Rating }) })
+            }
 
-
-function update_rating(msg, callback) {
-
-    Product.findById({ _id: msg.id }, (err, product) => {
-        if (err) {
-            console.log("rating update error", err);
-            callback(err, null);
-        } else {
-            product.Count = product.Count + 1
-            console.log('Count', product.Count)
-            product.Rating = (msg.Rating + (product.Rating * (product.Count - 1))) / (product.Count);
-            console.log(" Rating ", product.Rating)
-            product.save(() => { callback(null, { rating: product.Rating }) })
         }
     })
 }
