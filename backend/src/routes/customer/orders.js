@@ -52,7 +52,7 @@ router.get("/", function (req, res) {
     }
 });
 
-router.post("/placeOrder", checkCustomerAuth, (req, res) => {
+router.post("/placeOrder", (req, res) => {
 
     kafka.make_request('product', { "path": "place_order", "body": req.query }, function (err, result) {
         console.log("got back from place order kafka");
