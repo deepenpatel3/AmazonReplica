@@ -24,6 +24,7 @@ router.post("/payment", (req, res) => {
                     result : result
                 }
             }
+            res.status(200)
             res.send(payload)
         }
     });
