@@ -52,8 +52,8 @@ function namepic_func(msg, callback) {
     // var res = {};
     console.log("inside namepic fun");
 
-    Customer.findOneAndUpdate({ _id: msg.CustomerID }, { "$set": { ProfileURL: msg.ProfileURL } },
-        function (err, result) {
+    Customer.findByIdAndUpdate({ _id: msg.CustomerID }, { "$set": { ProfileURL: msg.ProfileURL } }, { new: true },
+        function (err, customer) {
             if (err) {
                 // res.code = "400";
                 // res.value =
@@ -66,7 +66,7 @@ function namepic_func(msg, callback) {
 
                 console.log("Update successful");
                 // console.log("result:", result);
-                callback(null, { success: true });
+                callback(null, { ProfileURL: customer.ProfileURL });
                 //res.sendStatus(200).end();
             }
         }
