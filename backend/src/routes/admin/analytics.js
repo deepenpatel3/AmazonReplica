@@ -5,7 +5,7 @@ const redis = require("redis");
 var redisScan = require('redisscan');
 const redisClient = redis.createClient(6379);
 const { auth } = require("../../utils/passport");
-const { checkAdminAuth } = require("../../Utils/passport");
+const { checkAdminAuth } = require("../../utils/passport");
 auth();
 
 redisClient.on('connect', function () {
@@ -20,7 +20,7 @@ redisClient.on("error", (err) => {
 router.get("/", checkAdminAuth, (req, res) => {
 
     let most_sold_products = [], top_10_sellers = [], top_5_customers = [], top_10_products = [], orders_per_day = [], top_10_viewed = []
-   
+
     kafka.make_request('analytics', { "path": "most_sold_products", "body": req.query }, function (err, result) {
         console.log("got back from most sold products kafka");
         if (!result) {

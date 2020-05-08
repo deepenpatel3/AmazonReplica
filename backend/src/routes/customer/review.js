@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const kafka = require("../../../kafka/client");
 const { auth } = require("../../utils/passport");
-const { checkCustomerAuth, checkAllAuth } = require("../../Utils/passport");
+const { checkCustomerAuth, checkAllAuth } = require("../../utils/passport");
 auth();
 
 router.get("/reviews", checkAllAuth, function (req, res) {
@@ -61,7 +61,7 @@ router.post("/addReview", checkCustomerAuth, function (req, res) {
     const data = {
         req: req.body
     }
-    console.log("addReview: ",JSON.stringify(data));
+    console.log("addReview: ", JSON.stringify(data));
     kafka.make_request('review', { "path": "add_review", "body": data }, function (err, result) {
         if (!result) {
             console.log("Inside err");
