@@ -117,7 +117,14 @@ function login(msg, callback) {
                         console.log("customer found-", customer)
                         if (bcrypt.compareSync(password, customer.Password)) {
                             console.log('customer match')
-                            callback(null, { signInSuccess: true, id: customer._id, name: customer.Name, message: "successful login", role: "customer" })
+                            callback(null, {
+                                signInSuccess: true,
+                                id: customer._id,
+                                name: customer.Name,
+                                message: "successful login",
+                                role: "customer",
+                                profileUrl: customer.ProfileURL,
+                            })
                         }
                         else {
                             console.log('wrong password')

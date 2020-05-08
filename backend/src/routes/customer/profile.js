@@ -55,9 +55,10 @@ app.post("/upload_file",upload.any(),(req,res)=>{
 */
 // app.use('../../uploads', express.static(path.join(__dirname, '/uploads')));
 
-router.post("/fetchprofile", checkCustomerAuth, (req, res) => {
-    console.log("inside fetch profile", req.body);
-    kafka.make_request("profile", { "path": "fetch_profile", "body": data }, req.body, (err, results) => {
+router.get("/fetchprofile", (req, res) => {
+    console.log("inside fetch profile", req.query.customerId);
+
+    kafka.make_request("profile", { "path": "fetch_profile", "body": { _id: req.query.customerId } }, (err, results) => {
         console.log("fetching profile", typeof results);
         if (err) {
             console.log("inside error");
@@ -116,10 +117,11 @@ router.post("/updatenamepic", function (req, res) {
     })
 });
 
-router.post("/updateaddress", checkCustomerAuth, function (req, res) {
+
+router.post("/updateaddress", function (req, res) {
     console.log("Inside Update Profile Post Request ");
     console.log("request body is", req.body);
-    kafka.make_request("profile", { "path": "address_func", "body": data }, req.body, function (err, results) {
+    kafka.make_request("profile", { "path": "address_func", "body": req.body }, function (err, results) {
         console.log("Inside Address Update Profile ");
         console.log(typeof results);
 
@@ -141,7 +143,7 @@ router.post("/updateaddress", checkCustomerAuth, function (req, res) {
                 res.sendStatus(200).end("Address of the profile is updated");
             }
         }
-    });
+    })
 });
 
 router.post("/updatecard", checkCustomerAuth, function (req, res) {

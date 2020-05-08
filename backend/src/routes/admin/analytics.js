@@ -20,7 +20,7 @@ redisClient.on("error", (err) => {
 router.get("/", checkAdminAuth, (req, res) => {
 
     let most_sold_products = [], top_10_sellers = [], top_5_customers = [], top_10_products = [], orders_per_day = [], top_10_viewed = []
-
+   
     kafka.make_request('analytics', { "path": "most_sold_products", "body": req.query }, function (err, result) {
         console.log("got back from most sold products kafka");
         if (!result) {
@@ -128,7 +128,8 @@ router.get("/", checkAdminAuth, (req, res) => {
 
 router.post("/productCount", checkAdminAuth, function (req, res) {
     // let Count
-    let redisKey = req.body.ProductID
+    // console.log("Ayushhhhhhhh ",req.body)
+    let redisKey = req.body.productId
     redisClient.exists(redisKey, (err, result) => {
         if (result === 1) {
             // redisClient.del(redisKey, function(err, reply) {

@@ -1,10 +1,10 @@
-import { SELLER_ADD_PRODUCT, SELLER_GET_PRODUCTS, SELLER_UPDATE_PRODUCT } from "../../constants/action-types";
+import { SELLER_ADD_PRODUCT, SELLER_GET_PRODUCTS, SELLER_UPDATE_PRODUCT, SELLER_DELETE_PRODUCT } from "../../constants/action-types";
 import axios from "axios";
 const { backendURL } = require("../../../config");
 
 const ROOT_URL = backendURL + "/seller/product";
 
-export const getProducts = (productData, SellerId, page, limit, Name, Categories) => dispatch => {
+export const getProducts = (productData, SellerId, page, limit, Name, Categories, sort) => dispatch => {
     axios.defaults.withCredentials = true;
     console.log(" Inside getProducts :");
     console.log(" page :", page);
@@ -29,9 +29,10 @@ export const getProducts = (productData, SellerId, page, limit, Name, Categories
     const data = {
         page: page,
         limit: limit,
-        SellerId: SellerId, 
+        SellerId: SellerId,
         name: Name,
         Categories: Categories,
+        sort: sort
     }
     console.log("data", JSON.stringify(data));
     // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
@@ -39,9 +40,9 @@ export const getProducts = (productData, SellerId, page, limit, Name, Categories
         .then(response => {
             // console.log("All Student", JSON.stringify(response));
             let data = { ...response.data }
-                data.name = Name;
-                data.categories = Categories 
-
+            data.name = Name;
+            data.categories = Categories;
+            data.sort = sort;
             if (response.status == 200) {
                 dispatch({
                     type: SELLER_GET_PRODUCTS,
@@ -115,6 +116,33 @@ export const updateSellerProduct = (product, id) => dispatch => {
         },
             error => {
                 console.log(" updateProduct error:", JSON.stringify(error));
+            })
+
+}
+
+export const deleteProduct = (product_id, id) => dispatch => {
+    // if (typeof (product) == "undefined" || typeof (id) == "undefined") {
+    //     return;
+    // }
+    console.log("Product Id:",product_id);
+    console.log("Id:",id);
+    console.log("inside delete product");
+    // dispatch({
+    //     type: SELLER_DELETE_PRODUCT,
+    //     payload: id,
+    // })
+    axios.post(`${ROOT_URL}/deleteProduct`, {product_id})
+        .then(response => {
+            console.log("deleteProduct: ", JSON.stringify(response));
+            if (response.status == 200) {
+                dispatch({
+                    type: SELLER_DELETE_PRODUCT,
+                    payload: id,
+                })
+            }
+        },
+         error => {
+                console.log(" deleteProduct error:", JSON.stringify(error));
             })
 
 }

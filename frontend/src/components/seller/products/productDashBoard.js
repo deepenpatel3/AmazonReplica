@@ -17,8 +17,9 @@ import AddIcon from '@material-ui/icons/Add';
 import Chip from '@material-ui/core/Chip';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from 'axios';
-import { getFilterCategories, getFilterName} from '../../../Redux/selectors/customer/selector';
+import { getFilterCategories, getFilterName, getFilterSort } from '../../../Redux/selectors/customer/selector';
 import Typography from '@material-ui/core/Typography';
+import {fetchAllCategories} from './../../../Redux/actions/admin/categoriesActions';
 
 
 const Styles = styled.div`
@@ -88,9 +89,10 @@ class ProductDashBoard extends Component {
             modalShow: false,
             imageModalShow: false,
             ProductImages: [],
-            cetagoriesSet: ["Shoes", "Toys", "Outdoors", "Clothing", "Beauty", "Electronics", "Computers", "Home"],
+            cetagoriesSet: ["",],
             SelectedCetagories: [],
             filterCategoires: [],
+
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -100,7 +102,8 @@ class ProductDashBoard extends Component {
 
     handleChange = (e, value) => {
         e.preventDefault();
-        this.props.getProducts(this.props.productData, localStorage.getItem("id"), value, this.state.limit);
+        this.props.getProducts(this.props.productData, localStorage.getItem("id"), value, this.state.limit,
+            this.props.filterName, this.props.filterCategoires, this.props.filterSort);
     };
 
     handleDelete = (id) => () => {
@@ -160,15 +163,15 @@ class ProductDashBoard extends Component {
         // e.preventDefault();
         const category = e.target.name;
         const isChecked = e.target.checked;
-        if(isChecked){
+        if (isChecked) {
             var isFound = false;
-            for (var i=0; i < this.state.filterCategoires.length; i++){
-                if(category == this.state.filterCategoires[i]){
-                    isFound =true;
+            for (var i = 0; i < this.state.filterCategoires.length; i++) {
+                if (category == this.state.filterCategoires[i]) {
+                    isFound = true;
                     break;
                 }
             }
-            if(!isFound){
+            if (!isFound) {
                 var arr = this.state.filterCategoires;
                 arr.push(category);
                 this.setState({
@@ -176,32 +179,33 @@ class ProductDashBoard extends Component {
                 });
                 // this.state.filterCategoires.push(category);
             }
-        }else{
+        } else {
             var isFound = false;
             var id = 0;
-            for (var i=0; i< this.state.filterCategoires.length; i++){
-                if(category == this.state.filterCategoires[i]){
-                    isFound =true;
+            for (var i = 0; i < this.state.filterCategoires.length; i++) {
+                if (category == this.state.filterCategoires[i]) {
+                    isFound = true;
                     id = i;
                     break;
                 }
             }
-            if(isFound){
+            if (isFound) {
                 var arr = this.state.filterCategoires;
                 arr.splice(id, 1);
                 this.setState({
                     filterCategoires: arr,
                 });
             }
-           
+
         }
-        this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit, this.props.filterName, this.state.filterCategoires);
+        this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit,
+            this.props.filterName, this.state.filterCategoires, this.props.filterSort);
         // console.log("filterCategoires: ",JSON.stringify(this.state.filterCategoires));
     }
 
     isCategoryInFilter = (category) => {
-        for (var i=0; i< this.state.filterCategoires.length; i++){
-            if(category == this.state.filterCategoires[i]){
+        for (var i = 0; i < this.state.filterCategoires.length; i++) {
+            if (category == this.state.filterCategoires[i]) {
                 return true;
             }
         }
@@ -229,9 +233,15 @@ class ProductDashBoard extends Component {
         });
     }
 
-    onValueChangeHandler = (e) => this.setState({ [e.target.name]: e.target.value })
+    onValueChangeHandler = (e) => this.setState({ [e.target.name]: e.target.value });
 
+    onSortinOptionsChangeListner = (e) => {
+        // console.log("value: ",e.target.value);
+        this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit,
+            this.props.filterName, this.state.filterCategoires, e.target.value);
+    }
     componentDidMount() {
+        this.props.fetchAllCategories();
         var sellerId = localStorage.getItem("id");
         this.props.getProducts(this.props.productData, localStorage.getItem("id"), 1, this.state.limit, this.props.filterName, this.props.filterCategoires);
         if (!this.props.productData) {
@@ -264,10 +274,16 @@ class ProductDashBoard extends Component {
                 products: nextProps.productData.products,
             })
         }
-        if(nextProps.filterCategoires){
+        if (nextProps.filterCategoires) {
             this.setState({
                 filterCategoires: nextProps.filterCategoires,
             });
+        }
+        if (nextProps.categoriesData){
+            console.log("categoriesData:",JSON.stringify(nextProps.categoriesData))
+            this.setState({
+                cetagoriesSet: nextProps.categoriesData
+            })
         }
     };
 
@@ -385,16 +401,16 @@ class ProductDashBoard extends Component {
                                         })
                                     }
                                 </div>
-                                <Row style={{ paddingTop:"10px", paddingLeft: "25px" }}>
+                                <Row style={{ paddingTop: "10px", paddingLeft: "25px" }}>
                                     <Typography variant="subtitle1" gutterBottom>
                                         Sorted By
                                      </Typography>
                                 </Row>
-                                <Form.Control as="select">
-                                    <option>None</option>
-                                    <option>Price: Low to High</option>
-                                    <option>Price: High to Low</option>
-                                    <option>Rating</option>
+                                <Form.Control as="select" onChange={this.onSortinOptionsChangeListner}>
+                                    <option value={""}>None</option>
+                                    <option value={"Price"}>Price: Low to High</option>
+                                    <option value={"-Price"}>Price: High to Low</option>
+                                    <option value={"-Rating"}>Rating</option>
                                 </Form.Control>
                             </div>
                         </Col>
@@ -439,8 +455,10 @@ const mapStateToProps = state => {
         productData: state.sellerProductData,
         filterCategoires: getFilterCategories(state.sellerProductData),
         filterName: getFilterName(state.sellerProductData),
+        filterSort: getFilterSort(state.sellerProductData),
+        categoriesData: state.categories.Categories,
     };
 };
 
 
-export default connect(mapStateToProps, { getProducts, addProduct })(ProductDashBoard);
+export default connect(mapStateToProps, { getProducts, addProduct,fetchAllCategories })(ProductDashBoard);

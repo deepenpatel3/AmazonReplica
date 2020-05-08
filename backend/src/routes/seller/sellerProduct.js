@@ -119,9 +119,9 @@ router.post("/updateProduct", checkSellrAuth, function (req, res) {
 
 router.post("/deleteProduct", checkAllAuth, function (req, res) {
     const data = {
-        req: req.body
+        _id: req.body.product_id
     }
-    // console.log("Data: ",JSON.stringify(data));
+    console.log("deleteProduct: ", JSON.stringify(data));
     kafka.make_request('product', { "path": "delete_seller_product", "body": data }, function (err, result) {
         if (!result) {
             console.log("Inside err");
