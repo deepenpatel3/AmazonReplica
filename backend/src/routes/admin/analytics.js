@@ -108,6 +108,7 @@ router.get("/", (req, res) => {
                                                 };
                                                 bubbleSort(arr)
                                                 top_10_viewed = arr.slice(0, 10)
+                                                res.status(200)
                                                 res.send(JSON.stringify({ orders_per_day: orders_per_day, most_sold_products: most_sold_products, top_10_sellers: top_10_sellers, top_5_customers: top_5_customers, top_10_products: top_10_products, top_10_viewed : top_10_viewed }))
                                             })
                                         }

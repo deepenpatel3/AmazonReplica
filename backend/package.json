@@ -5,11 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "assert": "^2.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "should": "^13.2.3",
+    "supertest": "^4.0.2",
     "aws-sdk": "^2.667.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
@@ -24,6 +29,7 @@
     "multer-s3": "^2.9.0",
     "nodemon": "^2.0.3",
     "redis": "^3.0.2",
-    "redisscan": "^2.0.0"
+    "redisscan": "^2.0.0",
+    "mocha": "^5.2.0"
   }
 }

@@ -33,6 +33,7 @@ router.post("/signIn", (req, res) => {
                 }
             }
             else {
+                res.status(401)
                 var payload = { signInSuccess: result.signInSuccess, message: result.message }
             }
             var token = jwt.sign(payload, secret, {
@@ -80,7 +81,7 @@ router.post("/getCart", function (req, res) {
 
     kafka.make_request('account', { "path": "get_cart", "body": req.body }, function (err, result) {
         console.log('got back from kafka customer_signup');
-
+        res.status(200)
         console.log("customer get cart result- ", result);
         res.send(result.value)
 
@@ -104,7 +105,7 @@ router.post("/addCard", function (req, res) {
 
     kafka.make_request('account', { "path": "addCard", "body": req.body }, function (err, result) {
         console.log('got back from kafka addcard');
-
+        res.status(200)
         console.log("customer add card result- ", result);
         res.send(result.value)
 
