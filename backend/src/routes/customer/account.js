@@ -16,7 +16,7 @@ router.post("/signIn", (req, res) => {
         role: req.body.role
     }
     kafka.make_request('account', { "path": "login", "body": body }, function (err, result) {
-        console.log('got back from kafka customer_login');
+        console.log('got back from kafka login');
         if (err) {
             console.log('error', err)
             res.send(JSON.stringify({
@@ -36,7 +36,6 @@ router.post("/signIn", (req, res) => {
                 }
             }
             else {
-                res.status(401)
                 var payload = { signInSuccess: result.signInSuccess, message: result.message }
             }
             var token = jwt.sign(payload, secret, {

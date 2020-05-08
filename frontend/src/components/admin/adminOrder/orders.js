@@ -1,26 +1,51 @@
 import React, { Component } from 'react';
 import Navbar from '../navbar/navbar';
 import Select from '@material-ui/core/Select';
-import Axios from 'axios'
-class AdminOrders extends Component{
-    constructor(props){
+import Axios from 'axios';
+import { Link, Redirect } from 'react-router-dom';
+import { backendURL } from "../../../config";
+
+class AdminOrders extends Component {
+    constructor(props) {
         super(props);
-        this.state={
-            currentSellerName:"",
-            orders:[]
+        this.state = {
+            status: "",
+            currentSellerName: "",
+            orders: []
         }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleFilter = this.handleFilter.bind(this);
     }
 
     componentDidMount() {
         this.getAllOrders()
     }
-
-    getAllOrders(){
-        Axios.post("http://localhost:3001/admin/orders/listOfOrders")
+    handleChange = (e) => {
+        e.preventDefault();
+        this.setState({
+            status: e.target.value
+        })
+    }
+    handleFilter = (e) => {
+        e.preventDefault();
+        console.log("status in ", this.state.status);
+        Axios.post(backendURL + "/admin/orders/listOfOrders", { status: this.state.status })
             .then(response => {
-                if(response.status === 200){
+                if (response.status === 200) {
                     this.setState({
-                        orders : response.data
+                        orders: response.data
+                    }, () => {
+                        console.log(('response', this.state.orders));
+                    })
+                }
+            })
+    }
+    getAllOrders() {
+        Axios.post(backendURL + "/admin/orders/listOfOrders")
+            .then(response => {
+                if (response.status === 200) {
+                    this.setState({
+                        orders: response.data
                     })
                 }
             })
@@ -28,9 +53,9 @@ class AdminOrders extends Component{
 
     handleSellerName = (event) => {
         this.setState({
-            currentSellerName : event.target.value
+            currentSellerName: event.target.value
         }, () => {
-            if(this.state.currentSellerName == ""){
+            if (this.state.currentSellerName == "") {
                 this.getAllOrders()
             }
         })
@@ -38,69 +63,74 @@ class AdminOrders extends Component{
 
     handleSearch = (event) => {
         const data = {
-            name:this.state.currentSellerName
+            name: this.state.currentSellerName
         }
-        Axios.post("http://localhost:3001/admin/orders/listOfOrders",data)
-        .then(response => {
-            if(response.status === 200){
-                this.setState({
-                    orders:response.data
-                })
-            }
-        })
+        Axios.post(backendURL + "/admin/orders/listOfOrders", data)
+            .then(response => {
+                if (response.status === 200) {
+                    this.setState({
+                        orders: response.data
+                    })
+                }
+            })
     }
 
 
-    render(){
-        return(
+    render() {
+        let redirectVar = null;
+        if (localStorage.getItem("type") !== "admin") {
+            redirectVar = <Redirect to="/login" />
+        }
+        return (
             <div>
-              <div class="container">
-              <h5 className="text-center" style={{fontFamily:"Officina Sans Bold" ,fontWeight: "700", margin: "0.1em"}}>Orders</h5>
-                <div className="row">
-                <div className="col-md-12"  >
-                <div className="form-inline my-2 my-lg-1" style={{ marginLeft: "10%"}}>
-                
-                <form>
-                <div className="form-group">
-                <h5>Filters:</h5>
-                <div className="br"></div>
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" onChange={this.handleSellerName} value={this.state.currentSellerName}/>
-                        <button class="btn btn-outline-warning my-2 my-sm-0" type="button" onClick={this.handleSearch}>Search by Seller </button>
-                </div>
-                </form>
-               <div className="br"></div>
+                <div class="container">
+                    <h5 className="text-center" style={{ fontFamily: "Officina Sans Bold", fontWeight: "700", margin: "0.1em" }}>Orders</h5>
+                    <div className="row">
+                        <div className="col-md-12"  >
+                            <div className="form-inline my-2 my-lg-1" style={{ marginLeft: "10%" }}>
 
-                <form onSubmit={this.handleFilter}>
-                <div className="form-group">
-                    <Select className="ui search dropdown" style={{ width: "13pc" }} value={this.state.value} onChange={this.handleChange}>
-                        <option value="category1">Order Placed</option>
-                        <option value="category2">Order shipped</option>
-                        <option value="category3">On the way</option>
-                        <option value="category4">Delivered</option>
-                    </Select>
-                    <div className="spacing_inv"></div>
-                        <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search by Status</button>
+                                <form>
+                                    <div className="form-group">
+                                        <h5>Filters:</h5>
+                                        <div className="br"></div>
+                                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" onChange={this.handleSellerName} value={this.state.currentSellerName} />
+                                        <button class="btn btn-outline-warning my-2 my-sm-0" type="button" onClick={this.handleSearch}>Search by Seller </button>
+                                    </div>
+                                </form>
+                                <div className="br"></div>
+
+                                <form onClick={this.handleFilter}>
+                                    <div className="form-group">
+                                        <Select id='status' className="ui search dropdown" style={{ width: "13pc" }} value={this.state.value} onChange={this.handleChange}>
+                                            <option value="Accepted">Accepted</option>
+                                            <option value="Dispatched">Dispatched</option>
+                                            <option value="Out for Delivery">Out for Delivery</option>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Cancel">Cancelled</option>
+                                        </Select>
+                                        <div className="spacing_inv"></div>
+                                        <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search by Status</button>
+                                    </div>
+
+                                </form>
+                            </div>
                         </div>
-                      
-                </form>
-                </div>
-                </div>
-                </div>
-                    <hr/>
+                    </div>
+                    <hr />
                         Orders:
                         <table>
-                            <th>Order Id</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            {this.state.orders.map(order => (
-                                <tr>
+                        <th>Order Id</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        {this.state.orders.map(order => (
+                            <tr>
                                 <td>{order.Order_id}</td>
                                 <td>{order.Price}</td>
                                 <td>{order.Tracking_Status}</td>
-                                </tr>
-                            ))}
-                        </table>
-                        
+                            </tr>
+                        ))}
+                    </table>
+
 
 
                 </div>

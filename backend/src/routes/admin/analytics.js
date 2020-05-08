@@ -3,13 +3,16 @@ const router = express.Router();
 const kafka = require("../../../kafka/client");
 const redis = require("redis");
 var redisScan = require('redisscan');
-const redisClient = redis.createClient(6379);
+const redisClient = redis.createClient(6379, { detect_buggers: true });
 const { auth } = require("../../utils/passport");
 const { checkAdminAuth } = require("../../utils/passport");
 auth();
 
 redisClient.on('connect', function () {
-    console.log('connected');
+    console.log('@connected');
+    // redisClient.flushdb((err, res) => {
+    //     console.log(err, res);
+    // })
 });
 
 redisClient.on("error", (err) => {
@@ -30,20 +33,20 @@ router.get("/most_sold_products", (req, res) => {
 
 //done
 router.get("/top_5_sellers", (req, res) => {
-kafka.make_request('analytics', { "path": "top_5_sellers", "body": req.query }, function (err, result) {
-    console.log("got back from top 5 sellers kafka");
-    if (!result) {
-        console.log("err ", err);
-        res.end();
-    } else {
-        res.status(200);
-        top_5_sellers = result;
-        console.log("top_5_sellers ", top_5_sellers);
-        res.json({
-            top_5_sellers : top_5_sellers
-        })
-    }
-})
+    kafka.make_request('analytics', { "path": "top_5_sellers", "body": req.query }, function (err, result) {
+        console.log("got back from top 5 sellers kafka");
+        if (!result) {
+            console.log("err ", err);
+            res.end();
+        } else {
+            res.status(200);
+            top_5_sellers = result;
+            console.log("top_5_sellers ", top_5_sellers);
+            res.json({
+                top_5_sellers: top_5_sellers
+            })
+        }
+    })
 })
 
 //done
@@ -53,9 +56,9 @@ router.get("/top_5_customers", (req, res) => {
         if (!result) {
             console.log("err ", err);
             res.end();
-        }else{
+        } else {
             //console.log("top 5 customers based on purchase",top_5_customers);
-        res.json(result)
+            res.json(result)
         }
     })
 })
@@ -63,7 +66,7 @@ router.get("/top_5_customers", (req, res) => {
 //done
 router.get("/top_10_products", (req, res) => {
     kafka.make_request('analytics', { "path": "top_10_products", "body": req.query }, function (err, result) {
-     console.log("got back from top 10 products kafka");
+        console.log("got back from top 10 products kafka");
         if (!result) {
             console.log("err ", err);
             res.end();
@@ -71,12 +74,12 @@ router.get("/top_10_products", (req, res) => {
             res.status(200);
             console.log("top_10_products ", result);
             res.json(result);
-    }
-})
+        }
+    })
 });
 
 //done
-router.get("/top_10_viewed_products",(req,res)=>{
+router.get("/top_10_viewed_products", (req, res) => {
     let arr = [];
     const promise = new Promise((resolve, reject) => {
         redisClient.keys('*', function (err, keys) {
@@ -113,37 +116,40 @@ router.get("/top_10_viewed_products",(req,res)=>{
             }
             console.log("arr sorted", arr)
             return arr;
-           
+
         };
         console.log("before bubble sort in product view");
         bubbleSort(arr)
         top_10_viewed = arr.slice(0, 10)
         res.status(200);
-})
+        res.send(arr);
+    })
 });
-                                     
+
 router.get("/orders_per_day", (req, res) => {
-        kafka.make_request('analytics', { "path": "orders_per_day", "body": req.query }, function (err, result) {
-            console.log("got back from orders_per_day kafka");
-            if (!result) {
-                console.log("err ", err);
-                res.end();
-            } else {
-                res.status(200);
-                orders_per_day = result;
-                console.log(orders_per_day);
-                res.json({
-                    orders_per_day : orders_per_day
-                })
+    kafka.make_request('analytics', { "path": "orders_per_day", "body": req.query }, function (err, result) {
+        console.log("got back from orders_per_day kafka");
+        if (!result) {
+            console.log("err ", err);
+            res.end();
+        } else {
+            res.status(200);
+            orders_per_day = result;
+            console.log(orders_per_day);
+            res.json({
+                orders_per_day: orders_per_day
+            })
 
-            }
-        });
+        }
     });
+});
 
-    //done
+//done
 router.post("/productCount", function (req, res) {
     // let Count
-    let redisKey = req.body.ProductID
+    console.log("req body", req.body)
+    let redisKey = req.body.productId;
+    console.log("redis key", redisKey);
     redisClient.exists(redisKey, (err, result) => {
         if (result === 1) {
             // redisClient.del(redisKey, function(err, reply) {

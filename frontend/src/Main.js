@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { BrowserRouter, Redirect } from 'react-router-dom';
+import { Switch, BrowserRouter, Redirect } from 'react-router-dom';
+
 import { Route } from 'react-router-dom';
 import CustomerLogin from './components/customer/customerLogin/customerLogin';
 import CustomerSignUp from './components/customer/customerSignUp/customerSignUp';
@@ -32,6 +33,14 @@ class Main extends Component {
                 <div>
                     <Route path="/login"> <CustomerLogin /> </Route>
 
+                    <Route path="/admin"><AdminNavBar></AdminNavBar></Route>
+                    <Route path="/admin/dashboard"><AnalyticsDashboard /></Route>
+                    <Route path="/admin/inventory"><AdminInventory /></Route>
+                    <Route path="/admin/orders"><AdminOrders /></Route>
+                    <Route path="/admin/sellers"><AdminSellers /></Route>
+
+                    <Route path="/login"> <CustomerLogin /> </Route>
+                    <Route exact path="/"> <CustomerLogin /> </Route>
                     <Route path="/signUp"><CustomerSignUp /></Route>
 
                     <Route path="/seller"><SellerNavBar></SellerNavBar></Route>
@@ -44,17 +53,10 @@ class Main extends Component {
                     <Route path="/customer/saveForLater"><SaveForLater /></Route>
                     <Route path="/customer/orders"><Orders /></Route>
                     <Route path="/customer/productDetails/:id" component={ProductDetails} />
-                    <Route path="/admin"><AdminNavBar></AdminNavBar></Route>
+
 
                     <Route path="/customer/Profile"><CustomerProfile /></Route>
                     <Route path="/seller/Profile"><SellerProfile /></Route>
-                    <Route path="/seller/orders"><SellerOrder /></Route>
-                    {/* <Route path="/admin/Dashboard"><Dashboard /></Route> */}
-
-                    <Route path="/admin/dashboard"><AnalyticsDashboard /></Route>
-                    <Route path="/admin/inventory"><AdminInventory /></Route>
-                    <Route path="/admin/orders"><AdminOrders /></Route>
-                    <Route path="/admin/sellers"><AdminSellers /></Route>
                 </div>
             </BrowserRouter>
         )

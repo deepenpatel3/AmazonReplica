@@ -2,141 +2,136 @@ import React, { Component } from 'react';
 import Navbar from '../navbar/navbar';
 import ReactPaginate from 'react-paginate';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { backendURL } from "../../../config";
 
-class AdminSellers extends Component{
-    constructor(props){
+class AdminSellers extends Component {
+    constructor(props) {
         super(props);
-        this.state={
-            profiles:[],
-            paginated_profiles:[],
-            status:[],
-            inc:[],
-            results_per_page:3,
-            page_num:0,
-            sellers : [],
-            particularSellerProducts:[],
-            searchSeller:"",
-            seller:"",
+        this.state = {
+            profiles: [],
+            paginated_profiles: [],
+            status: [],
+            inc: [],
+            results_per_page: 3,
+            page_num: 0,
+            sellers: [],
+            particularSellerProducts: [],
+            searchSeller: "",
+            seller: "",
             currentSeller: null
         };
 
-        this.handlePageClick= this.handlePageClick.bind(this);
-        this.retrieveSellers= this.retrieveSellers.bind(this);
-        this.refreshList= this.refreshList.bind(this);
-        //this.onChangeSearchSeller= this. onChangeSearch.bind(this);
-        this.setActiveSeller= this.setActiveSeller.bind(this);
-        this.searchSeller=this.searchSeller.bind(this);
+        this.handlePageClick = this.handlePageClick.bind(this);
+        this.retrieveSellers = this.retrieveSellers.bind(this);
+        this.refreshList = this.refreshList.bind(this);
+        this.onChangeSearchSeller = this.onChangeSearchSeller.bind(this);
+        this.setActiveSeller = this.setActiveSeller.bind(this);
+        this.searchSeller = this.searchSeller.bind(this);
     }
 
-    handlePageClick(data){
+    handlePageClick(data) {
         console.log(data.selected);
-        var page_number= data.selected;
-        var offset= Math.ceil(page_number * this.state.results_per_page)
+        var page_number = data.selected;
+        var offset = Math.ceil(page_number * this.state.results_per_page)
         this.setState({
-            paginated_profiles: this.state.profiles.slice(offset, offset+this.state.results_per_page)
+            paginated_profiles: this.state.profiles.slice(offset, offset + this.state.results_per_page)
         })
     }
-    onChangeSearchSeller(e){
-        const searchSeller= e. target.value;
-        this.setState(function(prevState){
-            return{
-                currentSeller:{
-                    ...prevState.currentSeller,
-                    
-                }
-            }
-            //searchSeller: searchSeller
-        });
+    onChangeSearchSeller(e) {
+        this.setState({
+            searchSeller: e.target.value
+        })
     }
 
-    retrieveSellers(){
+    retrieveSellers() {
         Axios
-        .post('http://localhost:3001/admin/seller')
-        .then(response=>{
-            this.setState({
-                sellers :response.data
-            });
-            console.log(response.data);
-        })
-        .catch(e=>{
-            console.log(e);
-        })
+            .post(backendURL + '/admin/seller')
+            .then(response => {
+                this.setState({
+                    sellers: response.data
+                });
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }
 
-    refreshList(){
+    refreshList() {
         this.retrieveSellers();
         this.setState({
-            currentSeller:null,
+            currentSeller: null,
             currentIndex: -1
         })
     }
 
-    setActiveSeller(sellers, index){
+    setActiveSeller(sellers, index) {
         this.setState({
             currentSeller: sellers,
             currentIndex: index
         })
     }
 
-    searchSeller(e){
+    searchSeller(e) {
+        e.preventDefault();
         Axios
-        .post('',this.state.searchSeller)
-        .then(response=>{
-            this.setState({
-                sellers: response.data
+            .post(backendURL + '/admin/seller', { name: this.state.searchSeller })
+            .then(response => {
+                this.setState({
+                    sellers: response.data
+                });
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
             });
-            console.log(response.data);
-        })
-        .catch(e=>{
-            console.log(e);
-        });
     }
 
 
 
     getSellerMonthlyData = (event) => {
-        console.log("Event and its id: ",event.target.id )
+        console.log("Event and its id: ", event.target.id)
         const data = {
-            "message" : "sales",
-            "ID" : event.target.id
+            "message": "sales",
+            "ID": event.target.id
         }
-        Axios.post("http://localhost:3001/admin/seller/",data)
-        .then(response => {
-            if(response.status === 200 && response.data[0]){
-                alert(`This seller has monthly sales of: ${response.data[0].Sales}`)
-            }
-        })
+        Axios.post(backendURL + "/admin/seller/", data)
+            .then(response => {
+                if (response.status === 200 && response.data[0]) {
+                    alert(`This seller has monthly sales of: ${response.data[0].Sales}`)
+                }
+            })
     }
 
     selectSeller = (event) => {
-        console.log("Seller id is: ",event.target.id)
+        console.log("Seller id is: ", event.target.id)
         Axios.defaults.withCredentials = true;
         const data = {
-            sellerID:event.target.id
+            sellerID: event.target.id
         }
-        Axios.post("http://localhost:3001/admin/seller",data)
+        Axios.post(backendURL + "/admin/seller", data)
             .then(response => {
-                console.log("After getting particular seller: ",response.data)
-                if(response.status === 200){
+                console.log("After getting particular seller: ", response.data)
+                if (response.status === 200) {
                     let particularSeller = response.data[0]
                     this.setState({
-                        particularSellerProducts:particularSeller["Products"]
+                        particularSellerProducts: particularSeller["Products"]
                     }, () => {
-                        console.log("Products size is: ",this.state.particularSellerProducts.length)
+                        console.log("Products size is: ", this.state.particularSellerProducts.length)
                     })
                 }
             })
     }
 
-    async componentDidMount(){
+    async componentDidMount() {
 
-        Axios.post("http://localhost:3001/admin/seller")
-            .then( response => {
+        Axios.post(backendURL + "/admin/seller")
+            .then(response => {
                 console.log(response.data)
-                if(response.status === 200){
+                if (response.status === 200) {
                     this.setState({
-                        sellers : response.data
+                        sellers: response.data
                     })
                 }
             })
@@ -163,7 +158,7 @@ class AdminSellers extends Component{
         // this.setState({status:status,inc:inc})     
     }
 
-    render(){
+    render() {
         // let allProfiles
         // if(this.state.sellers){
         //     allProfiles = this.state.sellers.map(seller => {
@@ -178,44 +173,47 @@ class AdminSellers extends Component{
         //         console.log(profile);
         //     }
         // }               {/*{searchSeller}*/}
-
-        const {searchSeller, sellers, currentSeller, currentIndex}= this.state;
-            return(
+        let redirectVar = null;
+        if (localStorage.getItem("type") !== "admin") {
+            redirectVar = <Redirect to="/login" />
+        }
+        const { searchSeller, sellers, currentSeller, currentIndex } = this.state;
+        return (
             <div>
-                <form class="form-inline my-2 my-lg-1" style={{ marginLeft: "35%"}} onSubmit={this.searchSeller}>
-                <div className="form-group">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search Sellers" aria-label="Search" onChange={this.onChangeSearchSeller} value={this.state.search}  />
+                <form class="form-inline my-2 my-lg-1" style={{ marginLeft: "35%" }} onClick={this.searchSeller}>
+                    <div className="form-group">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search Sellers" aria-label="Search" onChange={this.onChangeSearchSeller} value={this.state.search} />
                         <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search Sellers</button>
-                </div>
+                    </div>
                 </form>
                 {/* {allProfiles} */}
                 <div className="text-center">
-                <table>
-                    <th>Name of Seller</th>
-                    {this.state.sellers.map(seller => (
-                        <tr>
-                            <td>
-                                <p onClick={this.getSellerMonthlyData} id={seller._id}>{seller.Name}</p>
-                            </td>
-                        </tr>
-                    ))}
-               
-                <div className="row">
-                    <ReactPaginate
-                        previousLabel={'Previous'}
-                            nextLabel={'Next'}
-                            breakLabel={'...'}
-                            breakClassName={'break-me'}
-                            pageCount={this.state.pages_num}
-                            marginPagesDisplayed={2}
-                            pageRangeDisplayed={5}
-                            onPageChange={this.handlePageClick}
-                            containerClassName={'pagination'}
-                            subContainerClassName={'pages pagination'}
-                            activeClassName={'active'}
-                    />
-                </div>
-                </table>
+                    <table>
+                        <th>Name of Seller</th>
+                        {this.state.sellers.map(seller => (
+                            <tr>
+                                <td>
+                                    <a href="#" onClick={this.getSellerMonthlyData} id={seller._id}>{seller.Name}</a>
+                                </td>
+                            </tr>
+                        ))}
+
+                        <div className="row">
+                            <ReactPaginate
+                                previousLabel={'Previous'}
+                                nextLabel={'Next'}
+                                breakLabel={'...'}
+                                breakClassName={'break-me'}
+                                pageCount={this.state.pages_num}
+                                marginPagesDisplayed={2}
+                                pageRangeDisplayed={5}
+                                onPageChange={this.handlePageClick}
+                                containerClassName={'pagination'}
+                                subContainerClassName={'pages pagination'}
+                                activeClassName={'active'}
+                            />
+                        </div>
+                    </table>
                 </div>
             </div>
         )

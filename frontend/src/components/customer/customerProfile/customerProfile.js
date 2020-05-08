@@ -41,7 +41,7 @@ class CustomerProfile extends Component {
      */
     componentWillMount() {
         // if(!this.props.ProfileData){
-            this.props.fetchCustomerProfile(localStorage.getItem("id"));
+        this.props.fetchCustomerProfile(localStorage.getItem("id"));
         // }
     }
 
@@ -64,13 +64,8 @@ class CustomerProfile extends Component {
                         <tbody>
                             <div className="spacing"></div>
                             <tr>
-                                <td>
-                                    <div className="votecount" >
-                                        <Votecount />
-                                    </div>
-                                    <div className="spacing"></div>
-                                </td>
-                                <div className="spacing1"></div>
+
+
                                 <td>
                                     <div className="comments" >
                                         <Comments />
@@ -81,10 +76,10 @@ class CustomerProfile extends Component {
                         </tbody>
                     </table>
                     {/* <div>Address</div> */}
-                    <Address/>
+                    <Address />
                     <div className="spacing"></div>
                     {/* <div>Payments</div> */}
-                    <PaymentCard/>   
+                    <PaymentCard />
                     <div className="spacing"></div>
                     <div className="row">
                         <div className="col-md-12" style={{ marginTop: "10%" }} >

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import logo from "../../../images/amazon.png"
 import { connect } from "react-redux";
 import { customerLogin } from "../../../Redux/actions/customer/loginAction";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 class Customerlogin extends Component {
     constructor(props) {
@@ -27,7 +27,7 @@ class Customerlogin extends Component {
         console.log(role)
         if (role === "customer") redirectVar = <Redirect to="/customer/product" />
         else if (role === 'seller') redirectVar = <Redirect to="/seller/product" />
-        else if (role === 'admin') { }
+        else if (role === 'admin') redirectVar = <Redirect to="/admin/dashboard" />
 
 
         if (this.props.signInSuccess === false)
@@ -57,8 +57,8 @@ class Customerlogin extends Component {
                                 <option value="Seller">Seller</option>
                                 <option value="Admin">Admin</option>
                             </select>
-
-                            <div class="form-group" style={{ width: "100%", marginTop: "20px" }}>
+                            <a ><Link style={{ marginTop: "0px" }} to="/signup">Don't have an account?</Link></a>
+                            <div class="form-group" style={{ width: "100%", marginTop: "10px" }}>
                                 <button type="submit" class="btn btn-warning text-light" style={{ width: "100%" }}>Submit</button>
                             </div>
                             <small id="emailHelp" class="form-text text-muted">By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.</small>
