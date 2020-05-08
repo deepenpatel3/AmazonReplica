@@ -56,7 +56,7 @@ export const placeOrder = (data) => dispatch => {
             Authorization: token,
         }
     }
-    axios.get(backendURL + '/orders/placeOrder' ,{params : {...data}}, config).then(res => {
+    axios.post(backendURL + '/orders/placeOrder' , data, config).then(res => {
         dispatch(getCart({id : localStorage.getItem("id")}))
     })
 }

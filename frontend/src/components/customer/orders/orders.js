@@ -60,7 +60,7 @@ class Orders extends Component {
                 return <div key={i} className="card card-body">
                     <div>
                         <h5><u>Order# : {elem.Order_id}</u></h5> <div style={{float : "right" , color : "red"}}>${Number.parseFloat(elem.Price * elem.Qty).toFixed(2)}</div>
-                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h6>{elem.productName}</h6></Link>
+                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h6>{elem.ProductName}</h6></Link>
                         <h6>shipped from :: {elem.SellerName}</h6>
                         
                         <h6>Status : {elem.Tracking_Status}</h6>
@@ -92,7 +92,7 @@ class Orders extends Component {
                 return <div key={i} className="card card-body">
                     <div>
                         <h5><u>Order# : {elem.Order_id}</u></h5> <div style={{float : "right" , color : "red"}}>${Number.parseFloat(elem.Price * elem.Qty).toFixed(2)}</div>
-                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h6>{elem.productName}</h6></Link>
+                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h6>{elem.ProductName}</h6></Link>
                         <h6>shipped from :: {elem.SellerName}</h6>
                         
                         <h6>Status : {elem.Tracking_Status}</h6>
@@ -121,7 +121,7 @@ class Orders extends Component {
                 return <div key={i} className="card card-body">
                     <div>
                         <h5><u>Order# : {elem.Order_id}</u></h5> <div style={{float : "right" , color : "red"}}>${Number.parseFloat(elem.Price * elem.Qty).toFixed(2)}</div>
-                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h6>{elem.productName}</h6></Link>
+                        <Link to={"/customer/productDetails/" + elem.ProductID} ><h6>{elem.ProductName}</h6></Link>
                         <h6>shipped from :: {elem.SellerName}</h6>
                         
                         <h6>Status : {elem.Tracking_Status}</h6>
