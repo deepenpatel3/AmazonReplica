@@ -59,8 +59,6 @@ class AdminOrders extends Component {
         }
         return (
             <div>
-                <Navbar />
-                {redirectVar}
                 <div class="container">
                     <h5 className="text-center" style={{ fontFamily: "Officina Sans Bold", fontWeight: "700", margin: "0.1em" }}>Orders</h5>
                     <div className="row">
@@ -80,10 +78,11 @@ class AdminOrders extends Component {
                                 <form onSubmit={this.handleFilter}>
                                     <div className="form-group">
                                         <Select className="ui search dropdown" style={{ width: "13pc" }} value={this.state.value} onChange={this.handleChange}>
-                                            <option value="category1">Order Placed</option>
-                                            <option value="category2">Order shipped</option>
-                                            <option value="category3">On the way</option>
-                                            <option value="category4">Delivered</option>
+                                            <option value="Accepted">Accepted</option>
+                                            <option value="Dispatched">Dispatched</option>
+                                            <option value="Out for Delivery">Out for Delivery</option>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Cancel">Cancelled</option>
                                         </Select>
                                         <div className="spacing_inv"></div>
                                         <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search by Status</button>

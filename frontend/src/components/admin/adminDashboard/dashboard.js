@@ -23,8 +23,6 @@ class AnalyticsDashboard extends Component {
 
         return (
             <div>
-                {redirectVar}
-                <Navbar />
 
                 <div className >
                     <div className="margin">

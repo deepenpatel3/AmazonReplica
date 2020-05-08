@@ -20,7 +20,8 @@ function customerProfileReducer(state = initialState, action) {
         case SAVE_NAMEPIC_DETAILS_TO_STORE:
             return {
                 ...state,
-
+                Name: action.payload.Name,
+                ProfileURL: action.payload.ProfileURL
             }
         case SAVE_PAYMENT_DETAILS_TO_STORE:
             return {

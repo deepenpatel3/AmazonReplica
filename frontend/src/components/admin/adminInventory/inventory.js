@@ -144,15 +144,9 @@ class AdminInventory extends Component {
     }
 
     render() {
-        let redirectVar = null;
-        if (localStorage.getItem("type") !== "admin") {
-            redirectVar = <Redirect to="/login" />
-        }
 
         return (
             <div>
-                {redirectVar}
-                <Navbar />
                 <div class="container">
                     <div className="row">
                         <div className="col-md-12"  >

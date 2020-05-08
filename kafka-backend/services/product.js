@@ -142,21 +142,21 @@ function remove_category(msg, callback) {
 
 function get_customer_orders(msg, callback) {
     console.log("msg", msg)
-    let query = "select * from `Order` where Tracking_status !='Delivered' and Tracking_Status!='Cancel' and CustomerID = '" + msg.CustomerID + "'";
+    let query = "select * from `Order` where Tracking_status !='Delivered' and Tracking_Status!='Cancel' and CustomerID = '" + msg.CustomerID + "' ORDER BY Order_id DESC";
     mysql.executeQuery(query, function (err, result) {
         if (err) {
             console.log("error ", err);
             callback(err, null);
         } else {
             console.log("orders ", result)
-            let query = "select * from `Order` where Tracking_status='Delivered' and CustomerID = '" + msg.CustomerID + "'";
+            let query = "select * from `Order` where Tracking_status='Delivered' and CustomerID = '" + msg.CustomerID + "' ORDER BY Order_id DESC";
             mysql.executeQuery(query, function (err, result1) {
                 if (err) {
                     console.log("error ", err);
                     callback(err, null);
                 } else {
                     console.log("orders ", result)
-                    let query = "select * from `Order` where Tracking_Status='Cancel' and CustomerID = '" + msg.CustomerID + "'";
+                    let query = "select * from `Order` where Tracking_Status='Cancel' and CustomerID = '" + msg.CustomerID + "' ORDER BY Order_id DESC";
                     mysql.executeQuery(query, function (err, result2) {
                         if (err) {
                             console.log("error ", err);
@@ -181,14 +181,14 @@ function get_seller_orders(msg, callback) {
             callback(err, null);
         } else {
             console.log("orders ", result)
-            let query = "select * from `Order` where Tracking_status='Delivered' and SellerID = '" + msg.SellerID + "' Order by OrderDate DESC";
+            let query = "select * from `Order` where Tracking_status='Delivered' and SellerID = '" + msg.SellerID + "' ORDER BY Order_id DESC";
             mysql.executeQuery(query, function (err, result1) {
                 if (err) {
                     console.log("error ", err);
                     callback(err, null);
                 } else {
                     console.log("orders ", result)
-                    let query = "select * from `Order` where Tracking_Status='Cancel' and SellerID = '" + msg.SellerID + "' Order by OrderDate DESC";
+                    let query = "select * from `Order` where Tracking_Status='Cancel' and SellerID = '" + msg.SellerID + "' ORDER BY Order_id DESC";
                     mysql.executeQuery(query, function (err, result2) {
                         if (err) {
                             console.log("error ", err);
@@ -246,12 +246,13 @@ function place_order(msg, callback) {
                     console.log("Seller ", result);
                     console.log("Name---------------", result);
                     let query = "insert into `Order`(ProductID, CustomerID, SellerID, Price, Qty, Tracking_Status, IsGift,GiftMessage, CardNumber, CardName, Address, OrderDate, SellerName, ProductName) VALUES('" + product.ProductID + "', '" + msg.CustomerID + "','" + result[0].Seller.SellerId + "','" + Number(product.Price) * Number(product.Quantity) + "','" + product.Quantity + "','Accepted', '" + product.IsGift + "','" + product.GiftMessage + "','" + msg.CardNumber + "','" + msg.CardName + "','" + msg.Address + "','" + date + "','" + result[0].Seller.Name + "','" + result[0].Name + "') ";
-                    mysql.executeQuery(query, function (err, result) {
+
+                    mysql.con.query(query, function (err, result) {
                         if (err) {
                             console.log("error ", err);
                             callback(err, null);
                         } else {
-                            // console.log("orders ", result)
+                            console.log("orders ", result)
                             if (i === customer.Cart.length - 1) cb();
                         }
                     })
@@ -263,8 +264,10 @@ function place_order(msg, callback) {
                     callback(null, { success: true })
                 })
             }
+
         }
     })
+
 }
 function update_rating(msg, callback) {
 
@@ -478,6 +481,5 @@ function changeStatus(msg, callback) {
             callback(null, { value: "Updated Successfully" });
         }
     })
-
 
 }

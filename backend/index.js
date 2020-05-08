@@ -73,7 +73,8 @@ app.use("/customer/review", customerReview);
 app.use("/seller/product", sellerProduct)
 app.use("/orders", orders);
 
-app.use("/customer/profile", customerProfile)
+app.use("/customer/profile", customerProfile);
+app.use("/seller/profile", sellerProfile);
 app.use("/admin/analytics", adminAnalytics);
 app.use("/admin/seller", adminSideSeller);
 app.use("/admin/orders", adminSideOrder);

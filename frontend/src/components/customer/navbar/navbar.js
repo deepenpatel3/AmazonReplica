@@ -4,7 +4,7 @@ import { getCart } from "../../../Redux/actions/customer/cartActions";
 import { getProducts } from "../../../Redux/actions/customer/productActions";
 import { getFilterCategories, getFilterName } from '../../../Redux/selectors/customer/selector';
 import { connect } from 'react-redux';
-import Badge from '@material-ui/core/Badge';
+import Badge from '@material-ui/core/Badge';  
 import { withStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { Navbar as BNavbar, Form, FormControl, Button, Nav, NavDropdown } from 'react-bootstrap';

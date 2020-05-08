@@ -186,7 +186,7 @@ class ProductDetailsDashBoard extends Component {
     }
     componentDidMount() {
         this.props.getReviewsForProduct(this.props.Product._id);
-        this.props.productViewClickListnerApi(this.props.Product._id);
+        this.props.productViewClickListnerApi(this.props.Product.Name);
         // if (this.props.reviewData || this.props.reviewData.productId == this.props.Product._id) {
         //     this.props.getReviewsForProduct(this.props.Product._id);
         //     this.setState({

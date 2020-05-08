@@ -1,7 +1,28 @@
-import { SELLER_ADD_PRODUCT, SELLER_GET_PRODUCTS, SELLER_UPDATE_PRODUCT, SELLER_DELETE_PRODUCT } from "../../constants/action-types";
+import { SELLER_ADD_PRODUCT, SELLER_GET_PRODUCTS, SELLER_UPDATE_PRODUCT, SELLER_GET_ORDERS , SELLER_DELETE_PRODUCT } from "../../constants/action-types";
+
 import axios from "axios";
 const { backendURL } = require("../../../config");
 
+export const getSellerOrders = (data) => dispatch => {
+    console.log("Inside place Order")
+    axios.get(`${backendURL}/orders/?SellerID=${data.SellerID}`).then(res => {
+        console.log("ORDERS : " + res.data)
+        dispatch(setOrders(res.data))
+    }).catch((err) => {
+        console.log("ERROR ::::>" + err)
+    })
+}
+export const setOrders = (data) => ({
+    type: SELLER_GET_ORDERS,
+    payload: data
+})
+
+export const changeStatus = (data) => dispatch => {
+    console.log("Inside Change Status")
+    axios.post(`${backendURL}/admin/orders/changeStatus`, data).then(resp => {
+        dispatch(getSellerOrders({SellerID : localStorage.getItem("id")}))
+    })
+}
 const ROOT_URL = backendURL + "/seller/product";
 
 export const getProducts = (productData, SellerId, page, limit, Name, Categories, sort) => dispatch => {
@@ -9,12 +30,6 @@ export const getProducts = (productData, SellerId, page, limit, Name, Categories
     console.log(" Inside getProducts :");
     console.log(" page :", page);
     console.log(" limit :", limit);
-    const token = localStorage.getItem("token");
-    const config = {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    }
     if (!page) {
         page = 1;
     }
@@ -35,6 +50,12 @@ export const getProducts = (productData, SellerId, page, limit, Name, Categories
         sort: sort
     }
     console.log("data", JSON.stringify(data));
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
     // axios.get(`${backendURL}/customer/product/products?page=${page}&limit=${limit}&sellerId=${sellerId}`, config)
     axios.post(`${backendURL}/customer/product/products`, data, config)
         .then(response => {
@@ -70,10 +91,10 @@ export const addProduct = (product, productImages) => dispatch => {
     }
 
 
-    // const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const config = {
         headers: {
-            // Authorization: "Bearer " + token,
+            Authorization: token,
             'Content-Type': 'multipart/form-data'
         }
     }
@@ -104,7 +125,13 @@ export const updateSellerProduct = (product, id) => dispatch => {
         product: product,
         index: id,
     }
-    axios.post(`${ROOT_URL}/updateProduct`, product)
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(`${ROOT_URL}/updateProduct`, product, config)
         .then(response => {
             console.log("updateProduct: ", JSON.stringify(response));
             if (response.status == 200) {
@@ -131,7 +158,13 @@ export const deleteProduct = (product_id, id) => dispatch => {
     //     type: SELLER_DELETE_PRODUCT,
     //     payload: id,
     // })
-    axios.post(`${ROOT_URL}/deleteProduct`, {product_id})
+    const token = localStorage.getItem("token");
+    const config = {
+        headers: {
+            Authorization: token,
+        }
+    }
+    axios.post(`${ROOT_URL}/deleteProduct`, {product_id}, config)
         .then(response => {
             console.log("deleteProduct: ", JSON.stringify(response));
             if (response.status == 200) {

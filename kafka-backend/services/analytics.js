@@ -113,6 +113,7 @@ function top_10_products(msg, callback) {
     })
 }
 
+//done
 async function orders_per_day(msg, callback) {
     let Counts = []
     const promise = new Promise((resolve, reject) => {
@@ -121,7 +122,7 @@ async function orders_per_day(msg, callback) {
             let date = new Date(+new Date() - i * 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ');
             date = date.slice(0, 11)
             console.log("Date", date)
-            let query = " SELECT COUNT(Order_id) as orders  FROM `Order` where OrderDate = '" + date + "' ";
+            let query = " SELECT COUNT(Order_id) as orders  FROM `Order` where OrderDate LIKE '" + date + "%' ";
             mysql.executeQuery(query, async function (err, result) {
                 if (err) {
                     console.log("error ", err);

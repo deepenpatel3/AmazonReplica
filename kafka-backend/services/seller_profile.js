@@ -1,6 +1,6 @@
 const Seller = require('../models/sellerModel');
+const Product = require('../models/productModel');
 var mysql = require("../models/mysql");
-
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);

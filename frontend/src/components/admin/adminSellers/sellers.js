@@ -185,8 +185,6 @@ class AdminSellers extends Component {
         const { searchSeller, sellers, currentSeller, currentIndex } = this.state;
         return (
             <div>
-                <Navbar />
-                {redirectVar}
                 <form class="form-inline my-2 my-lg-1" style={{ marginLeft: "35%" }} onSubmit={this.searchSeller}>
                     <div className="form-group">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search Sellers" aria-label="Search" onChange={this.onChangeSearchSeller} value={this.state.search} />

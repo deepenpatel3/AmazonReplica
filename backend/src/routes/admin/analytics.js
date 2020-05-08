@@ -3,13 +3,16 @@ const router = express.Router();
 const kafka = require("../../../kafka/client");
 const redis = require("redis");
 var redisScan = require('redisscan');
-const redisClient = redis.createClient(6379);
+const redisClient = redis.createClient(6379, { detect_buggers: true });
 const { auth } = require("../../utils/passport");
 const { checkAdminAuth } = require("../../utils/passport");
 auth();
 
 redisClient.on('connect', function () {
-    console.log('connected');
+    console.log('@connected');
+    // redisClient.flushdb((err, res) => {
+    //     console.log(err, res);
+    // })
 });
 
 redisClient.on("error", (err) => {
@@ -119,6 +122,7 @@ router.get("/top_10_viewed_products", (req, res) => {
         bubbleSort(arr)
         top_10_viewed = arr.slice(0, 10)
         res.status(200);
+        res.send(arr);
     })
 });
 
@@ -143,7 +147,9 @@ router.get("/orders_per_day", (req, res) => {
 //done
 router.post("/productCount", function (req, res) {
     // let Count
-    let redisKey = req.body.ProductID
+    console.log("req body", req.body)
+    let redisKey = req.body.productId;
+    console.log("redis key", redisKey);
     redisClient.exists(redisKey, (err, result) => {
         if (result === 1) {
             // redisClient.del(redisKey, function(err, reply) {
