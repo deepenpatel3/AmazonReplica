@@ -174,6 +174,11 @@ class Navbar extends Component {
 //     }
 // }
 
-export default Navbar;
+const map = state => {
+    return {
+    }
+}
+export default connect(map, {logout })(Navbar);
+
 
 
