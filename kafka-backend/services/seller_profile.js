@@ -1,4 +1,5 @@
 const Seller = require('../models/sellerModel');
+const Product = require('../models/productModel');
 
 exports.serve = function serve(msg, callback) {
     console.log("msg", msg);
@@ -12,7 +13,10 @@ exports.serve = function serve(msg, callback) {
             break;
         case "address_func":
             address_func_seller(msg.body, callback);
-            break;     
+            break;   
+        case "all_sellers":
+            all_sellers(msg.body, callback);
+            break;  
     }
 }
 
@@ -81,4 +85,57 @@ function address_func_seller(msg, callback){
       } 
         }
       );
+}
+
+function all_sellers(msg, callback) {
+  console.log("Inside kafka all seller ", msg.sellerID)
+  var res = {};
+  if (msg.name) {
+    let condition = { Name: { $regex: '.*' + msg.name + '.*' } }
+    Seller.find(condition, { Name: 1 })
+      .exec()
+      .then(res => {
+        console.log("Sellers List");
+        callback(null, res);
+      })
+      .catch(err => {
+        callback(err, null);
+      })
+
+  }
+  else if (msg.sellerID) {
+    console.log(" SHould populate products")
+    Seller.find({ _id: msg.sellerID }).populate("Products")
+      .exec()
+      .then(res => {
+        console.log("Sellers List");
+        callback(null, res);
+      })
+      .catch(err => {
+        callback(err, null);
+      })
+  }
+  else if (msg.message) {
+    let query = " SELECT SUM(Price) as Sales FROM `Order` where SellerID='"+msg.ID+"'GROUP BY MONTH(OrderDate)";
+    mysql.executeQuery(query, function (err, result) {
+      if (err) {
+        console.log("error ", err);
+        callback(err, null);
+      } else {
+        console.log(result)
+        callback(null, result);
+      }
+    })
+  }
+  else {
+    Seller.find({}, { Name: 1 })
+      .exec()
+      .then(res => {
+        console.log("Sellers List");
+        callback(null, res);
+      })
+      .catch(err => {
+        callback(err, null);
+      })
+  }
 }
