@@ -49,17 +49,26 @@ export const setCart = (data) => ({
 
 export const placeOrder = (data) => dispatch => {
     console.log("Inside place Order")
+    
     const token = localStorage.getItem("token");
     const config = {
         headers: {
             Authorization: token,
         }
     }
-    axios.post(backendURL + '/orders/placeOrder' , data, config).then(res => {
+    axios.get(backendURL + '/orders/placeOrder' ,{params : {...data}}, config).then(res => {
         dispatch(getCart({id : localStorage.getItem("id")}))
     })
 }
 
+export const cancelOrder = data => dispatch => {
+    
+    data.status = "Cancel"
+    axios.post(backendURL + "/orders/updateOrder" , data).then(res => {
+        console.log(res.data);
+        dispatch(getOrders({CustomerID : localStorage.getItem('id')}))
+    })
+}
 export const getOrders = (data) => dispatch => {
     console.log("Inside place Order")
     const token = localStorage.getItem("token");
@@ -71,8 +80,6 @@ export const getOrders = (data) => dispatch => {
     axios.get(backendURL + "/orders/?CustomerID=" + data.CustomerID,config).then(res => {
         console.log("ORDERS : " + res.data)
         dispatch(setOrders(res.data))
-    }).catch((err) => {
-        console.log("ERROR ::::>" + err )
     })
 }
 
@@ -97,7 +104,7 @@ export const getProduct = data => dispatch =>{
 
 export const setOrders = (data) => ({
     type : GET_ORDERS,
-    payload : data
+    payload : {...data}
 })
 
 export const setProduct = (data) => ({

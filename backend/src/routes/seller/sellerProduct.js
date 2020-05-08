@@ -11,7 +11,7 @@ var app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 const { auth } = require("../../utils/passport");
-const { checkSellrAuth, checkAllAuth } = require("../../Utils/passport");
+const { checkSellrAuth, checkAllAuth } = require("../../utils/passport");
 auth();
 
 const bucket = "ouramazonbucket1";

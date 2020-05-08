@@ -4,7 +4,7 @@ const { secret } = require("../../utils/config");
 const jwt = require('jsonwebtoken');
 const kafka = require("../../../kafka/client");
 const { auth } = require("../../utils/passport");
-const { checkCustomerAuth } = require("../../Utils/passport");
+const { checkCustomerAuth } = require("../../utils/passport");
 auth();
 
 router.post("/signIn", (req, res) => {

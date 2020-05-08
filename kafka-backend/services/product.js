@@ -263,8 +263,10 @@ function place_order(msg, callback) {
                     callback(null, { success: true })
                 })
             }
+
         }
     })
+
 }
 function update_rating(msg, callback) {
 

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const kafka = require("../../../kafka/client");
 const { auth } = require("../../utils/passport");
-const { checkCustomerAuth, checkAllAuth } = require("../../Utils/passport");
+const { checkCustomerAuth, checkAllAuth } = require("../../utils/passport");
 auth();
 
 router.get("/reviews", checkAllAuth, function (req, res) {

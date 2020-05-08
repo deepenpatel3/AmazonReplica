@@ -5,7 +5,7 @@ const kafka = require("../../../kafka/client");
 const redis = require("redis");
 const redisClient = redis.createClient(6379);
 const { auth } = require("../../utils/passport");
-const { checkAllAuth, checkCustomerAuth } = require("../../Utils/passport");
+const { checkAllAuth, checkCustomerAuth } = require("../../utils/passport");
 auth();
 
 redisClient.on("error", (err) => {

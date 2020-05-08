@@ -5,7 +5,7 @@ const redis = require("redis");
 var redisScan = require('redisscan');
 const redisClient = redis.createClient(6379);
 const { auth } = require("../../utils/passport");
-const { checkAdminAuth } = require("../../Utils/passport");
+const { checkAdminAuth } = require("../../utils/passport");
 auth();
 
 redisClient.on('connect', function () {
