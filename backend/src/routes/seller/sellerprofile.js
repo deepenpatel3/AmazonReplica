@@ -9,7 +9,7 @@ const multers3 = require("multer-s3");
 var path = require('path');
 var app = express();
 const { auth } = require("../../utils/passport");
-const { checkSellrAuth, checkAllAuth } = require("../../Utils/passport");
+const { checkSellrAuth, checkAllAuth } = require("../../utils/passport");
 auth();
 
 const bucket = "ouramazonbucket1";
