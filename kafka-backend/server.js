@@ -53,26 +53,32 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
+                break;
             case "product":
                 product.serve(data.data, function (err, res) {
                     response(data, res, producer);
                     return;
                 })
+                break;
             case "review":
                 review.serve(data.data, function (err, res) {
                     response(data, res, producer);
                     return;
                 })
+                break;
             case "analytics":
                 analytics.serve(data.data, function (err, res) {
                     response(data, res, producer);
                     return;
                 })
+                break;
             case "seller_profile":
+                console.log(" seller profile called bahar");
                 seller_profile.serve(data.data, function (err, res) {
                     response(data, res, producer);
                     return;
                 })
+                break;
             case "profile":
                 console.log(" customerProfile called bahar");
                 customerProfile.serve(data.data, function (err, res) {
@@ -80,7 +86,7 @@ function handleTopicRequest(topic_name) {
                     response(data, res, producer);
                     return;
                 })
-
+                break;
         }
     });
 }

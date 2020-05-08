@@ -65,6 +65,7 @@ const adminAnalytics = require("./src/routes/admin/analytics");
 const adminSideSeller = require("./src/routes/admin/sellerData");
 const category = require("./src/routes/admin/category");
 const adminSideOrder = require("./src/routes/admin/orders");
+const sellerProfile = require("./src/routes/seller/sellerprofile");
 
 app.use("/customer", customerAccount);
 app.use("/customer/product", customerProduct);
@@ -76,7 +77,7 @@ app.use("/customer/profile", customerProfile)
 app.use("/admin/analytics", adminAnalytics);
 app.use("/admin/seller", adminSideSeller);
 app.use("/admin/orders", adminSideOrder);
-//Customer Payment
+app.use("/seller/profile", sellerProfile);
 app.use("/admin/category", category);
 app.use("/customer/payment", customerPayment)
 
