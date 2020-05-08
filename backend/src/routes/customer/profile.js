@@ -27,22 +27,23 @@ app.post("/upload_file",upload.any(),(req,res)=>{
 */
 app.use('../../uploads', express.static(path.join(__dirname, '/uploads')));
 
-router.post("/fetchprofile",(req,res)=>{
-    console.log("inside fetch profile",req.body);
-    kafka.make_request("profile",{ "path": "fetch_profile", "body": data },req.body,(err,results)=>{
+router.get("/fetchprofile",(req,res)=>{
+    console.log("inside fetch profile",req.query.customerId);
+ 
+    kafka.make_request("profile",{ "path": "fetch_profile", "body": { _id: req.query.customerId } },(err,results)=>{
         console.log("fetching profile",typeof results);
         if(err){
             console.log("inside error");
-            res.json({
+            res.json({ 
                 status: "error",
                 msg:err
-            });
+            }); 
         }else{
-            if(typeof results === "string"){
-                res.sendStatus(400).end();               
+            if(typeof results === "string"){  
+                res.sendStatus(400).end();                
             }else{
                 res.code="200";
-                res.send({
+                res.send({  
                     docs:results
                 });
                 console.log("Profile is populated by data");

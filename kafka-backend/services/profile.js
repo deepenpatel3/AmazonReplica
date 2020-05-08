@@ -1,10 +1,12 @@
 const Customer = require('../models/customerModel');
 
+
 exports.serve = function serve(msg, callback) {
-  console.log("msg", msg);
+  console.log("@@@@@ msg", msg);
   // console.log("In Service path:", msg.path);
   switch (msg.path) {
-    case "fetchprofile":
+    case "fetch_profile":
+      console.log("fetchprofile inside switch");
       fetchprofile(msg.body, callback);
       break;
     case "namepic_func":
@@ -25,8 +27,8 @@ exports.serve = function serve(msg, callback) {
 
 function fetchprofile(msg, callback) {
   var res = {};
-
-  Customer.findOne({ "user.email": msg.email },
+  console.log("fetchprofile inside fetchprofile");
+  Customer.findOne({ "_id": msg._id},
     function (err, docs) {
       if (err) {
         console.log("Inside if : error", err);
@@ -38,7 +40,6 @@ function fetchprofile(msg, callback) {
       else {
         console.log("Inside else : ");
         res.code = "200";
-
         console.log("User is found", docs);
         //res.end(JSON.stringify(docs));
         callback(null, docs);

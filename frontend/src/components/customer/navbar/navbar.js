@@ -7,11 +7,12 @@ import { connect } from 'react-redux';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { Navbar as BNavbar, Form, FormControl, Button, Nav } from 'react-bootstrap';
+import { Navbar as BNavbar, Form, FormControl, Button, Nav, NavDropdown } from 'react-bootstrap';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { logout } from "../../../Redux/actions/customer/loginAction";
 import SearchIcon from '@material-ui/icons/Search';
-import {Redirect} from 'react-router';
+import { Redirect } from 'react-router';
+import Typography from '@material-ui/core/Typography';
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -27,33 +28,41 @@ class Navbar extends Component {
         super(props)
         this.state = {
             cart: [],
-            redirect : false,
-            prdouctData : {},
-            name : ""
+            redirect: false,
+            prdouctData: {},
+            name: "",
+            anchorEl: true,
         }
         this.ChangeHandler = this.ChangeHandler.bind(this);
         this.clickHandler = this.clickHandler(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
     }
-    clickHandler = () => () => {        
-        this.props.getProducts(this.state.productData,1,8,this.state.name, this.props.filterCategoires)
+
+    handleMenuClose = () => {
+        this.setState({
+            anchorEl: null
+        });
+    }
+
+    clickHandler = () => () => {
+        this.props.getProducts(this.state.productData, 1, 8, this.state.name, this.props.filterCategoires)
         // this.setState({
         //     name : ""
         // })
     }
     ChangeHandler = e => {
         this.setState({
-            name : e.target.value
+            name: e.target.value
         })
     }
     componentWillMount = () => {
         this.props.getCart({ id: localStorage.getItem("id") })
-        this.logout =  this.logout.bind(this)
+        this.logout = this.logout.bind(this)
     }
     logout = () => {
         this.props.logout();
         this.setState({
-            redirect : true
+            redirect: true
         })
     }
     componentDidUpdate = (prevProps) => {
@@ -70,18 +79,18 @@ class Navbar extends Component {
     }
     handleKeyPress(e) {
         // 
-        if (e.key === 'Enter') {   
+        if (e.key === 'Enter') {
             e.preventDefault();
-            console.log("Enter key pressed!")      
-            this.props.getProducts(this.state.productData,1,8,this.state.name, this.props.filterCategoires)
+            console.log("Enter key pressed!")
+            this.props.getProducts(this.state.productData, 1, 8, this.state.name, this.props.filterCategoires)
         }
-      }
+    }
 
     render() {
         // let redirect = this.state.redirect;
-        if(!localStorage.getItem("id") || !(localStorage.getItem("type") == "customer")){
-            return(
-            <Redirect to="/login" />
+        if (!localStorage.getItem("id") || !(localStorage.getItem("type") == "customer")) {
+            return (
+                <Redirect to="/login" />
             );
         }
         return (
@@ -89,9 +98,28 @@ class Navbar extends Component {
                 <BNavbar style={{ backgroundColor: "#252f3d", padding: "0" }}>
                     <BNavbar.Brand style={{ marginLeft: "1%" }} href="/customer/product"><img src="/navbar_logo.jpeg" width="150" height="55" alt="amazon" /></BNavbar.Brand>
                     <Form inline>
-                        <FormControl type="text" placeholder="Search" style={{ width: "900px" , borderRadius : "0px" }} className="mr-sm-7" onChange = { this.ChangeHandler } onKeyPress={this.handleKeyPress} value = {this.state.name}  />
-                        <Button variant="warning" onClick = {this.clickHandler} type="button"  style={{marginTop : "1.5%" , height : "2.4em"}} ><SearchIcon style={{paddingTop : "5%" }}/></Button>
+                        <FormControl type="text" placeholder="Search" style={{ width: "800px", borderRadius: "0px" }} className="mr-sm-7" onChange={this.ChangeHandler} onKeyPress={this.handleKeyPress} value={this.state.name} />
+                        <Button variant="warning" onClick={this.clickHandler} type="button" style={{ marginTop: "1.5%", height: "2.4em" }} ><SearchIcon style={{ paddingTop: "5%" }} /></Button>
                     </Form>
+                    <Nav className="mr-auto"></Nav>
+                    <Nav style={{ color: "white" }}>
+                        <NavDropdown
+                            title={
+                                <div>
+                                    <Typography style={{ color: "white", fontSize:"12px" }} variant="body2" gutterBottom>
+                                        Hello, {localStorage.getItem("name")}
+                                        <br/>
+                                        <b>Account & List</b>
+                                    </Typography>
+                                </div>
+                            }
+                            id="nav-dropdown">
+                            <NavDropdown.Item eventKey="4.1" href="/customer/orders">Your Orders</NavDropdown.Item>
+                            <NavDropdown.Item eventKey="4.2" href="/customer/profile">Account</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item eventKey="4.4" onClick={this.logout}>Signout</NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
                     <Nav className="mr-auto"></Nav>
                     <Nav>
                         <Nav.Link href="/customer/cart">
@@ -99,9 +127,9 @@ class Navbar extends Component {
                                 <ShoppingCartIcon style={{ color: "white" }} />
                             </StyledBadge>
                         </Nav.Link>
-                        <Nav.Link>
-                            <PowerSettingsNewIcon style={{ color: "white" }} onClick ={this.logout}/>
-                        </Nav.Link>
+                        {/* <Nav.Link>
+                            <PowerSettingsNewIcon style={{ color: "white" }} onClick={this.logout} />
+                        </Nav.Link> */}
                     </Nav>
                 </BNavbar>
                 {/*                 
@@ -141,6 +169,6 @@ const map = state => {
         filterName: getFilterName(state.customerProductData),
     }
 }
-export default connect(map, { getCart, logout, getProducts  })(Navbar);
+export default connect(map, { getCart, logout, getProducts })(Navbar);
 
 
