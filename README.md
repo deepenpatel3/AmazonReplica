@@ -1,19 +1,24 @@
 # Simulation of Amazon
 
-### Project Overview
+## Project Overview and Architecture Diagram
 In this project, a 3-tier distributed application design implementing the functions of Amazon website is done. Different types of users are managed and implemented in Amazon Prototype.
 Though Amazon.com has wide range of features, this project is limited to only few important functionalities which cover all the essential features required to place an order and implement the functionalities which involve different roles.
 For each type of object, an associated database schema responsible for representing how a given object should be stored in a database is implemented.
+
+![image](https://user-images.githubusercontent.com/52833369/98450209-c76cc900-20ef-11eb-82a4-df0d3a36c489.png)
 
 System is built upon distributed architecture. Message queues is used as the middleware technology.
 System supports the following types of entities:
 a. Customers
 b. Sellers
-c. Admin users
-Project consists of three tiers:
+c. Admin users.
+<br><br>
+Project consists of multiple tiers:
 - The client tier, where the user will interact with system
-- The middle tier/middleware/messaging system, where the majority of the processing takes place
-- The third tier, comprising a database to store the state of your entity objects
+- The API tier, where all the server endpoints are, which takes requests from clients
+- The middle tier/middleware/messaging system, which directs the requests from API layer to microservices in form of Kafka messages
+- The sevices tier - this is where all the business logic reside which communicates with the Databases
+- The Database tier, comprising a database to store the state of your entity objects
 
 Functionalities like, 
 - Customers can Log/Sign In to the system 
